@@ -14,6 +14,22 @@ export default defineConfig({
 				replacesTitle: true,
 			},
 			favicon: '/favicon.svg',
+			components: {
+				ThemeProvider: './src/components/ThemeProvider.astro',
+				ThemeSelect: './src/components/ThemeSelect.astro',
+			},
+			expressiveCode: {
+				styleOverrides: { borderRadius: '0' },
+			},
+			customCss: [
+				'@fontsource/geist/400.css',
+				'@fontsource/geist/500.css',
+				'@fontsource/geist/600.css',
+				'@fontsource/geist/700.css',
+				'@fontsource/jetbrains-mono/400.css',
+				'@fontsource/jetbrains-mono/500.css',
+				'./src/styles/theme.css',
+			],
 			social: [
 				{ icon: 'github', label: 'GitHub', href: 'https://github.com/RocketFlag' }
 			],

@@ -1,0 +1,9 @@
+---
+// Force the dark theme app-wide. The RocketFlag console is dark-only, so the
+// docs match it: no light mode, no flash. Overrides Starlight's default
+// ThemeProvider (which would otherwise follow the system preference).
+---
+
+<script is:inline>
+	document.documentElement.dataset.theme = "dark";
+</script>
