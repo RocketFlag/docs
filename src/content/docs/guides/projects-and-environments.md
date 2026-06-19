@@ -5,7 +5,18 @@ description: Organizing your flags into projects and environments.
 
 Projects are the primary way to organize your feature flags in RocketFlag.
 
+### Personal vs Organisation Projects
+
+Every project is owned either by **you** (a personal project) or by an **Organisation** (a shared workspace).
+
+- **Personal projects** need no setup — create one as soon as you sign in. The free tier includes up to **3 personal projects**, making them ideal for trying RocketFlag, side projects, and solo work.
+- **Organisation projects** are owned by an Organisation so your team can collaborate. They unlock team features — inviting members, [project sharing](#sharing-a-project-with-specific-people), the stale-flag [Caretaker](/guides/stale-flags/), [analytics](/guides/analytics-and-stats/), and organisation-wide [audit logs](/guides/audit-logs/) — and remove the personal-tier project limit. See [Organisations & Users](/guides/organisations-and-users/).
+
+Not sure which to pick? Start with a personal project and [move it into an Organisation](#moving-a-project-into-an-organisation) whenever you're ready — your flag IDs don't change.
+
 ### Creating a Project
+
+When you create a project from the **Projects** page, it's a **personal** project. To create a project inside an Organisation, open that Organisation first, then create the project there.
 
 1. Navigate to the **Projects** page.
 2. Click **New Project**.
