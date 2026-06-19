@@ -24,10 +24,10 @@ Open the link to complete sign-in. If you open the link on a **different device 
 
 ### After Signing In
 
-The first time you sign in you'll be guided to:
+Once you're signed in you can start straight away:
 
-1. **Create an Organisation** — your top-level workspace. See [Organisations & Users](/guides/organisations-and-users/).
-2. **Create your first Project and Flag** — follow the [Quick Start Guide](/guides/quick-start/).
+1. **Create your first Project and Flag** — you can create a **personal project** (owned by just you) with no extra setup. Follow the [Quick Start Guide](/guides/quick-start/).
+2. **Create an Organisation** (optional) — if you're working with a team, create an Organisation to invite members and unlock team features. See [Organisations & Users](/guides/organisations-and-users/).
 
 ### Managing Your Account
 

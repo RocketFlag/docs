@@ -5,14 +5,15 @@ description: Get up and running with RocketFlag in 5 minutes.
 
 Welcome to RocketFlag! This guide will walk you through the process of setting up your first feature flag and evaluating it in your application.
 
-### Step 1: Create an Organisation
-When you first log in, you'll be prompted to create an Organisation. This is your workspace where you'll manage your projects and team.
+### Step 1: Create a Project
+Projects group related flags. When you first sign in you can create a project straight away — no setup required.
 
-1. Enter a name for your Organisation (e.g., "Acme Corp").
-2. Click **Create Organisation**.
+You have two options:
 
-### Step 2: Create a Project
-Projects help you group related flags.
+- **Personal project (quickest):** owned by just you. Perfect for trying RocketFlag, side projects, or solo development. The free tier includes up to **3 personal projects**.
+- **Organisation project:** owned by an Organisation (a shared workspace) so you can invite teammates and use team features. Choose this if you're working with others — see [Organisations & Users](/guides/organisations-and-users/).
+
+For this guide a **personal project** is perfectly fine; you can always [move it into an Organisation later](/guides/projects-and-environments/#moving-a-project-into-an-organisation) without changing your flag IDs.
 
 1. On your dashboard, click **New Project**.
 2. Give it a name (e.g., "Web App").
@@ -20,7 +21,7 @@ Projects help you group related flags.
 4. Set the environment name to `production`.
 5. Click **Create**.
 
-### Step 3: Create your First Flag
+### Step 2: Create your First Flag
 Now, let's create a flag to control a new feature.
 
 1. Click **New Flag** inside your project.
@@ -29,7 +30,7 @@ Now, let's create a flag to control a new feature.
 4. **Traffic Percentage:** Set this to `100`.
 5. Click **Create**.
 
-### Step 4: Evaluate the Flag
+### Step 3: Evaluate the Flag
 Copy your **Flag ID** from the table. You can now call the RocketFlag Public Evaluation API to check the flag's state.
 
 #### Using Curl

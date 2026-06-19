@@ -5,13 +5,13 @@ description: How to manage your team and workspace in RocketFlag.
 
 Managing your team effectively is key to a smooth feature flagging workflow. RocketFlag uses an **Organisation** model to group projects and people.
 
-### Creating an Organisation
+> **Do I need an Organisation?** No. You can create [personal projects](/guides/projects-and-environments/#personal-vs-organisation-projects) (up to 3 on the free tier) and use the API and SDKs without ever creating one. Create an Organisation when you want to **work with a team** or use team features — inviting members, project sharing, the stale-flag Caretaker, analytics, and organisation-wide audit logs. You can [move existing personal projects into an Organisation](/guides/projects-and-environments/#moving-a-project-into-an-organisation) in one click.
 
-When you first sign up for RocketFlag, you will be prompted to create your first Organisation.
+### Creating an Organisation
 
 1. Navigate to the **Organisations** page.
 2. Click **New Organisation**.
-3. Give your organization a name and click **Create**.
+3. Give your organisation a name and click **Create**.
 
 ### Managing Users
 

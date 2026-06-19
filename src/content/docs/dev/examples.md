@@ -30,4 +30,4 @@ Whatever your stack, getting started is the same three steps:
 2. Install the relevant SDK ([Node](/dev/node-sdk/), [React](/dev/react-sdk/), [Go](/dev/go-sdk/)) or call the [API](/dev/api-reference/) directly.
 3. Read the flag's `enabled` value and branch your code on it.
 
-Using a language we don't have an SDK for yet? The [API](/dev/api-reference/) is a single `GET` request — see the [Quick Start](/guides/quick-start/#step-4-evaluate-the-flag) for `curl`, JavaScript, Python, Ruby, and Go examples.
+Using a language we don't have an SDK for yet? The [API](/dev/api-reference/) is a single `GET` request — see the [Quick Start](/guides/quick-start/#step-3-evaluate-the-flag) for `curl`, JavaScript, Python, Ruby, and Go examples.

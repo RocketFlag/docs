@@ -5,15 +5,20 @@ description: Key terms and architectural concepts in RocketFlag.
 
 Understanding these core concepts will help you get the most out of RocketFlag.
 
-### Organisations
+### Personal Projects vs Organisations
 
-An **Organisation** is the top-level container for all your projects and users. It serves as your billing entity and workspace. 
-- **Roles:** Organisations support **Admins** (full control) and **Members** (can manage flags but not organization settings).
+You don't need to set anything up to start — you can create a **personal project** (owned by just you) the moment you sign in. The free tier includes up to **3 personal projects**, which is ideal for trying RocketFlag, side projects, or solo work.
+
+An **Organisation** is a shared workspace for working with a team. It's the top-level container for projects and people, and serves as your billing entity.
+- **Roles:** Organisations support **Admins** (full control) and **Members** (can manage flags but not organisation settings).
 - **Tiers:** Options include Free, Teams, and Ultra, offering different levels of features and limits.
+- **Team features:** Inviting members, project sharing, the stale-flag [Caretaker](../../guides/stale-flags), analytics, and organisation-wide audit logs require an Organisation (on the relevant tier).
+
+A personal project can be [moved into an Organisation](../../guides/projects-and-environments#moving-a-project-into-an-organisation) at any time — your flag IDs stay the same, so nothing breaks in your code.
 
 ### Projects
 
-A **Project** is a logical grouping of related feature flags. Projects belong to an Organisation and come in two types:
+A **Project** is a logical grouping of related feature flags. A project is either **personal** (owned by you) or owned by an **Organisation**. Projects come in two types:
 1. **Single Environment:** A simple container for flags, often tied to a specific environment like "Production".
 2. **Multi-Environment (Group Flags):** A more advanced project type that allows you to manage the same flag across multiple environments (e.g., Dev, Staging, Prod) within a single view.
 
