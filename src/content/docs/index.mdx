@@ -1,0 +1,42 @@
+---
+title: RocketFlag Documentation
+description: Build faster and release with confidence using RocketFlag.
+template: splash
+hero:
+  tagline: Lightweight, high-performance feature flagging for modern teams.
+  image:
+    file: ../../assets/rocketflag-logo.svg
+  actions:
+    - text: Get Started
+      link: /guides/quick-start/
+      icon: right-arrow
+      variant: primary
+    - text: API Reference
+      link: /dev/api-reference/
+      icon: external
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## Next steps
+
+<CardGrid stagger>
+	<Card title="Quick Start" icon="rocket">
+		Get up and running in 5 minutes with our [Quick Start Guide](/guides/quick-start/).
+	</Card>
+	<Card title="Learn the Concepts" icon="pencil">
+		Understand Organisations, Projects, Flags, and Cohorts in [Concepts](/intro/concepts/).
+	</Card>
+	<Card title="Configure your Team" icon="setting">
+		Set up your Organisation and invite members in the [User Guide](/guides/organisations-and-users/).
+	</Card>
+	<Card title="Integrate an SDK" icon="add-document">
+		Get up and running with our [Node.js](/dev/node-sdk/), [React](/dev/react-sdk/), or [Go](/dev/go-sdk/) SDKs.
+	</Card>
+	<Card title="Advanced Targeting" icon="open-book">
+		Master [Multi-Environment Flags](/guides/group-flags/) and [Per-Environment Cohorts](/dev/per-env-cohorts/).
+	</Card>
+	<Card title="Sample Projects" icon="seti:react">
+		See RocketFlag in a real app with our [example projects](/dev/examples/).
+	</Card>
+</CardGrid>

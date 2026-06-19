@@ -1,0 +1,45 @@
+# Builds the Astro Starlight docs site and deploys it to the GCS bucket that
+# backs docs.rocketflag.app. Triggered on push to main (see the docs deploy
+# trigger in the rocketflag repo: infrastructure/terraform_prod/docs_deploy.tf).
+steps:
+  - id: "install"
+    name: "node:20"
+    entrypoint: npm
+    args: ["ci"]
+
+  - id: "build"
+    name: "node:20"
+    entrypoint: npm
+    args: ["run", "build"]
+    waitFor: ["install"]
+
+  # Sync the build output to the bucket, deleting files that no longer exist.
+  - id: "deploy"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    entrypoint: gcloud
+    args:
+      - "storage"
+      - "rsync"
+      - "./dist"
+      - "gs://rocketflag-docs-site"
+      - "--recursive"
+      - "--delete-unmatched-destination-objects"
+    waitFor: ["build"]
+
+  # Drop the CDN cache so the new content is served immediately.
+  - id: "invalidate-cdn"
+    name: "gcr.io/google.com/cloudsdktool/cloud-sdk:slim"
+    entrypoint: gcloud
+    args:
+      - "compute"
+      - "url-maps"
+      - "invalidate-cdn-cache"
+      - "rocketflag-api-global-lb"
+      - "--path=/*"
+      - "--host=docs.rocketflag.app"
+      - "--global"
+      - "--async"
+    waitFor: ["deploy"]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
