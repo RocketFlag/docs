@@ -1,0 +1,166 @@
+name: Docs sync (Gemini)
+
+# Centralized "brain" for keeping docs.rocketflag.app in step with releases.
+#
+# Triggered by a repository_dispatch (event_type: docs-sync) sent from a source
+# repo's .github/workflows/notify-docs.yml when a tagged release is published.
+# Also runnable by hand via workflow_dispatch for testing / backfills.
+#
+# Flow: mint GitHub App tokens -> fetch the release diff from the source repo ->
+# let Gemini decide whether docs need updating and edit them in place -> open a
+# DRAFT PR only if files actually changed (no-op otherwise).
+#
+# NOTE: repository_dispatch only triggers the copy of this file on the default
+# branch, so this must be merged to main to go live.
+
+on:
+  repository_dispatch:
+    types: [docs-sync]
+  workflow_dispatch:
+    inputs:
+      repo:
+        description: "Source repo, e.g. RocketFlag/node-sdk or jgunnink/rocketflag"
+        required: true
+      tag:
+        description: "Release tag, e.g. v1.2.0"
+        required: true
+
+permissions:
+  contents: read # all writes use the GitHub App token minted below
+
+concurrency:
+  group: docs-sync-${{ github.event.client_payload.repo || inputs.repo }}-${{ github.event.client_payload.tag || inputs.tag }}
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    # Holds the App secrets; restrict this environment to the default branch (and
+    # optionally required reviewers) in repo Settings → Environments → docs-sync.
+    environment: docs-sync
+    steps:
+      - name: Resolve inputs
+        id: vars
+        run: |
+          set -euo pipefail
+          REPO="${{ github.event.client_payload.repo || inputs.repo }}"
+          TAG="${{ github.event.client_payload.tag || inputs.tag }}"
+          if [ -z "$REPO" ] || [ -z "$TAG" ]; then
+            echo "::error::repo and tag are required"; exit 1
+          fi
+          {
+            echo "repo=$REPO"
+            echo "tag=$TAG"
+            echo "owner=${REPO%%/*}"
+            echo "name=${REPO##*/}"
+          } >> "$GITHUB_OUTPUT"
+
+      # Token for writing to the docs repo (commit + open PR).
+      - name: Mint docs App token
+        id: app-token-docs
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+          private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
+          owner: RocketFlag
+          repositories: docs
+          # Least privilege: this token can only touch the docs repo.
+          permission-contents: write
+          permission-pull-requests: write
+
+      # Separate, read-only token for fetching the source repo's release/diff.
+      # Kept distinct from the docs token so the diff-fetch path can never write.
+      - name: Mint source App token
+        id: app-token-source
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.DOCS_BOT_APP_ID }}
+          private-key: ${{ secrets.DOCS_BOT_PRIVATE_KEY }}
+          owner: ${{ steps.vars.outputs.owner }}
+          repositories: ${{ steps.vars.outputs.name }}
+          permission-contents: read
+
+      - name: Checkout docs
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token-docs.outputs.token }}
+
+      - name: Fetch release context
+        env:
+          GH_TOKEN: ${{ steps.app-token-source.outputs.token }}
+          REPO: ${{ steps.vars.outputs.repo }}
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p context
+
+          # Human-written release notes (if any).
+          gh release view "$TAG" --repo "$REPO" \
+            --json tagName,name,body \
+            --jq '"# Release " + .tagName + " — " + (.name // "") + "\n\n" + (.body // "(no release notes)")' \
+            > context/RELEASE.md 2>/dev/null \
+            || echo "# Release $TAG (no release metadata)" > context/RELEASE.md
+
+          # Code diff vs the previous release tag.
+          PREV=$(gh api "repos/$REPO/releases?per_page=2" --jq '.[1].tag_name // empty' 2>/dev/null || true)
+          if [ -n "$PREV" ]; then
+            echo "Comparing $PREV...$TAG"
+            gh api "repos/$REPO/compare/$PREV...$TAG" \
+              --jq '.files[] | "=== " + .filename + " (" + .status + ") ===\n" + (.patch // "(binary or no textual patch)")' \
+              > context/CHANGES.patch 2>/dev/null || echo "(unable to compute diff)" > context/CHANGES.patch
+          else
+            echo "(no previous release tag found; this looks like the first tagged release — review the current sources broadly)" > context/CHANGES.patch
+          fi
+
+          # Guard against feeding an enormous diff to the model.
+          head -c 200000 context/CHANGES.patch > context/CHANGES.patch.trim
+          mv context/CHANGES.patch.trim context/CHANGES.patch
+
+      - name: Run Gemini docs sync
+        uses: google-github-actions/run-gemini-cli@v0.1.22 # pin; check for newer release periodically
+        with:
+          gemini_api_key: ${{ secrets.GEMINI_API_KEY }}
+          gemini_model: gemini-2.5-pro
+          prompt: |
+            Follow the instructions in .github/docs-sync/INSTRUCTIONS.md exactly.
+
+            Release context for this run:
+            - Source repo: ${{ steps.vars.outputs.repo }}
+            - Release tag: ${{ steps.vars.outputs.tag }}
+            - Release notes file: ./context/RELEASE.md
+            - Code diff file: ./context/CHANGES.patch
+
+            Edit documentation files under src/content/docs/ in place if and only if
+            the release warrants it. If no user-facing documentation change is needed,
+            make NO edits at all.
+
+      - name: Open draft PR if docs changed
+        env:
+          GH_TOKEN: ${{ steps.app-token-docs.outputs.token }}
+          REPO: ${{ steps.vars.outputs.repo }}
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          set -euo pipefail
+          rm -rf context
+
+          if git diff --quiet -- src/; then
+            echo "::notice title=Docs sync::No documentation changes required for $REPO $TAG — no PR opened."
+            exit 0
+          fi
+
+          BRANCH="docs-sync/$(echo "$REPO" | tr '/' '-')-$TAG"
+          git config user.name "rocketflag-docs-bot[bot]"
+          git config user.email "rocketflag-docs-bot[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add src/
+          git commit -m "docs: sync for $REPO $TAG"
+          git push -f origin "$BRANCH"
+
+          gh pr create --draft --base main --head "$BRANCH" \
+            --title "docs: sync for $REPO $TAG" \
+            --body "Automated documentation sync proposed by Gemini for release **$TAG** of \`$REPO\`.
+
+          These edits were generated from the release diff (\`context/CHANGES.patch\`) and release notes. **Review carefully** before merging — verify code samples, version numbers, and API shapes. If the proposal is wrong or unnecessary, edit or close this PR.
+
+          _Generated by \`.github/workflows/docs-sync.yml\` · model: gemini-2.5-pro_" \
+          || echo "::warning::PR may already exist for $BRANCH"
