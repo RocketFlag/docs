@@ -76,3 +76,22 @@ rf := rocketflag.NewClient(
 	rocketflag.WithHTTPClient(customHTTPClient),
 )
 ```
+
+### Caching Responses
+
+To avoid hitting the API on every check, enable an in-memory cache by configuring the client with the `WithCache` functional option. Cached entries are keyed by flag ID **and** the user context, so different cohorts or environments still resolve independently.
+
+```go
+import (
+	"time"
+	rocketflag "github.com/rocketflag/go-sdk"
+)
+
+// Enable response caching with a 5-minute TTL
+rf := rocketflag.NewClient(
+	// <!-- TODO: verify if the functional option is rocketflag.WithCache or rocketflag.WithCaching, and the exact signature -->
+	rocketflag.WithCache(5 * time.Minute),
+)
+```
+
+Caching is **opt-in** — without configuring a cache TTL, every call goes directly to the API.
