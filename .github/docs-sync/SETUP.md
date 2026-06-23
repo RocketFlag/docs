@@ -113,7 +113,7 @@ must be merged to `main` to go live.
 
 ## Notes & knobs
 
-- **Model:** `gemini-2.5-pro` is set in `docs-sync.yml`. Bump as newer models ship.
+- **Model:** `gemini-flash-latest` is set in `docs-sync.yml`. Change as newer models ship.
 - **No-op behavior:** if Gemini makes no edits, the run logs a notice and opens
   no PR. This is intentional.
 - **Branch protection on `docs`:** require the existing build check + review so
