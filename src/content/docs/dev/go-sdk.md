@@ -76,3 +76,32 @@ rf := rocketflag.NewClient(
 	rocketflag.WithHTTPClient(customHTTPClient),
 )
 ```
+
+### Caching Responses
+
+To avoid hitting the API on every check, enable an in-memory cache by providing a default TTL via `WithCache`. Cached entries are keyed by flag ID **and** the user context, so different cohorts or environments still resolve independently.
+
+```go
+import (
+	"time"
+	rocketflag "github.com/rocketflag/go-sdk"
+)
+
+// Enable response caching with a 5-minute default TTL.
+rf := rocketflag.NewClient(rocketflag.WithCache(5 * time.Minute))
+
+// First call hits the API; subsequent calls within the TTL are served from cache.
+flag, err := rf.GetFlag("your-flag-id", rocketflag.UserContext{})
+```
+
+You can override the TTL for a single call — or disable caching for that call — with `WithCallTTL`:
+
+```go
+// Force a fresh fetch, bypassing the cache for this call.
+flag, err := rf.GetFlag("your-flag-id", nil, rocketflag.WithCallTTL(0))
+
+// Use a shorter TTL just for this call.
+flag, err := rf.GetFlag("your-flag-id", nil, rocketflag.WithCallTTL(10*time.Second))
+```
+
+Caching is **opt-in** — without `WithCache` or a per-call override, every call goes directly to the API.

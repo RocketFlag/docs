@@ -33,7 +33,7 @@ No. A **Protected Key** only grants read access to a single flag's evaluation st
 
 ### Can I cache flag responses?
 
-Yes. The [Node](/dev/node-sdk/#caching-responses) and [React](/dev/react-sdk/#caching-notes--limitations) SDKs support opt-in in-memory caching with a configurable TTL, keyed by flag ID and user context. Caching is off by default.
+Yes. The [Node](/dev/node-sdk/#caching-responses), [React](/dev/react-sdk/#caching-notes--limitations), and [Go](/dev/go-sdk/#caching-responses) SDKs support opt-in in-memory caching with a configurable TTL, keyed by flag ID and user context. Caching is off by default.
 
 ### I don't see the Caretaker tab / analytics / audit logs.
 
