@@ -8,7 +8,7 @@ The RocketFlag Go SDK is a high-performance client for interacting with the Rock
 ### Installation
 
 ```bash
-go get github.com/RocketFlag/go-sdk
+go get github.com/rocketflag/go-sdk
 ```
 
 ### Basic Usage
@@ -19,7 +19,7 @@ package main
 import (
 	"fmt"
 	"log"
-	rocketflag "github.com/RocketFlag/go-sdk"
+	rocketflag "github.com/rocketflag/go-sdk"
 )
 
 func main() {
@@ -84,7 +84,7 @@ To avoid hitting the API on every check, enable an in-memory cache by providing 
 ```go
 import (
 	"time"
-	rocketflag "github.com/RocketFlag/go-sdk"
+	rocketflag "github.com/rocketflag/go-sdk"
 )
 
 // Enable response caching with a 5-minute default TTL.
