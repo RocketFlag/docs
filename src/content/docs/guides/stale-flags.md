@@ -3,13 +3,13 @@ title: Managing Stale Flags
 description: Use the Caretaker to find and safely remove flags you no longer need.
 ---
 
-Feature flags are meant to be temporary. Once a feature is fully rolled out, the flag (and the conditional branches around it in your code) becomes technical debt. RocketFlag's **Caretaker** automatically watches your flags, flags the ones that look ready to retire, and helps you remove them from your codebase.
+Feature flags are meant to be temporary. Once a feature is fully rolled out, the flag (and the conditional branches around it in your code) becomes technical debt. RocketFlag's **Caretaker** automatically watches your flags (including multi-environment **group flags**), flags the ones that look ready to retire, and helps you remove them from your codebase.
 
 > **Availability:** Caretaker is available for **projects that belong to an Organisation on the Teams tier or above**. Personal/legacy projects without an Organisation don't have Caretaker.
 
 ### How Caretaker Classifies Flags
 
-RocketFlag periodically evaluates every flag and assigns it a **Caretaker status**:
+RocketFlag periodically evaluates every flag (and group flag) and assigns it a **Caretaker status**:
 
 | Status      | Meaning                                                                                          |
 | :---------- | :----------------------------------------------------------------------------------------------- |
@@ -22,7 +22,7 @@ Healthy flags are left alone. When a flag becomes **stale** or **dormant**, Rock
 
 ### Spotting Flags That Need Attention
 
-When a flag is stale or dormant, a **Caretaker** badge appears next to its name in the flags table. Hover the badge for a short explanation of why the flag was flagged.
+When a flag (or group flag) is stale or dormant, a **Caretaker** badge appears next to its name in the flags table. Hover the badge for a short explanation of why the flag was flagged.
 
 To act on a flagged flag:
 
@@ -31,9 +31,16 @@ To act on a flagged flag:
 
 The tab shows the current status, an explanation, and the available actions.
 
+#### Weekly Email Digests
+
+In addition to badges in the web console, Organisation Admins of Organisations on the Teams tier or above receive a weekly email digest summarizing all flags (and group flags) that have newly become stale or dormant during that week's scan.
+
 ### Removing a Flag with an AI Coding Agent
 
 The Caretaker tab can generate a tailored **removal prompt** for the flag — context about the flag, its configuration, and its history, written as instructions for an AI coding agent.
+
+- **For single flags:** The prompt generates code removal instructions tailored to the flag's single-environment configuration.
+- **For group flags:** The prompt is environment-aware. It lists each environment's rollout configuration and instructs your agent to remove the flag. It only commits to a specific branch when all environments agree; otherwise, it tells the agent that the live state/branch differs across environments and requests human verification.
 
 1. In the Caretaker tab, click **Generate prompt**.
 2. Click **Copy**.
