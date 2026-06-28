@@ -24,6 +24,9 @@ Feature flags are the building blocks of RocketFlag. They allow you to toggle fe
 #### Toggling
 You can toggle a flag on or off instantly from the flags table using the switch in the "Enabled" column.
 
+#### Searching and Filtering
+You can filter the flags table to find specific flags quickly. Use the filter input above the table to search and filter flags by **name**, **ID**, **description**, or **tags**.
+
 #### Partial Rollouts (Traffic Percentage)
 By setting the traffic percentage to a value like `10%`, the flag will only evaluate to `true` for 10% of requests. 
 > **Note:** Traffic evaluation is randomized per request. If you need consistency for a specific user, use **Cohorts**.
