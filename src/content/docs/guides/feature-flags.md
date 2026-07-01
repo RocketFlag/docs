@@ -31,6 +31,7 @@ You can quickly find flags in the flags table using the search filter. The searc
 - **Description:** Text within the flag's description.
 - **Tags:** Any tags assigned to the flag.
 
+
 #### Partial Rollouts (Traffic Percentage)
 By setting the traffic percentage to a value like `10%`, the flag will only evaluate to `true` for 10% of requests. 
 > **Note:** Traffic evaluation is randomized per request. If you need consistency for a specific user, use **Cohorts**.
