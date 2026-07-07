@@ -42,3 +42,9 @@ GET https://api.rocketflag.app/v1/flags/{flag_id}?env=production
 ```
 
 If the `env` parameter is missing or does not match an environment defined for that flag, the API will return a `404 Not Found`.
+
+### Caretaker Integration
+
+Group flags are fully integrated with RocketFlag's **Caretaker** on the Teams tier and above. If a group flag is fully rolled out across all environments and left unchanged (or gets no traffic), the Caretaker will mark it as stale or dormant.
+
+When removing a group flag, the Caretaker tab can generate an environment-aware **removal prompt** for your AI coding agent, detailing the active state of each environment. See [Managing Stale Flags](/guides/stale-flags/) for details.
