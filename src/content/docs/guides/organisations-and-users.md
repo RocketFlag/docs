@@ -44,11 +44,21 @@ RocketFlag offers several tiers to suit your needs:
 | **Analytics (7 days)**  | No     | Yes      | Yes       |
 | **Org-wide Audit Logs** | No     | No       | Yes       |
 
+### Managing Billing
+
+Organisation Admins can view and manage subscription plans, activate trials, and update payment information from the **Billing** section of Organisation settings.
+
+#### Self-Serve Billing Portal
+
+Admins can click **Manage Payment Method** in Organisation Billing to launch the secure Stripe billing portal. The portal allows you to:
+
+- Update credit card or payment details on file
+- Download past invoices and receipts
+- View billing history and manage active subscriptions
+
 #### Teams Trial
 
 New Organisations on the Free tier can activate a **14-day free trial** of the Teams tier to explore advanced features.
 
 - The trial can be activated once per Organisation by an Admin.
 - After 14 days, the Organisation will revert to the Free tier unless a paid subscription is started.
-
-You can view and manage your subscription or activate your trial in the **Billing** section of your Organisation settings.

@@ -31,7 +31,9 @@ Once you're signed in you can start straight away:
 
 ### Managing Your Account
 
-You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation — see [Organisations & Users](/guides/organisations-and-users/#organisation-tiers).
+You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
+
+For legacy individual subscriptions, you can update payment details, download past invoices, and manage your subscription by clicking **Manage Payment Method** in the **Account** area under **Subscriptions**.
 
 #### Deleting Your Account
 
