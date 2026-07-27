@@ -10,7 +10,7 @@ This approach uses **Group Flags**, allowing you to manage a single flag across 
 
 #### Setup
 1. Create a project and select **Multi Environment**.
-2. Click **Environment Labels** and add your environments (e.g., `dev`, `staging`, `prod`).
+2. Click **Environment Labels** and add your environments (e.g., `dev`, `staging`, `prod`). **Note:** Environment names can only contain letters, numbers, hyphens, and underscores.
 3. Create a **Group Flag**. You will be asked to set the initial state for each environment.
 
 #### Calling the API

@@ -31,7 +31,22 @@ Once you're signed in you can start straight away:
 
 ### Managing Your Account
 
-You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation — see [Organisations & Users](/guides/organisations-and-users/#organisation-tiers).
+You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
+
+For legacy individual subscriptions, you can update payment details, download past invoices, and manage your subscription by clicking **Manage Payment Method** in the **Account** area under **Subscriptions**.
+
+#### Deleting Your Account
+
+If you wish to close your RocketFlag account:
+
+1. Navigate to the **Account** area of the console.
+2. Scroll to the bottom and click **Delete Account**.
+3. Confirm the deletion.
+
+**Important Safety Rules for Deletion:**
+- **Last-Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Admin** of any Organisation. You must first promote another member to Admin, invite/assign a new Admin, or delete/disband the Organisation first.
+- **Subscription Cancellation:** When you delete your account, any active user-level subscription is automatically cancelled.
+- **Data Cleanup:** All of your personal projects and user details will be permanently removed.
 
 ### Inviting Teammates
 
