@@ -35,12 +35,12 @@ No. A **Protected Key** only grants read access to a single flag's evaluation st
 
 Yes. The [Node](/dev/node-sdk/#caching-responses), [React](/dev/react-sdk/#caching-notes--limitations), and [Go](/dev/go-sdk/#caching-responses) SDKs support opt-in in-memory caching with a configurable TTL, keyed by flag ID and user context. Caching is off by default.
 
-### I don't see the Caretaker tab / analytics / audit logs.
+### I don't see the Caretaker tab / analytics / audit logs / SAML SSO.
 
 These are tier-gated:
 
 - **Caretaker** (stale-flag detection) and **Analytics** require the **Teams** tier or above, on a project that belongs to an Organisation.
-- **Organisation-wide Audit Logs** require the **Ultra** tier.
+- **Organisation-wide Audit Logs** and **Enterprise SAML SSO** require the **Ultra** tier.
 
 See [Organisation Tiers](/guides/organisations-and-users/#organisation-tiers).
 

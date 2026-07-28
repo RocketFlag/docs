@@ -10,9 +10,9 @@ Understanding these core concepts will help you get the most out of RocketFlag.
 You don't need to set anything up to start — you can create a **personal project** (owned by just you) the moment you sign in. The free tier includes up to **3 personal projects**, which is ideal for trying RocketFlag, side projects, or solo work.
 
 An **Organisation** is a shared workspace for working with a team. It's the top-level container for projects and people, and serves as your billing entity.
-- **Roles:** Organisations support **Admins** (full control) and **Members** (can manage flags but not organisation settings).
-- **Tiers:** Options include Free, Teams, and Ultra, offering different levels of features and limits.
-- **Team features:** Inviting members, project sharing, the stale-flag [Caretaker](../../guides/stale-flags), analytics, and organisation-wide audit logs require an Organisation (on the relevant tier).
+- **Roles:** Organisations support a four-tier role hierarchy — **Owner** (workspace & billing control), **Admin** (projects, members & sharing), **Editor** (flags & content), and **Viewer** (read-only). See [Organisations & Users](../../guides/organisations-and-users/#roles--permissions).
+- **Tiers:** Options include Free, Teams, and Ultra, offering different feature levels and unlimited seat limits on paid plans.
+- **Team features:** Inviting members, project sharing, the stale-flag [Caretaker](../../guides/stale-flags), analytics, organisation-wide audit logs, and enterprise SAML SSO require an Organisation (on the relevant tier).
 
 A personal project can be [moved into an Organisation](../../guides/projects-and-environments#moving-a-project-into-an-organisation) at any time — your flag IDs stay the same, so nothing breaks in your code.
 

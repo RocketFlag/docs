@@ -43,7 +43,7 @@ If you are using a Multi-Environment project:
 
 ### Project Visibility
 
-Every project that belongs to an Organisation is visible to **all members of that Organisation**. Admins can manage all projects; Members can manage flags within them. See [Organisations & Users](/guides/organisations-and-users/) for roles.
+Every project that belongs to an Organisation is visible to **all members of that Organisation**. Owners and Admins can manage all projects and environment labels; Editors can create and manage flags within them; Viewers have read-only access. See [Organisations & Users](/guides/organisations-and-users/#roles--permissions) for full role details.
 
 ### Sharing a Project with Specific People
 
@@ -62,7 +62,7 @@ Adding an email shares the project with that person; removing an email revokes t
 If you have a personal project (one that isn't yet part of an Organisation), you can move it into an Organisation so your team can collaborate on it.
 
 1. On the **Projects** page, click the **Move to Organisation** icon on the project.
-2. Choose the **destination Organisation**. *(You must be an Admin of the destination Organisation.)*
+2. Choose the **destination Organisation**. *(You must be an Owner or Admin of the destination Organisation.)*
 3. Click **Move Project**.
 
 All existing flags and evaluations continue to work without interruption — flag IDs don't change, so your application keeps working through the move.

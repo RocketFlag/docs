@@ -7,7 +7,7 @@ RocketFlag is managed through the web console at [console.rocketflag.app](https:
 
 ### Ways to Sign In
 
-RocketFlag offers three sign-in methods. Whichever you choose the first time becomes your account identity, so use the same method each time.
+RocketFlag offers options for individual users and enterprise teams. Whichever method you choose the first time becomes your account identity, so use the same method each time.
 
 #### Continue with GitHub
 Click **Sign in with GitHub** and authorise RocketFlag. On your first sign-in you'll be asked for a **display name** to identify you to your teammates (for example in audit logs).
@@ -22,6 +22,9 @@ Enter your email address and we'll send you a unique sign-in link.
 
 Open the link to complete sign-in. If you open the link on a **different device or browser** from the one you requested it on, you'll be asked to re-enter your email address to confirm it's you.
 
+#### Enterprise SAML Single Sign-On (SAML SSO)
+For organisations on the **Ultra** tier with SAML SSO configured, team members can sign in using their corporate Identity Provider (IdP). Enter your work email address to be automatically directed to your company's SAML login portal. See [Enterprise SAML SSO](/guides/organisations-and-users/#enterprise-saml-sso).
+
 ### After Signing In
 
 Once you're signed in you can start straight away:
@@ -31,7 +34,7 @@ Once you're signed in you can start straight away:
 
 ### Managing Your Account
 
-You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
+You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation and are managed by Organisation **Owners** — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
 
 For legacy individual subscriptions, you can update payment details, download past invoices, and manage your subscription by clicking **Manage Payment Method** in the **Account** area under **Subscriptions**.
 
@@ -44,7 +47,7 @@ If you wish to close your RocketFlag account:
 3. Confirm the deletion.
 
 **Important Safety Rules for Deletion:**
-- **Last-Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Admin** of any Organisation. You must first promote another member to Admin, invite/assign a new Admin, or delete/disband the Organisation first.
+- **Last Owner/Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Owner** or **Admin** of any Organisation. You must first promote another member to Owner/Admin, assign a new Owner/Admin, or delete/disband the Organisation first.
 - **Subscription Cancellation:** When you delete your account, any active user-level subscription is automatically cancelled.
 - **Data Cleanup:** All of your personal projects and user details will be permanently removed.
 
