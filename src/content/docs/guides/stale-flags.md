@@ -33,7 +33,7 @@ The tab shows the current status, an explanation, and the available actions.
 
 #### Weekly Email Digests
 
-In addition to badges in the web console, Organisation Admins of Organisations on the Teams tier or above receive a weekly email digest summarizing all flags (and group flags) that have newly become stale or dormant during that week's scan.
+In addition to badges in the web console, Organisation Owners and Admins of Organisations on the Teams tier or above receive a weekly email digest summarizing all flags (and group flags) that have newly become stale or dormant during that week's scan.
 
 ### Removing a Flag with an AI Coding Agent
 
