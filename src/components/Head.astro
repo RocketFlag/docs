@@ -1,0 +1,17 @@
+---
+// Wraps Starlight's default Head to add GA4. The docs were previously entirely
+// unmeasured; this stream (G-K1G7DVZ675) lives on the same rocketflag-website
+// property as the marketing site and console, so journeys join up.
+import Default from '@astrojs/starlight/components/Head.astro';
+---
+<Default><slot /></Default>
+<script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-K1G7DVZ675"></script>
+<script is:inline>
+  var dnt = navigator.doNotTrack || window.doNotTrack;
+  if (dnt !== "1" && dnt !== "yes") {
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){ dataLayer.push(arguments); }
+    gtag('js', new Date());
+    gtag('config', 'G-K1G7DVZ675');
+  }
+</script>
