@@ -16,10 +16,12 @@ Not sure which to pick? Start with a personal project and [move it into an Organ
 
 ### Creating a Project
 
-When you create a project from the **Projects** page, it's a **personal** project. To create a project inside an Organisation, open that Organisation first, then create the project there.
+When you first sign in with no existing projects or organisations, RocketFlag guides you to set up an Organisation and start a 14-day Teams trial, or to create a personal project.
 
-1. Navigate to the **Projects** page.
-2. Click **New Project**.
+When you create a project from your personal dashboard, click **New Personal Project**. To create a project inside an Organisation, open that Organisation first and click **New Project**.
+
+1. Navigate to the **Projects** page (or open your Organisation).
+2. Click **New Personal Project** (or **New Project** in an Organisation).
 3. Choose your project type:
    - **Single Environment:** A straightforward container for flags.
    - **Multi-Environment:** For managing flags across Dev, Staging, and Production.

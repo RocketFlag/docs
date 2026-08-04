@@ -27,10 +27,12 @@ For organisations on the **Ultra** tier with SAML SSO configured, team members c
 
 ### After Signing In
 
-Once you're signed in you can start straight away:
+When you sign in for the first time without any projects or organisations, RocketFlag guides you through setting up an **Organisation** with a **14-day Teams trial** by default (no credit card required). This provides instant access to team features like member invitations, project sharing, Caretaker, and analytics.
 
-1. **Create your first Project and Flag** — you can create a **personal project** (owned by just you) with no extra setup. Follow the [Quick Start Guide](/guides/quick-start/).
-2. **Create an Organisation** (optional) — if you're working with a team, create an Organisation to invite members and unlock team features. See [Organisations & Users](/guides/organisations-and-users/).
+If you prefer working solo, you can choose to create a **personal project** instead. You can also create personal projects or additional organisations at any time.
+
+1. **Set up an Organisation (recommended):** Creates your shared workspace and starts a 14-day free trial of the Teams tier. See [Organisations & Users](/guides/organisations-and-users/).
+2. **Create a Personal Project:** Quick start for solo development with no extra setup. Follow the [Quick Start Guide](/guides/quick-start/).
 
 ### Managing Your Account
 
