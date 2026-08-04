@@ -9,9 +9,11 @@ Managing your team effectively is key to a smooth feature flagging workflow. Roc
 
 ### Creating an Organisation
 
-1. Navigate to the **Organisations** page.
+1. Navigate to the **Organisations** page (or complete the first-run onboarding screen).
 2. Click **New Organisation**.
 3. Give your organisation a name and click **Create**.
+
+When you create a new Organisation, RocketFlag automatically starts a **14-day free trial** of the **Teams** tier (no credit card required) so you and your team can immediately try out advanced features.
 
 ### Managing Users
 
@@ -79,7 +81,9 @@ Owners can click **Manage Payment Method** in Organisation Billing to launch the
 
 #### Teams Trial
 
-New Organisations on the Free tier can activate a **14-day free trial** of the Teams tier to explore advanced features.
+New Organisations automatically start on a **14-day free trial** of the Teams tier to explore advanced features (unlimited seats, multi-environment flags, protected keys, analytics, and Caretaker). No credit card is required.
 
-- The trial can be activated once per Organisation by an Owner or Admin.
-- After 14 days, the Organisation will revert to the Free tier unless a paid subscription is started.
+- The trial can be activated once per Organisation.
+- After 14 days, if no paid subscription is started, the Organisation enters a **write-locked** state.
+- While write-locked, creating new projects, creating flags, and editing flag configurations are disabled. Helpful banners and tooltips on console controls explain why actions are locked.
+- **Resource deletion remains permitted** while write-locked so you can remove flags, group flags, or projects to wind down or clean up your workspace without needing to start a subscription first.
