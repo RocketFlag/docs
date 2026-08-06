@@ -43,7 +43,7 @@ A **Flag** is the core entity of the service. It represents a feature or a condi
 
 ### Audit Logs
 
-Every change to a flag's state (creation, update, toggle, deletion) is recorded in the **Audit Logs**, providing a history of who changed what and when.
+Every change to flags (creation, update, toggle, deletion) and organisation settings (member invitations, role updates, removals) is recorded in the **Audit Logs**, providing a history of who changed what and when.
 
 ### Caretaker (Stale & Dormant Flags)
 
