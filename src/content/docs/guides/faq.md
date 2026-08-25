@@ -40,7 +40,7 @@ Yes. The [Node](/dev/node-sdk/#caching-responses), [React](/dev/react-sdk/#cachi
 These are tier-gated:
 
 - **Caretaker** (stale-flag detection) and **Analytics** require the **Teams** tier or above, on a project that belongs to an Organisation.
-- **Organisation-wide Audit Logs** and **Enterprise SAML SSO** require the **Ultra** tier.
+- **Organisation-wide Audit Logs** and **SAML SSO** require the **Enterprise** tier.
 
 See [Organisation Tiers](/guides/organisations-and-users/#organisation-tiers).
 

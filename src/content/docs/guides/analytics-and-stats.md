@@ -3,7 +3,7 @@ title: Analytics & Stats
 description: Monitoring flag performance and rollout metrics.
 ---
 
-RocketFlag provides built-in analytics to help you understand how your features are performing in the wild. Analytics are available for Organisations on the **Teams** and **Ultra** tiers.
+RocketFlag provides built-in analytics to help you understand how your features are performing in the wild. Analytics are available for Organisations on the **Teams** and **Enterprise** tiers.
 
 ### How it Works
 
