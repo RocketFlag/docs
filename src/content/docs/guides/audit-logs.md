@@ -20,8 +20,8 @@ To see the history of a specific flag:
 3. Select the **Activity** or **History** tab.
 4. A list of all historical changes for that flag will be displayed, including the action, the data changed, the timestamp, and the author.
 
-#### Organisation-Level Logs (Ultra Tier)
-Organisations on the **Ultra** tier have access to a global audit feed. This allows Owners and Admins to monitor activity across the entire workspace.
+#### Organisation-Level Logs (Enterprise Tier)
+Organisations on the **Enterprise** tier have access to a global audit feed. This allows Owners and Admins to monitor activity across the entire workspace.
 - **Access:** Found in the main navigation bar under **Audit Logs**.
 - **Filtering:** You can filter the logs by **Project**, **Author** (email), and **Date Range**.
 - **Export:** Audit logs can be viewed in the dashboard to maintain a complete trail of all configuration changes.

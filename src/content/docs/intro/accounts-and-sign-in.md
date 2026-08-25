@@ -23,7 +23,7 @@ Enter your email address and we'll send you a unique sign-in link.
 Open the link to complete sign-in. If you open the link on a **different device or browser** from the one you requested it on, you'll be asked to re-enter your email address to confirm it's you.
 
 #### Enterprise SAML Single Sign-On (SAML SSO)
-For organisations on the **Ultra** tier with SAML SSO configured, team members can sign in using their corporate Identity Provider (IdP). Enter your work email address to be automatically directed to your company's SAML login portal. See [Enterprise SAML SSO](/guides/organisations-and-users/#enterprise-saml-sso).
+For organisations on the **Enterprise** tier with SAML SSO configured, team members can sign in using their corporate Identity Provider (IdP). Enter your work email address to be automatically directed to your company's SAML login portal. See [Enterprise SAML SSO](/guides/organisations-and-users/#enterprise-saml-sso).
 
 ### After Signing In
 

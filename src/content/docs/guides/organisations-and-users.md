@@ -48,7 +48,7 @@ RocketFlag uses a ranked four-tier role hierarchy (`Owner > Admin > Editor > Vie
 
 ### Enterprise SAML SSO
 
-Organisations on the **Ultra** tier can configure **Enterprise SAML Single Sign-On (SSO)** via Identity Platform.
+Organisations on the **Enterprise** tier can configure **SAML Single Sign-On (SSO)** via Identity Platform.
 
 - **Seamless Sign-In:** Allows team members to sign in using your company's corporate identity provider (IdP).
 - **Domain Lookup:** Users entering an email address matching a configured SAML domain are automatically routed to your identity provider.
@@ -57,7 +57,7 @@ Organisations on the **Ultra** tier can configure **Enterprise SAML Single Sign-
 
 RocketFlag offers several tiers to suit your needs:
 
-| Feature                 | Free   | Teams     | Ultra     |
+| Feature                 | Free   | Teams     | Enterprise     |
 | :---------------------- | :----- | :-------- | :-------- |
 | **Seat Limit**          | 1 User | Unlimited | Unlimited |
 | **Multi-Env Flags**     | Yes    | Yes       | Yes       |
@@ -74,7 +74,7 @@ Organisation **Owners** can view and manage subscription plans, activate trials,
 
 Owners can click **Manage Payment Method** in Organisation Billing to launch the secure Stripe billing portal. The portal allows you to:
 
-- Switch self-serve between subscription plans (e.g., Teams and Ultra)
+- Switch self-serve between subscription plans (e.g., Teams and Enterprise)
 - Update credit card or payment details on file
 - Download past invoices and receipts
 - Schedule period-end cancellations or resume pending cancellations before the period ends

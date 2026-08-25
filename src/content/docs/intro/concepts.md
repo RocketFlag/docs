@@ -11,7 +11,7 @@ When you sign in for the first time without any projects or organisations, Rocke
 
 An **Organisation** is a shared workspace for working with a team. It's the top-level container for projects and people, and serves as your billing entity.
 - **Roles:** Organisations support a four-tier role hierarchy — **Owner** (workspace & billing control), **Admin** (projects, members & sharing), **Editor** (flags & content), and **Viewer** (read-only). See [Organisations & Users](../../guides/organisations-and-users/#roles--permissions).
-- **Tiers:** Options include Free, Teams, and Ultra, offering different feature levels and unlimited seat limits on paid plans.
+- **Tiers:** Options include Free, Teams, and Enterprise, offering different feature levels and unlimited seat limits on paid plans.
 - **Team features:** Inviting members, project sharing, the stale-flag [Caretaker](../../guides/stale-flags), analytics, organisation-wide audit logs, and enterprise SAML SSO require an Organisation (on the relevant tier).
 
 A personal project can be [moved into an Organisation](../../guides/projects-and-environments#moving-a-project-into-an-organisation) at any time — your flag IDs stay the same, so nothing breaks in your code.
