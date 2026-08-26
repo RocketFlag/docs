@@ -1,45 +1,15 @@
 ---
 title: Protected Keys
-description: Securing your feature flags with protected keys.
+description: Protected keys have been retired in RocketFlag 2.7.0.
 ---
 
-**Protected Keys** are an optional security feature designed to prevent unauthorized access to flag names and statuses.
+> **Note:** **Protected Keys have been retired as of RocketFlag 2.7.0.** The feature has been removed from both the console and the public Evaluation API.
 
-### How it Works
+### Overview
 
-When a Protected Key is enabled for a flag, the RocketFlag API will only return a successful response if the correct key is provided in the request. If the key is missing or incorrect, the API returns a **404 Not Found**.
+Protected Keys previously allowed you to require a shared secret in front of a flag's evaluation. A check across production showed no flags or group flags actively using this feature, so it was removed in RocketFlag 2.7.0 to simplify flag evaluation and reduce latency.
 
-This ensures that even if someone guesses your flag ID, they cannot determine if the flag exists or what its state is without the key.
+### Upgrading from Protected Keys
 
-### Setting Up a Protected Key
-
-1.  Navigate to your flag settings.
-2.  Find the **Protected Key** field.
-3.  Enter a secret key (or generate a random one).
-4.  Save the flag.
-
-### Using Protected Keys in Requests
-
-You can provide the protected key to the API in two ways:
-
-#### 1. Via HTTP Header
-Include a header named `x-rocketflag-key`.
-
-```bash
-curl -H "x-rocketflag-key: YOUR_SECRET_KEY" \
-  "https://api.rocketflag.app/v1/flags/YOUR_FLAG_ID"
-```
-
-#### 2. Via Query Parameter
-Add a `key` parameter to the URL.
-
-```bash
-curl "https://api.rocketflag.app/v1/flags/YOUR_FLAG_ID?key=YOUR_SECRET_KEY"
-```
-
-### SDK Integration
-
-Both the Node.js and Go SDKs support protected keys by passing the key in the context/options object when calling `getFlag`.
-
-- **Node.js:** `await rocketflag.getFlag(flagId, { key: "YOUR_SECRET_KEY" })`
-- **Go:** `rf.GetFlag(flagId, rocketflag.UserContext{ "key": "YOUR_SECRET_KEY" })`
+- **Console:** The **Protected Key** field is no longer present when creating or editing flags.
+- **API & SDKs:** Evaluation requests no longer require or validate the `key` query parameter or `x-rocketflag-key` header. If your application code passes a `key` parameter or context, you can safely remove it. Flag state is evaluated strictly by Flag ID, environment, and user cohort.
