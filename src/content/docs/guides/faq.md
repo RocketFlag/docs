@@ -9,7 +9,6 @@ A `404` from the evaluation API means one of:
 
 - The **Flag ID is wrong** — copy it again from the flags table in the [console](https://console.rocketflag.app).
 - The flag is a **Group (Multi-Environment) Flag** and you didn't pass `env`, or the `env` value doesn't match a defined environment label. The `env` parameter is **case-sensitive**. See [Group Flags](/guides/group-flags/).
-- The flag has a **Protected Key** and you didn't supply it (or supplied the wrong one). Protected flags deliberately return `404` so their existence can't be probed. See [Protected Keys](/dev/protected-keys/).
 
 ### I renamed an environment and now I get `404`.
 
@@ -26,10 +25,6 @@ Traffic-percentage rollouts are evaluated **randomly per request**, so a user be
 ### My analytics numbers look behind.
 
 Analytics are processed in batches. Usage counts update frequently, but there can be a delay of up to **10–15 minutes** before the latest hits appear in the charts. Analytics require the **Teams** tier or above. See [Analytics & Stats](/guides/analytics-and-stats/).
-
-### Is the Protected Key the same as my account credentials?
-
-No. A **Protected Key** only grants read access to a single flag's evaluation state and is safe to use in application code. It is unrelated to your account login, which authenticates the private management API used by the console. See [Security & Privacy](/guides/security-and-privacy/).
 
 ### Can I cache flag responses?
 

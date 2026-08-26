@@ -18,11 +18,12 @@ To see the history of a specific flag:
 1. Navigate to the project containing the flag.
 2. Click on the flag name in the table to open the **Flag Details** drawer.
 3. Select the **Activity** or **History** tab.
-4. A list of all historical changes for that flag will be displayed, including the action, the data changed, the timestamp, and the author.
+4. A list of all historical changes for that flag will be displayed, including the action, the data changed, the timestamp, and the author. Expanding an entry shows a highlighted diff: removed values in red, added values in green, and unchanged fields dimmed out.
 
 #### Organisation-Level Logs (Enterprise Tier)
 Organisations on the **Enterprise** tier have access to a global audit feed. This allows Owners and Admins to monitor activity across the entire workspace.
 - **Access:** Found in the main navigation bar under **Audit Logs**.
+- **Diff View:** Expanding any log entry shows a highlighted diff of changes, making it easy to spot additions, deletions, and moves.
 - **Filtering:** You can filter the logs by **Project**, **Author** (email), and **Date Range**.
 - **Export:** Audit logs can be viewed in the dashboard to maintain a complete trail of all configuration changes.
 

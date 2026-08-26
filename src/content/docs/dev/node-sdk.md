@@ -58,15 +58,6 @@ const flag = await rocketflag.getFlag(flagId, {
 });
 ```
 
-#### Protected Keys
-Provide the protected key in the options:
-
-```javascript
-const flag = await rocketflag.getFlag(flagId, {
-  key: "YOUR_PROTECTED_KEY"
-});
-```
-
 ### Custom Configuration
 
 You can customize the API URL or version if necessary:

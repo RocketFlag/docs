@@ -28,7 +28,6 @@ A **Flag** is the core entity of the service. It represents a feature or a condi
 - **Enabled:** A global toggle to turn the feature on or off.
 - **Traffic Percentage:** Control the rollout by enabling the flag for a specific percentage of requests (0-100%).
 - **Cohorts:** Target specific users or groups by providing a list of identifiers (emails, IDs, etc.).
-- **Protected Keys:** Add an extra layer of security requiring a key to be sent with the API request.
 
 ### Group Flags (Multi-Env)
 

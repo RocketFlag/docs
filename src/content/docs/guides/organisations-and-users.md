@@ -61,7 +61,6 @@ RocketFlag offers several tiers to suit your needs:
 | :---------------------- | :----- | :-------- | :-------- |
 | **Seat Limit**          | 1 User | Unlimited | Unlimited |
 | **Multi-Env Flags**     | Yes    | Yes       | Yes       |
-| **Protected Keys**      | No     | Yes       | Yes       |
 | **Analytics (7 days)**  | No     | Yes       | Yes       |
 | **Org-wide Audit Logs** | No     | No        | Yes       |
 | **Enterprise SAML SSO** | No     | No        | Yes       |
@@ -81,7 +80,7 @@ Owners can click **Manage Payment Method** in Organisation Billing to launch the
 
 #### Teams Trial
 
-New Organisations automatically start on a **14-day free trial** of the Teams tier to explore advanced features (unlimited seats, multi-environment flags, protected keys, analytics, and Caretaker). No credit card is required.
+New Organisations automatically start on a **14-day free trial** of the Teams tier to explore advanced features (unlimited seats, multi-environment flags, analytics, and Caretaker). No credit card is required.
 
 - The trial can be activated once per Organisation.
 - After 14 days, if no paid subscription is started, the Organisation enters a **write-locked** state.

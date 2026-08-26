@@ -19,6 +19,6 @@ RocketFlag aims to answer one simple question as fast as possible: **"Is this fe
 The service is built with a focus on:
 1. **Speed:** Low-latency API responses.
 2. **Simplicity:** A clean UI and straightforward SDKs.
-3. **Safety:** Protected keys and per-environment isolation.
+3. **Safety:** Per-environment isolation.
 
 Next: [Learn about RocketFlag Concepts](../concepts)

@@ -57,14 +57,6 @@ userContext := rocketflag.UserContext{"env": "production"}
 flag, err := rf.GetFlag(flagKey, userContext)
 ```
 
-#### Protected Keys
-Add the "key" to your `UserContext`:
-
-```go
-userContext := rocketflag.UserContext{"key": "YOUR_PROTECTED_KEY"}
-flag, err := rf.GetFlag(flagKey, userContext)
-```
-
 ### Custom Configuration
 
 Customize the client by passing functional options to `NewClient`:
