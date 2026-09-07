@@ -45,6 +45,6 @@ If the `env` parameter is missing or does not match an environment defined for t
 
 ### Caretaker Integration
 
-Group flags are fully integrated with RocketFlag's **Caretaker** on the Teams tier and above. If a group flag is fully rolled out across all environments and left unchanged (or gets no traffic), the Caretaker will mark it as stale or dormant.
+Group flags are fully integrated with RocketFlag's **Caretaker** on the Teams tier and above. If a group flag is fully rolled out across all environments and left unchanged (or gets no traffic), the Caretaker will mark it as stale or dormant. When stale flags exist in the project, an **Only show stale flags** switch appears next to the filter input to view only the affected group flags.
 
-When removing a group flag, the Caretaker tab can generate an environment-aware **removal prompt** for your AI coding agent, detailing the active state of each environment. See [Managing Stale Flags](/guides/stale-flags/) for details.
+When removing a group flag, the Caretaker tab can generate an environment-aware **removal prompt** for your AI coding agent, detailing the active state of each environment. Note that if the group flag still has cohort targeting attached (either globally or overridden on any environment), the Caretaker will withhold prompt generation and indicate that the flag is not ready for removal until all cohort targeting is cleared. See [Managing Stale Flags](/guides/stale-flags/) for details.
