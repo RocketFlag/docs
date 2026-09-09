@@ -36,9 +36,10 @@ If you prefer working solo, you can choose to create a **personal project** inst
 
 ### Managing Your Account
 
-You can update your profile and manage your account from the **Account** area of the console. Billing and subscription settings live under your Organisation and are managed by Organisation **Owners** — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
-
-For legacy individual subscriptions, you can update payment details, download past invoices, and manage your subscription by clicking **Manage Payment Method** in the **Account** area under **Subscriptions**.
+You can update your profile and manage your account from the **Account** area of the console:
+- **Profile:** Update your display name.
+- **Notifications:** Customize your notification preferences, such as turning on or off the weekly Caretaker digest emails for stale and dormant flags.
+- **Subscriptions & Billing:** For legacy individual subscriptions, you can update payment details, download past invoices, and manage your subscription by clicking **Manage Payment Method** under **Subscriptions**. Organisation billing is managed under Organisation settings by Organisation **Owners and Admins** — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
 
 #### Deleting Your Account
 

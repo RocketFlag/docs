@@ -30,6 +30,8 @@ You can quickly find flags in the flags table using the search filter. The searc
 - **Description:** Text within the flag's description.
 - **Tags:** Any tags assigned to the flag.
 
+When a project has flags identified as stale by the [Caretaker](/guides/stale-flags/), an **Only show stale flags** toggle switch appears next to the search bar to let you quickly narrow the view down to flags ready for retirement.
+
 
 #### Partial Rollouts (Traffic Percentage)
 By setting the traffic percentage to a value like `10%`, the flag will only evaluate to `true` for 10% of requests. 

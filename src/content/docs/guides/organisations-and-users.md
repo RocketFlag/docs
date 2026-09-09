@@ -24,7 +24,7 @@ You can invite teammates to your Organisation to collaborate on projects.
 1. Within your Organisation dashboard, find the **Members** section in the navigation header.
 2. Click **Invite Member**.
 3. Enter their email address and select an initial role (**Admin**, **Editor**, or **Viewer**):
-   - **Admin:** Full management of projects, flags, environment labels, member invitations/roles (up to Admin), and project sharing.
+   - **Admin:** Full management of projects, flags, environment labels, member invitations/roles (up to Admin), project sharing, and billing.
    - **Editor:** Can create, update, and toggle flags, group flags, and project content.
    - **Viewer:** Read-only access to projects and flags.
 
@@ -34,8 +34,8 @@ You can invite teammates to your Organisation to collaborate on projects.
 
 RocketFlag uses a ranked four-tier role hierarchy (`Owner > Admin > Editor > Viewer`):
 
-- **Owner:** Complete control over the Organisation, including billing management (checkout, Stripe portal, plan changes, and cancellations) and member roles. Every Organisation must retain at least one active Owner.
-- **Admin:** Can manage all projects, flags, group flags, environment labels, member invitations/roles (up to Admin), and project sharing. Cannot manage billing settings or remove/demote Owners.
+- **Owner:** Complete control over the Organisation, including member roles and promoting/demoting Owners. Every Organisation must retain at least one active Owner.
+- **Admin:** Can manage all projects, flags, group flags, environment labels, member invitations/roles (up to Admin), project sharing, and billing management (checkout, Stripe portal, plan changes, and cancellations). Cannot remove or demote Owners.
 - **Editor:** Can manage flag content (create, update, toggle flags and group flags). Cannot delete projects or flags, change Organisation settings, or manage members.
 - **Viewer:** Read-only access to Organisation projects and flags. Cannot create, update, or toggle flags, nor change settings.
 
@@ -67,11 +67,11 @@ RocketFlag offers several tiers to suit your needs:
 
 ### Managing Billing
 
-Organisation **Owners** can view and manage subscription plans, activate trials, and update payment information from the **Billing** section of Organisation settings.
+Organisation **Owners and Admins** can view and manage subscription plans, activate trials, and update payment information from the **Billing** section of Organisation settings.
 
 #### Self-Serve Billing Portal
 
-Owners can click **Manage Payment Method** in Organisation Billing to launch the secure Stripe billing portal. The portal allows you to:
+Owners and Admins can click **Manage Payment Method** in Organisation Billing to launch the secure Stripe billing portal. The portal allows you to:
 
 - Switch self-serve between subscription plans (e.g., Teams and Enterprise)
 - Update credit card or payment details on file

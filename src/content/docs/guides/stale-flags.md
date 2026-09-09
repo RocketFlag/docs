@@ -18,11 +18,13 @@ RocketFlag periodically evaluates every flag (and group flag) and assigns it a *
 | **Dormant** | Has received **no evaluations for 60+ days**. The flag may already be gone from your code, or it's dead code. |
 | **Snoozed** | You've chosen to ignore this flag for a period (see [Snoozing](#snoozing-a-flag)).               |
 
-Healthy flags are left alone. When a flag becomes **stale** or **dormant**, RocketFlag surfaces it so you can act.
+Healthy flags are left alone. When a flag becomes **stale** or **dormant**, RocketFlag surfaces it so you can act. Any rollout modification — including toggling the flag on/off, adjusting traffic percentage, or updating cohort targeting — counts as a rollout change and resets the 30-day clock.
 
 ### Spotting Flags That Need Attention
 
 When a flag (or group flag) is stale or dormant, a **Caretaker** badge appears next to its name in the flags table. Hover the badge for a short explanation of why the flag was flagged.
+
+When a project contains stale flags, an **Only show stale flags** toggle switch appears next to the search filter above the flags table. Turning this toggle on filters the list to show only the stale flags.
 
 To act on a flagged flag:
 
@@ -35,6 +37,8 @@ The tab shows the current status, an explanation, and the available actions.
 
 In addition to badges in the web console, Organisation Owners and Admins of Organisations on the Teams tier or above receive a weekly email digest summarizing all flags (and group flags) that have newly become stale or dormant during that week's scan.
 
+You can turn off these digest emails at any time in the **Account** section of the console under **Notifications**.
+
 ### Removing a Flag with an AI Coding Agent
 
 The Caretaker tab can generate a tailored **removal prompt** for the flag — context about the flag, its configuration, and its history, written as instructions for an AI coding agent.
@@ -42,7 +46,9 @@ The Caretaker tab can generate a tailored **removal prompt** for the flag — co
 - **For single flags:** The prompt generates code removal instructions tailored to the flag's single-environment configuration.
 - **For group flags:** The prompt is environment-aware. It lists each environment's rollout configuration and instructs your agent to remove the flag. It only commits to a specific branch when all environments agree; otherwise, it tells the agent that the live state/branch differs across environments and requests human verification.
 
-1. In the Caretaker tab, click **Generate prompt**.
+> **Cohort targeting and deletion readiness:** A flag that still has cohorts attached returns `false` for any request without a matching cohort, so a 100% rollout is only 100% of that cohort. While such a flag can still become stale, it is **not ready for removal** because removing the conditional would expose the active branch to all users. In this case, the Caretaker displays a **Not ready for removal** alert naming the targeted cohorts (or restricted environments) and withholds prompt generation until the cohort targeting is removed.
+
+1. In the Caretaker tab, click **Generate prompt**. (If cohorts are still attached, remove them first to unlock prompt generation.)
 2. Click **Copy**.
 3. Paste it into your AI coding agent (Cursor, GitHub Copilot, Claude, etc.).
 
