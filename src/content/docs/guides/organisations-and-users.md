@@ -9,11 +9,10 @@ Managing your team effectively is key to a smooth feature flagging workflow. Roc
 
 ### Creating an Organisation
 
-1. Navigate to the **Organisations** page (or complete the first-run onboarding screen).
-2. Click **New Organisation**.
-3. Give your organisation a name and click **Create**.
+1. Open the workspace switcher in the header and select **New Organisation** (or use the prompt on the first-run onboarding screen).
+2. Give your organisation a name and click **Create**.
 
-When you create a new Organisation, RocketFlag automatically starts a **14-day free trial** of the **Teams** tier (no credit card required) so you and your team can immediately try out advanced features.
+When you create a new Organisation, RocketFlag automatically starts a **14-day free trial** of the **Teams** tier in the same step (no credit card required) so you and your team can immediately try out advanced features.
 
 ### Managing Users
 
@@ -34,7 +33,7 @@ You can invite teammates to your Organisation to collaborate on projects.
 
 RocketFlag uses a ranked four-tier role hierarchy (`Owner > Admin > Editor > Viewer`):
 
-- **Owner:** Complete control over the Organisation, including member roles and promoting/demoting Owners. Every Organisation must retain at least one active Owner.
+- **Owner:** Complete control over the Organisation, including member roles, promoting/demoting Owners, and deleting the organisation. Every Organisation must retain at least one active Owner.
 - **Admin:** Can manage all projects, flags, group flags, environment labels, member invitations/roles (up to Admin), project sharing, and billing management (checkout, Stripe portal, plan changes, and cancellations). Cannot remove or demote Owners.
 - **Editor:** Can manage flag content (create, update, toggle flags and group flags). Cannot delete projects or flags, change Organisation settings, or manage members.
 - **Viewer:** Read-only access to Organisation projects and flags. Cannot create, update, or toggle flags, nor change settings.
@@ -45,6 +44,28 @@ RocketFlag uses a ranked four-tier role hierarchy (`Owner > Admin > Editor > Vie
 
 - **Pending:** The user has been invited but has not yet accepted via the invitation email.
 - **Active:** The user has joined and has access to the Organisation.
+
+### Deleting an Organisation
+
+An Organisation **Owner** can permanently delete an Organisation from the **Settings** tab.
+
+#### Eligibility Requirements
+
+To prevent accidental data loss or stranded billing subscriptions, an Organisation can only be deleted when:
+
+- **You are the sole remaining active member:** All other active members must be removed first. Outstanding (pending) invitations do not block deletion and are removed automatically with the Organisation.
+- **No active subscription exists:** The Organisation must not have an active paid subscription. If you have an active subscription, cancel it in the **Billing** tab and wait for the billing period to end before deleting. Organisations on an active trial, write-locked, or in an unpaid state can be deleted immediately.
+
+The Settings page displays any blockers upfront so you know what needs to be sorted before deleting.
+
+#### How to Delete
+
+1. Navigate to the Organisation and click the **Settings** tab.
+2. In the **Danger Zone**, click **Delete Organisation**.
+3. Type the organisation's name to confirm.
+4. Click **Yes, delete organisation**.
+
+> **Warning:** Deletion is permanent and immediate. Deleting an Organisation synchronously removes the organisation and all of its associated projects, flags, group flags, and environment configurations.
 
 ### Enterprise SAML SSO
 
@@ -67,7 +88,10 @@ RocketFlag offers several tiers to suit your needs:
 
 ### Managing Billing
 
-Organisation **Owners and Admins** can view and manage subscription plans, activate trials, and update payment information from the **Billing** section of Organisation settings.
+Organisation **Owners and Admins** can view and manage subscription plans, activate trials, and update payment information from the **Billing** tab.
+
+- **Purchasing a plan:** You can subscribe to the **Teams** or **Enterprise** plan directly from the billing page using the **Get Teams** or **Get Enterprise** buttons. If you prefer to speak with our team first, click **Talk to someone** to email sales directly.
+- **Role permissions:** Billing management is available to Owners and Admins. Members with Editor or Viewer roles who cannot manage billing see an explanation of who in the organisation can manage billing.
 
 #### Self-Serve Billing Portal
 

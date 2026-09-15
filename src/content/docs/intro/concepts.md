@@ -10,7 +10,7 @@ Understanding these core concepts will help you get the most out of RocketFlag.
 When you sign in for the first time without any projects or organisations, RocketFlag guides you through setting up an **Organisation** with a **14-day Teams trial** by default (no credit card required). You can also choose to start with a **personal project** (owned by just you). The free tier includes up to **3 personal projects**, which is ideal for side projects or solo work.
 
 An **Organisation** is a shared workspace for working with a team. It's the top-level container for projects and people, and serves as your billing entity.
-- **Roles:** Organisations support a four-tier role hierarchy — **Owner** (workspace & member control), **Admin** (projects, members, sharing & billing), **Editor** (flags & content), and **Viewer** (read-only). See [Organisations & Users](../../guides/organisations-and-users/#roles--permissions).
+- **Roles:** Organisations support a four-tier role hierarchy — **Owner** (workspace & member control, organisation deletion), **Admin** (projects, members, sharing & billing), **Editor** (flags & content), and **Viewer** (read-only). See [Organisations & Users](../../guides/organisations-and-users/#roles--permissions).
 - **Tiers:** Options include Free, Teams, and Enterprise, offering different feature levels and unlimited seat limits on paid plans.
 - **Team features:** Inviting members, project sharing, the stale-flag [Caretaker](../../guides/stale-flags), analytics, organisation-wide audit logs, and enterprise SAML SSO require an Organisation (on the relevant tier).
 
@@ -42,7 +42,7 @@ A **Flag** is the core entity of the service. It represents a feature or a condi
 
 ### Audit Logs
 
-Every change to flags (creation, update, toggle, deletion) and organisation settings (member invitations, role updates, removals) is recorded in the **Audit Logs**, providing a history of who changed what and when.
+Every change to flags (creation, update, toggle, deletion) and organisation settings (member invitations, role updates, removals, organisation deletion) is recorded in the **Audit Logs**, providing a history of who changed what and when.
 
 ### Caretaker (Stale & Dormant Flags)
 

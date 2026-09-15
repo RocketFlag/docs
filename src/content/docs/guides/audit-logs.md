@@ -9,7 +9,7 @@ RocketFlag provides detailed **Audit Logs** to help you track changes, debug iss
 
 An audit entry is created for significant actions across flags and organisation management:
 - **Flag Activity:** Creating, updating (including name, description, traffic percentage, or cohort overrides), toggling, or deleting flags.
-- **Organisation & Team Changes:** Organisation creation, inviting members, updating member roles, and removing members.
+- **Organisation & Team Changes:** Organisation creation, deletion, inviting members, updating member roles, and removing members.
 
 ### Viewing Audit Logs
 

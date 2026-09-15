@@ -50,7 +50,7 @@ If you wish to close your RocketFlag account:
 3. Confirm the deletion.
 
 **Important Safety Rules for Deletion:**
-- **Last Owner/Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Owner** or **Admin** of any Organisation. You must first promote another member to Owner/Admin, assign a new Owner/Admin, or delete/disband the Organisation first.
+- **Last Owner/Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Owner** or **Admin** of any Organisation. You must first promote another member to Owner/Admin, assign a new Owner/Admin, or [delete the Organisation](/guides/organisations-and-users/#deleting-an-organisation) first.
 - **Subscription Cancellation:** When you delete your account, any active user-level subscription is automatically cancelled.
 - **Data Cleanup:** All of your personal projects and user details will be permanently removed.
 
