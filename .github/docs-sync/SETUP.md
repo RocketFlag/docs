@@ -24,9 +24,9 @@ Files in this system:
 - `<source repo>/.github/workflows/notify-docs.yml` — dispatch on release.
 
 Source repos wired up: `RocketFlag/node-sdk`, `RocketFlag/react-sdk`,
-`RocketFlag/go-sdk`, `RocketFlag/rocketflag`.
+`RocketFlag/go-sdk`, `RocketFlag/python-sdk`, `RocketFlag/rocketflag`.
 
-> **Prerequisite:** all five repos must live under the **RocketFlag org** so a
+> **Prerequisite:** all six repos must live under the **RocketFlag org** so a
 > single org-level secret covers everything. If `rocketflag` is still under
 > `jgunnink`, transfer it first (Settings → General → Transfer ownership →
 > RocketFlag). After transfer, `github.repository` in its workflow becomes
@@ -57,7 +57,7 @@ Create it, then note the **App ID** and **Generate a private key** (downloads a
 ## 2. Install the App (once)
 
 From the App's page → **Install App** → install on the **RocketFlag org**, and
-select the five repos: `docs`, `node-sdk`, `react-sdk`, `go-sdk`, `rocketflag`.
+select the six repos: `docs`, `node-sdk`, `react-sdk`, `go-sdk`, `python-sdk`, `rocketflag`.
 
 One installation now covers every repo, so `docs-sync.yml` mints all its tokens
 from the same org installation.
@@ -70,8 +70,8 @@ repositories** = the five repos above:
 
 | Secret                  | Scope                                   | Value                                    |
 | ----------------------- | --------------------------------------- | ---------------------------------------- |
-| `DOCS_BOT_APP_ID`       | org secret, selected repos              | the App ID                               |
-| `DOCS_BOT_PRIVATE_KEY`  | org secret, selected repos              | full contents of the `.pem` file         |
+| `DOCS_BOT_APP_ID`       | org secret, selected repos (include `python-sdk`) | the App ID                        |
+| `DOCS_BOT_PRIVATE_KEY`  | org secret, selected repos (include `python-sdk`) | full contents of the `.pem` file |
 | `GEMINI_API_KEY`        | org secret, **docs only** (or repo secret) | key from Google AI Studio (free tier ok) |
 
 Get the Gemini key at https://aistudio.google.com/apikey.

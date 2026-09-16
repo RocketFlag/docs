@@ -67,6 +67,7 @@ export default defineConfig({
 						{ label: 'Node SDK', slug: 'dev/node-sdk' },
 						{ label: 'React SDK', slug: 'dev/react-sdk' },
 						{ label: 'Go SDK', slug: 'dev/go-sdk' },
+						{ label: 'Python SDK (beta)', slug: 'dev/python-sdk' },
 						{ label: 'Unofficial SDKs', slug: 'dev/unofficial-sdks' },
 						{ label: 'Protected Keys', slug: 'dev/protected-keys' },
 						{ label: 'Per-Environment Cohorts', slug: 'dev/per-env-cohorts' },
