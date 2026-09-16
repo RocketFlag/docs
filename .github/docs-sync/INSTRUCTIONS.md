@@ -45,6 +45,7 @@ not invent changes or make cosmetic edits just to produce a diff.
 | `RocketFlag/node-sdk`      | `src/content/docs/dev/node-sdk.md`                                 |
 | `RocketFlag/react-sdk`     | `src/content/docs/dev/react-sdk.md`                                |
 | `RocketFlag/go-sdk`        | `src/content/docs/dev/go-sdk.md`                                   |
+| `RocketFlag/python-sdk`    | `src/content/docs/dev/python-sdk.md` (beta)                        |
 | `RocketFlag/rocketflag`    | `src/content/docs/dev/api-reference.md`, `dev/protected-keys.md`, `dev/per-env-cohorts.md`, and `src/content/docs/guides/*` and `intro/*` where the release changes user-facing app/API behavior |
 
 Treat the mapping as a starting point — if the diff clearly affects another
