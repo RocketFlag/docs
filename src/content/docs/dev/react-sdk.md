@@ -103,6 +103,20 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", { cohort: "beta", env: "staging"
 
 > **Input validation:** the client validates its arguments and throws synchronously for bad input — `flagId` must be a non-empty string, context values must be `string`/`number`/`boolean`, and `env` must be alphanumeric. These surface via the hook's `error` field.
 
+#### Attributes and sticky rollouts
+
+Add a `targetingKey` for sticky percentage rollouts, and any other keys as audience attributes, in the same context object:
+
+```tsx
+const { enabled } = useFlag("IFldMzqP5jtv9wAL", {
+  targetingKey: user.id,
+  plan: "pro",
+  country: "AU",
+});
+```
+
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. In TypeScript, the `UserContext` type currently declares only `cohort` and `env`, so an object literal with other keys fails type-checking until the next SDK release widens the type. Until then, cast the object (`{ plan: "pro" } as UserContext`). Building it as a variable does not help on its own, because TypeScript still rejects an object that shares no property with `UserContext` unless it also carries `cohort` or `env`. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+
 #### Per-call cache override
 
 Pass cache options as the third argument to override the provider default for a single call (or `0` to force a fresh fetch):

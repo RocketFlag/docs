@@ -11,11 +11,15 @@
 
 ## Developer reference
 - [API reference](https://docs.rocketflag.app/dev/api-reference/): GET /v1/flags/{id}, unauthenticated
-- [Node SDK](https://docs.rocketflag.app/dev/node-sdk/) · [React SDK](https://docs.rocketflag.app/dev/react-sdk/) · [Go SDK](https://docs.rocketflag.app/dev/go-sdk/)
+- [Node SDK](https://docs.rocketflag.app/dev/node-sdk/) · [React SDK](https://docs.rocketflag.app/dev/react-sdk/) · [Go SDK](https://docs.rocketflag.app/dev/go-sdk/) · [Python SDK](https://docs.rocketflag.app/dev/python-sdk/)
+- [Management API](https://docs.rocketflag.app/api/management/): token-authenticated /api/v1 endpoints to list, read, create and patch flags
+- [CI recipes](https://docs.rocketflag.app/dev/ci-recipes/): flip and audit flags from CI pipelines with the Management API
+- [API changelog](https://docs.rocketflag.app/dev/api-changelog/): dated changes to the public and management APIs
 - [Protected keys](https://docs.rocketflag.app/dev/protected-keys/) · [Per-environment cohorts](https://docs.rocketflag.app/dev/per-env-cohorts/)
 
 ## Guides
 - [Feature flags](https://docs.rocketflag.app/guides/feature-flags/) · [Group flags](https://docs.rocketflag.app/guides/group-flags/)
+- [Audiences](https://docs.rocketflag.app/guides/audiences/): reusable project-level targeting groups shared across flags
 - [Stale flags & Caretaker](https://docs.rocketflag.app/guides/stale-flags/)
 - [Organisations & users](https://docs.rocketflag.app/guides/organisations-and-users/)
 - [FAQ](https://docs.rocketflag.app/guides/faq/)

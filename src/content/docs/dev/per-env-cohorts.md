@@ -34,3 +34,7 @@ To help you quickly identify which environments are using overrides, a **"Cohort
 ### API Integration
 
 There are no changes required to your API or SDK calls. Simply continue sending the `env` and `cohort` parameters as usual. The RocketFlag backend handles the override/fallback logic automatically.
+
+### Cohorts and audiences together
+
+In the console the cohort list is labelled **Always on for**. A cohort match is always on: if the request's `cohort` is in the environment's effective list, the flag is `true` regardless of the environment's rollout percentage or audience. An environment can also pick its own [audience](/guides/audiences/), so you can give staging a cohort list of testers and an audience for wider testing while production uses a different audience. Requests that do not match the cohort list continue to the audience and then the rollout. If an environment has cohorts but no audience, requests outside the list get `false`.

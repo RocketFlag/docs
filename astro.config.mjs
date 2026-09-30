@@ -51,6 +51,7 @@ export default defineConfig({
 						{ label: 'Projects & Environments', slug: 'guides/projects-and-environments' },
 						{ label: 'Environment Management', slug: 'guides/environment-management' },
 						{ label: 'Feature Flags', slug: 'guides/feature-flags' },
+						{ label: 'Audiences', slug: 'guides/audiences' },
 						{ label: 'Group (Multi-Env) Flags', slug: 'guides/group-flags' },
 						{ label: 'Analytics & Stats', slug: 'guides/analytics-and-stats' },
 						{ label: 'Audit Logs', slug: 'guides/audit-logs' },
@@ -72,6 +73,14 @@ export default defineConfig({
 						{ label: 'Protected Keys', slug: 'dev/protected-keys' },
 						{ label: 'Per-Environment Cohorts', slug: 'dev/per-env-cohorts' },
 						{ label: 'Sample Projects', slug: 'dev/examples' },
+					],
+				},
+				{
+					label: 'API',
+					items: [
+						{ label: 'Management API', slug: 'api/management' },
+						{ label: 'CI recipes', slug: 'dev/ci-recipes' },
+						{ label: 'API changelog', slug: 'dev/api-changelog' },
 					],
 				},
 			],

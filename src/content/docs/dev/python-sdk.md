@@ -46,6 +46,19 @@ Pass a cohort identifier to target specific users:
 flag = rocketflag.get_flag("ABC123def456", {"cohort": "user@example.com"})
 ```
 
+#### Attributes and sticky rollouts
+
+Add a `targetingKey` for sticky percentage rollouts, and any other keys as audience attributes:
+
+```python
+flag = rocketflag.get_flag(
+    "ABC123def456",
+    {"targetingKey": "user-42", "plan": "pro", "country": "AU"},
+)
+```
+
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. No SDK signature changed: this is the same context you already pass. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+
 #### Working with Group Flags (Environments)
 
 When using Group Flags, specify the environment (`env` must be alphanumeric):
