@@ -13,7 +13,7 @@ https://api.rocketflag.app
 
 ### Authentication
 
-This reference covers the **public Evaluation API** used by your applications to read flag state. It requires no account credentials — flags are addressed by their **Flag ID**. It is safe to call from frontend, backend, and client-side code.
+This reference covers the **public Evaluation API** used by your applications to read flag state. It requires no account credentials. Flags are addressed by their **Flag ID**. It is safe to call from frontend, backend, and client-side code.
 
 > The **Management API** (reading and changing flag state from scripts and CI) is a separate, authenticated API that is available with API tokens. It is documented in the [Management API reference](/api/management/). The wider set of console endpoints (projects, organisations and so on) remains private and is not part of any public reference.
 
@@ -45,6 +45,8 @@ Returns the state of a specific feature flag. This endpoint supports both single
 | `targetingKey` | string | No | A stable identifier for the end user (a user ID, device ID or email). Makes [percentage rollouts sticky](#sticky-rollouts-and-key-resolution): the same key always gets the same answer. |
 | any other key | string | No | An **attribute** such as `plan=pro` or `country=AU`, matched against the flag's [audience](/guides/audiences/). Only read when the flag has an audience. |
 
+URL-encode `targetingKey` and attribute values the same way as `cohort`. If a key is repeated, its first value is used.
+
 `cohort`, `env` and `targetingKey` are **reserved keys**: they always keep their meaning above and cannot be used as audience attribute keys. Attribute matching is exact and case-sensitive, and an attribute you do not send never matches.
 
 #### Sample Request
@@ -68,9 +70,9 @@ curl "https://api.rocketflag.app/v1/flags/ABC123def456?targetingKey=user-42&plan
 ```
 
 #### Error Responses
-- **400 Bad Request:** Returned if the `cohort` query string could not be decoded — usually because it contains special characters (such as `+`) that weren't URL-encoded. The response body explains how to fix it. Always URL-encode cohort values.
+- **400 Bad Request:** Returned if the `cohort` query string could not be decoded, usually because it contains special characters (such as `+`) that weren't URL-encoded. The response body explains how to fix it. Always URL-encode cohort values.
 - **403 Forbidden:** Returned when access to the flag is not permitted.
-- **404 Not Found:** Returned if the `flag_id` does not exist, or if the `env` parameter is missing/incorrect for a Group Flag.
+- **404 Not Found:** Returned if the `flag_id` does not exist, or if `env` is missing for a Group Flag. An unknown environment returns `enabled: false`.
 - **500 Internal Server Error:** Returned if an unexpected error occurs on the server.
 
 #### Sticky rollouts and key resolution
@@ -110,6 +112,9 @@ Returns a list of all flags associated with a specific project.
 
 #### Endpoint
 `GET /v1/flags/project/{project_id}`
+
+#### Query Parameters
+Takes the same `cohort`, `targetingKey` and attribute parameters as [Evaluate a Flag](#evaluate-a-flag), and applies them to every flag in the project. It does not take `env`.
 
 #### Success Response (`200 OK`)
 ```json

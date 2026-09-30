@@ -8,10 +8,10 @@ These recipes use the [Management API](/api/management/) to change flags from a 
 ### Before you start
 
 1. On a Teams or Enterprise plan, create a token in the console under **Project > Tokens**. Give it `write` permission for the recipes that change flags, and limit it to the environments the pipeline should touch.
-2. Store the secret as `RF_TOKEN` in your CI secret store. In GitHub that is **Settings > Secrets and variables > Actions**.
+2. Store the secret as `ROCKETFLAG_TOKEN` in your CI secret store. In GitHub that is **Settings > Secrets and variables > Actions**.
 3. Find the flag id in the console, or look it up by name: `GET /api/v1/flags?name=my-flag`.
 
-The recipes assume a multi-environment project, so they pass `?env=production`. On a single-environment project, drop the `?env=` part. All of them read the token from `RF_TOKEN` and use the flag id in `FLAG_ID`.
+The recipes assume a multi-environment project, so they pass `?env=production`. On a single-environment project, drop the `?env=` part. All of them read the token from `ROCKETFLAG_TOKEN` and use the flag id in `FLAG_ID`.
 
 :::note
 Every step sets `shell: bash`, which GitHub runs with `-eo pipefail`, and starts with `set -euo pipefail` so the same guarantee holds in any other shell. Without `pipefail`, a failed `curl` piped into `jq` would report `jq`'s success and the job would pass. With it, a non-2xx response from the API fails the step: `curl` exits 22, the pipeline takes that status, and `-e` stops the script.
@@ -37,14 +37,14 @@ jobs:
     steps:
       - name: Enable new-checkout in production
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           curl -sS --fail-with-body -X PATCH \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" \
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"enabled": true}' | jq '{changed, enabled: .flag.enabled}'
 ```
@@ -53,12 +53,12 @@ The same thing in a shell:
 
 ```bash
 set -euo pipefail
-export RF_TOKEN="rf_..."
-FLAG_ID="Zt4nQ8wK2mVx7LpB3hYc"
+export ROCKETFLAG_TOKEN="rf_..."
+FLAG_ID="Gp9rS5dH1jXe6UaM0fTw"
 
 curl -sS --fail-with-body -X PATCH \
   "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-  -H "Authorization: Bearer $RF_TOKEN" \
+  -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"enabled": true}' | jq '{changed, enabled: .flag.enabled}'
 ```
@@ -79,14 +79,14 @@ jobs:
     steps:
       - name: Roll out to 50%
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           curl -sS --fail-with-body -X PATCH \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" \
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"enabled": true, "trafficPercentage": 50}' | jq .flag
 
@@ -102,14 +102,14 @@ jobs:
     steps:
       - name: Roll out to 100%
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           curl -sS --fail-with-body -X PATCH \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" \
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"trafficPercentage": 100}' | jq .flag
 ```
@@ -121,7 +121,7 @@ set -euo pipefail
 patch() {
   curl -sS --fail-with-body -X PATCH \
     "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-    -H "Authorization: Bearer $RF_TOKEN" \
+    -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
     -H "Content-Type: application/json" \
     -d "$1" | jq .flag
 }
@@ -145,14 +145,14 @@ jobs:
     steps:
       - name: Enable new-checkout
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           curl -sS --fail-with-body -X PATCH \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" \
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"enabled": true}' > /dev/null
 
@@ -162,14 +162,14 @@ jobs:
       - name: Kill switch
         if: failure()
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           curl -sS --fail-with-body -X PATCH \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" \
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
             -H "Content-Type: application/json" \
             -d '{"enabled": false}' | jq '{changed, enabled: .flag.enabled}'
 ```
@@ -181,7 +181,7 @@ set -euo pipefail
 off() {
   curl -sS --fail-with-body -X PATCH \
     "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-    -H "Authorization: Bearer $RF_TOKEN" \
+    -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
     -H "Content-Type: application/json" \
     -d '{"enabled": false}' | jq '{changed, enabled: .flag.enabled}'
 }
@@ -203,14 +203,14 @@ jobs:
       - name: Read flag state
         id: flag
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           enabled=$(curl -sS --fail-with-body \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" | jq -r '.enabled')
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" | jq -r '.enabled')
           echo "enabled=$enabled" >> "$GITHUB_OUTPUT"
 
       - name: New checkout tests
@@ -224,7 +224,7 @@ In a shell:
 set -euo pipefail
 enabled=$(curl -sS --fail-with-body \
   "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-  -H "Authorization: Bearer $RF_TOKEN" | jq -r '.enabled')
+  -H "Authorization: Bearer $ROCKETFLAG_TOKEN" | jq -r '.enabled')
 
 if [ "$enabled" = "true" ]; then
   npm run test:new-checkout
@@ -256,15 +256,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Sync cohorts
         env:
-          RF_TOKEN: ${{ secrets.RF_TOKEN }}
-          FLAG_ID: Zt4nQ8wK2mVx7LpB3hYc
+          ROCKETFLAG_TOKEN: ${{ secrets.ROCKETFLAG_TOKEN }}
+          FLAG_ID: Gp9rS5dH1jXe6UaM0fTw
         shell: bash
         run: |
           set -euo pipefail
           body=$(jq -Rn '{cohorts: [inputs | select(length > 0)]}' cohorts.txt)
           curl -sS --fail-with-body -X PATCH \
             "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-            -H "Authorization: Bearer $RF_TOKEN" \
+            -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
             -H "Content-Type: application/json" \
             -d "$body" | jq '{changed, cohorts: .flag.cohorts}'
 ```
@@ -277,18 +277,18 @@ body=$(jq -Rn '{cohorts: [inputs | select(length > 0)]}' cohorts.txt)
 
 curl -sS --fail-with-body -X PATCH \
   "https://api.rocketflag.app/api/v1/flags/$FLAG_ID?env=production" \
-  -H "Authorization: Bearer $RF_TOKEN" \
+  -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
   -H "Content-Type: application/json" \
   -d "$body" | jq '{changed, cohorts: .flag.cohorts}'
 ```
 
-A `cohorts` array replaces the list, it does not append, so the file is the single source of truth. An empty file sends `{"cohorts": []}`, which clears the list. Guard against that if a missing file would be a mistake.
+A `cohorts` array replaces the list, it does not append, so the file is the single source of truth. On a multi-environment project, `cohorts` sets that environment's override. An empty file removes the override, and the environment inherits the flag-wide list (see [Patch](/api/management/#patch)). On a single-environment project, an empty file clears the list. Guard against an empty file if a missing file would be a mistake.
 
 ---
 
 ### Tips
 
 - **Fail loudly.** Keep `--fail-with-body` together with `set -euo pipefail` (or `shell: bash` in GitHub Actions). The error envelope's `detail` tells you what to fix.
-- **Check the token first.** `curl -sS -H "Authorization: Bearer $RF_TOKEN" https://api.rocketflag.app/api/v1/token | jq` prints the token's permission, environments and expiry.
-- **Never echo the secret.** GitHub masks `secrets.RF_TOKEN` in logs, but other CI systems may not. Do not run scripts with `set -x` while the token is in the environment.
-- **Denials send emails.** If a pipeline uses a token outside its permission or environments, the token's owners are emailed. See [Security](/api/management/#security).
+- **Check the token first.** `curl -sS -H "Authorization: Bearer $ROCKETFLAG_TOKEN" https://api.rocketflag.app/api/v1/token | jq` prints the token's permission, environments and expiry.
+- **Never echo the secret.** GitHub masks `secrets.ROCKETFLAG_TOKEN` in logs, but other CI systems may not. Do not run scripts with `set -x` while the token is in the environment.
+- **Denials send emails.** If a pipeline uses a token outside its permission or environments, the token's creator and the organisation's Owners are emailed, at most once per token per 24 hours. See [Security](/api/management/#security).

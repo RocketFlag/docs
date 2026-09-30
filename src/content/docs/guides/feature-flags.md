@@ -15,9 +15,10 @@ Feature flags are the building blocks of RocketFlag. They allow you to toggle fe
    - **Enabled:** The initial state of the flag.
    - **Traffic Percentage:** Set to 100 for a full release, or lower for a partial rollout. Partial rollouts are [sticky per user](#sticky-rollouts).
    - **Tags:** (Optional) Add labels to categorize and filter your flags (e.g., `frontend`, `v2-release`).
-   - **Always on for (Cohorts):** (Optional) A list of specific user identifiers that always get the enabled value.
-   - **Audience:** (Optional) Restrict the flag to requests that match an [audience](/guides/audiences/).
+   - **Cohorts:** (Optional) A list of specific user identifiers that always get the enabled value.
 4. Click **Create**.
+
+After creating the flag, click **Edit** to restrict it to an [audience](/guides/audiences/). In the editor the cohort list is labelled **Always on for** and the percentage is labelled **Rollout**.
 
 ### Managing Flags
 
@@ -56,7 +57,7 @@ FNV-1a is the 64-bit variant (offset basis `14695981039346656037`, prime `109951
 - **Raising the percentage only adds users.** Anyone already enabled stays enabled as you go from 10% to 50% to 100%.
 - **Each flag buckets independently.** The flag ID is part of the hash, so one user is not always in the first 10% of every flag.
 - **Environments share a bucket.** The environment is not part of the hash, so a key lands in the same bucket in every environment of a group flag.
-- **The key is only ever hashed.** RocketFlag does not store it or write it to analytics. Prefer a stable opaque identifier, such as a user ID, over an email address.
+- **The key is only ever hashed.** RocketFlag only hashes the key. It is not saved with your flag data, written to analytics or included in RocketFlag's application logs. Like any URL parameter, it can appear in infrastructure request logs, so prefer a stable opaque identifier, such as a user ID, over an email address.
 
 Three worked examples, handy for testing your own integration:
 

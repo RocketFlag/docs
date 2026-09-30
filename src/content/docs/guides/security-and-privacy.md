@@ -26,7 +26,7 @@ const flag = await rocketflag.getFlag(flagId, { cohort: cohortId });
 RocketFlag uses two distinct APIs to ensure security:
 
 - **Public Evaluation API:** Used by your applications to check flag states. Flags are secured and addressed via **Flag IDs**. It is safe to use in frontend and client-side code.
-- **Management API:** Used by the RocketFlag console, and by your scripts and CI through [API tokens](/api/management/) on the Teams plan. It can change production flags, so keep tokens in server-side code and CI secrets, and **never** call it from untrusted client-side environments.
+- **Management API:** Token-authenticated `/api/v1` endpoints for your scripts and CI ([API tokens](/api/management/), Teams and Enterprise plans). The console uses separate private endpoints. It can change production flags, so keep tokens in server-side code and CI secrets, and **never** call it from untrusted client-side environments.
 
 ### 3. Environment Isolation
 Use **Multi-Environment Projects** to ensure that changes in your `dev` environment can never accidentally impact your `production` users. Each environment is treated as a separate silo by the RocketFlag evaluation engine.

@@ -34,9 +34,9 @@ You can invite teammates to your Organisation to collaborate on projects.
 RocketFlag uses a ranked four-tier role hierarchy (`Owner > Admin > Editor > Viewer`):
 
 - **Owner:** Complete control over the Organisation, including member roles, promoting/demoting Owners, and deleting the organisation. Every Organisation must retain at least one active Owner.
-- **Admin:** Can manage all projects, flags, group flags, environment labels, member invitations/roles (up to Admin), project sharing, and billing management (checkout, Stripe portal, plan changes, and cancellations). Cannot remove or demote Owners.
-- **Editor:** Can manage flag content (create, update, toggle flags and group flags). Cannot delete projects or flags, change Organisation settings, or manage members.
-- **Viewer:** Read-only access to Organisation projects and flags. Cannot create, update, or toggle flags, nor change settings.
+- **Admin:** Can manage all projects, flags, group flags, environment labels, member invitations/roles (up to Admin), project sharing, and billing management (checkout, Stripe portal, plan changes, and cancellations). Can revoke or rotate any [API token](/api/management/). Cannot remove or demote Owners.
+- **Editor:** Can manage flag content (create, update, toggle flags and group flags). Can create, edit and delete [audiences](/guides/audiences/), and create [API tokens](/api/management/) (and revoke or rotate their own). Cannot delete projects or flags, change Organisation settings, or manage members.
+- **Viewer:** Read-only access to Organisation projects and flags, including the list of audiences. Cannot create, update, or toggle flags, nor change settings.
 
 > **Last Owner Guard:** An Organisation cannot demote or remove its last active Owner. You must promote another active member to Owner first.
 

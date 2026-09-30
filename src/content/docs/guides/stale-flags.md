@@ -18,7 +18,7 @@ RocketFlag periodically evaluates every flag (and group flag) and assigns it a *
 | **Dormant** | Has received **no evaluations for 60+ days**. The flag may already be gone from your code, or it's dead code. |
 | **Snoozed** | You've chosen to ignore this flag for a period (see [Snoozing](#snoozing-a-flag)).               |
 
-Healthy flags are left alone. When a flag becomes **stale** or **dormant**, RocketFlag surfaces it so you can act. Any rollout modification — including toggling the flag on/off, adjusting traffic percentage, or updating cohort targeting — counts as a rollout change and resets the 30-day clock.
+Healthy flags are left alone. When a flag becomes **stale** or **dormant**, RocketFlag surfaces it so you can act. Any rollout modification counts as a rollout change and resets the 30-day clock. That includes toggling the flag on or off, adjusting the traffic percentage, updating cohort targeting, or changing the flag's audience (including edits to the audience itself).
 
 ### Spotting Flags That Need Attention
 

@@ -79,8 +79,8 @@ export default defineConfig({
 					label: 'API',
 					items: [
 						{ label: 'Management API', slug: 'api/management' },
-						{ label: 'CI recipes', slug: 'dev/ci-recipes' },
-						{ label: 'API changelog', slug: 'dev/api-changelog' },
+						{ label: 'CI Recipes', slug: 'dev/ci-recipes' },
+						{ label: 'API Changelog', slug: 'dev/api-changelog' },
 					],
 				},
 			],

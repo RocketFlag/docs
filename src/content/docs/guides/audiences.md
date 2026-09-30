@@ -3,6 +3,10 @@ title: Audiences
 description: Target a flag at users by attributes such as plan or region, using reusable project audiences.
 ---
 
+:::caution[Preview]
+Audiences are a first iteration. They are marked **Preview** in the console and may change.
+:::
+
 An **audience** is a named, reusable set of rules over attributes of a request, such as `plan`, `country` or `region`. You define it once in a project, then pick it on any flag (or on one environment of a [group flag](/guides/group-flags/)). The flag is only enabled for requests that match the audience.
 
 Audiences are deliberately simple. There is no regex, no semantic version comparison and no numeric comparison. Every match is an exact string check, which keeps evaluation fast and predictable.
@@ -33,7 +37,6 @@ For example, this audience matches Pro or Team customers in Australia, or anyone
 - **Matching is exact and case-sensitive.** `Pro` does not match `pro`. There is no trimming and no normalisation, so `pro ` with a trailing space does not match `pro`.
 - **An absent attribute never matches.** If the request does not carry the attribute at all, no condition on it matches, including **is not one of**. To treat "no plan sent" as free, use a rule such as `plan` is one of `free` and send `plan=free` from your application.
 - **An empty attribute is still present.** `?plan=` is present with the value `""`, so it can satisfy **is not one of**.
-- An audience with no rules, or a condition with no values, never matches.
 
 ### Limits
 
@@ -43,7 +46,7 @@ For example, this audience matches Pro or Team customers in Australia, or anyone
 | Rules per audience | 5 |
 | Conditions per rule | 3 |
 | Values per condition | 10 |
-| Audience name | 1 to 50 characters |
+| Audience name | 1 to 50 characters. Names must be unique in a project, ignoring case and surrounding whitespace. A duplicate is refused with a `409`. |
 | Attribute key | 1 to 32 characters of letters, digits, `_` and `-`. `cohort`, `env` and `targetingKey` are reserved and cannot be used. |
 | Value | 1 to 64 characters, no leading or trailing whitespace |
 
@@ -55,22 +58,24 @@ Attributes travel as **flat query parameters** on the evaluation request. Any qu
 curl "https://api.rocketflag.app/v1/flags/ABC123def456?targetingKey=user-42&plan=pro&country=AU"
 ```
 
-Values are strings. Attributes are only read when the flag has an audience, so sending extra attributes to a flag without one costs nothing. The SDKs pass attributes through the same context you already use for `cohort` and `env`. See the [Node.js](/dev/node-sdk/#attributes-and-sticky-rollouts), [Go](/dev/go-sdk/#attributes-and-sticky-rollouts), [React](/dev/react-sdk/#attributes-and-sticky-rollouts) and [Python](/dev/python-sdk/#attributes-and-sticky-rollouts) SDK pages.
+Values are strings, and you must URL-encode them as you do `cohort`. If a key is repeated, its first value is used. Attributes are only read when the flag has an audience, so sending extra attributes to a flag without one costs nothing. The SDKs pass attributes through the same context you already use for `cohort` and `env`. See the [Node.js](/dev/node-sdk/#attributes-and-sticky-rollouts), [Go](/dev/go-sdk/#attributes-and-sticky-rollouts), [React](/dev/react-sdk/#attributes-and-sticky-rollouts) and [Python](/dev/python-sdk/#attributes-and-sticky-rollouts) SDK pages.
 
-> **Privacy:** Attributes are read only to match the audience. Because they travel in the URL, prefer coarse values such as `plan` or `region` over personal data such as email addresses.
+> **Privacy:** Attributes are read only to match the audience and are not saved with your flag data. Because they travel in the URL, they can appear in infrastructure request logs like any URL parameter, so prefer coarse values such as `plan` or `region` over personal data such as email addresses.
 
 ### Creating an audience
+
+Editors, Admins and Owners can create, edit and delete audiences. Viewers can see the list.
 
 1. Open a project and select the **Audiences** tab.
 2. Click **New audience** and give it a name.
 3. Add a rule, then add up to three conditions to it. Add more rules (up to five) for alternatives.
-4. Click **Create**.
+4. Click **Create audience**.
 
-You can also create an audience from inside a flag editor by choosing **New audience...** in the Audience field.
+You can also create an audience from inside a flag editor by choosing **New audience...** in the Audience field. That opens a side drawer that only creates. To edit an audience later, use the **Audiences** tab.
 
 #### Try it
 
-Once the audience is saved, open it and use the **Try it** panel. Paste a query string such as `plan=pro&country=AU` and see whether the audience matches and which rule matched. **Try it** runs against the rules as they are saved, not unsaved edits, so save a change before you test it. It uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
+Once the audience is saved, open it and use the **Try it** panel. Paste a query string such as `plan=pro&country=AU` and see whether the audience matches and which rules matched, for example *Matched rules 1 and 2*. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies. **Try it** runs against the rules as they are saved, not unsaved edits, so save a change before you test it. It uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
 
 ### Using an audience on a flag
 

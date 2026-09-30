@@ -100,6 +100,8 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", { cohort: "beta", env: "staging"
 
 - `cohort`: `string | number | boolean` — cohort/variant identifier.
 - `env`: `string` — must be **alphanumeric**. Required for [Group Flags](/guides/group-flags/).
+- `targetingKey`: a stable user identifier that makes percentage rollouts sticky. See [Attributes and sticky rollouts](#attributes-and-sticky-rollouts).
+- any other key: an [audience](/guides/audiences/) attribute, such as `plan` or `country`.
 
 > **Input validation:** the client validates its arguments and throws synchronously for bad input — `flagId` must be a non-empty string, context values must be `string`/`number`/`boolean`, and `env` must be alphanumeric. These surface via the hook's `error` field.
 
@@ -115,7 +117,7 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", {
 });
 ```
 
-Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. In TypeScript, the `UserContext` type currently declares only `cohort` and `env`, so an object literal with other keys fails type-checking until the next SDK release widens the type. Until then, cast the object (`{ plan: "pro" } as UserContext`). Building it as a variable does not help on its own, because TypeScript still rejects an object that shares no property with `UserContext` unless it also carries `cohort` or `env`. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. In TypeScript, the `UserContext` type currently declares only `cohort` and `env`, so an object literal with other keys fails type-checking until the next SDK release widens the type. Until then, cast the object (`{ plan: "pro" } as UserContext`). Building it as a variable does not help on its own, because TypeScript still rejects an object that shares no property with `UserContext` unless it also carries `cohort` or `env`. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). With caching on, each distinct `targetingKey` is a separate cache entry.
 
 #### Per-call cache override
 
