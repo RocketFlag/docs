@@ -36,7 +36,9 @@ The Management API is available on the Teams and Enterprise plans. See the [Mana
 
 #### Evaluation API
 
-The additions below to `GET /v1/flags/{flag_id}` and `GET /v1/flags/project/{project_id}` need no action, but two behaviours change for flags that use cohorts or percentages, and they come first.
+The additions below to `GET /v1/flags/{flag_id}` and `GET /v1/flags/project/{project_id}` need no action, but three behaviours change, and they come first.
+
+- **Behaviour change: an invalid cohort on the project route is a `400`.** `GET /v1/flags/project/{project_id}` with a `cohort` that cannot be decoded now returns `400 Bad Request`, the same as the single-flag route. It used to return `200` with an empty list, which was indistinguishable from a project with no flags. If your code treats an empty list from this route as "no flags", check that it also handles a `400`. Requests with a valid or absent `cohort` are unaffected.
 
 - **Behaviour change: cohort matches are always on.** A request whose `cohort` matches the flag's cohorts now evaluates to `true` regardless of the traffic percentage. Previously a matching cohort still had to pass the percentage, so a cohort-gated flag below 100% was off for some matching cohort members. Flags with no cohorts, or with cohorts at 100%, behave as before.
 - **Behaviour change: sticky percentage rollouts.** Send `targetingKey` (a stable id such as a user id) and a flag below 100% gives that key the same answer on every request, instead of a fresh random draw each time. If you send only `cohort`, the cohort is used as the bucketing key, so those requests are now sticky too. A request that carries neither key is still a random roll on every request, as it always was.

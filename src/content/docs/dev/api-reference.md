@@ -131,3 +131,10 @@ Takes the same `cohort`, `targetingKey` and attribute parameters as [Evaluate a 
   }
 ]
 ```
+
+A project with no flags returns an empty list, `[]`.
+
+#### Error Responses
+- **400 Bad Request:** Returned if the `cohort` query string could not be decoded, the same as for a single flag. Earlier versions answered with an empty list instead, which looked like a project with no flags. Always URL-encode cohort values.
+- **404 Not Found:** Returned if the `project_id` does not exist.
+- **500 Internal Server Error:** Returned if an unexpected error occurs on the server.
