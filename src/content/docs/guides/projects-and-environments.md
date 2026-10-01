@@ -43,6 +43,8 @@ If you are using a Multi-Environment project:
 2. Add the names of your environments (e.g., `dev`, `qa`, `prod`).
 3. These labels will now be available as targets for all Group Flags in this project.
 
+Renaming or deleting an environment label requires confirmation if active environment-restricted [API tokens](/api/management/) are scoped to that environment, as their requests will be refused once the environment name no longer matches.
+
 ### Project Visibility
 
 Every project that belongs to an Organisation is visible to **all members of that Organisation**. Owners and Admins can manage all projects and environment labels; Editors can create and manage flags within them; Viewers have read-only access. See [Organisations & Users](/guides/organisations-and-users/#roles--permissions) for full role details.

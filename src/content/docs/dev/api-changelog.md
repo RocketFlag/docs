@@ -17,9 +17,7 @@ Write your scripts to ignore fields they do not recognise, and they will keep wo
 
 ---
 
-### Unreleased
-
-This entry ships with the next management release and `eval-v` tag. Until then, parts of it are not live.
+### 2.9.0
 
 #### Management API v1
 

@@ -48,7 +48,7 @@ For example, this audience matches Pro or Team customers in Australia, or anyone
 | Values per condition | 10 |
 | Audience name | 1 to 50 characters. Names must be unique in a project, ignoring case and surrounding whitespace. A duplicate is refused with a `409`. |
 | Attribute key | 1 to 32 characters of letters, digits, `_` and `-`. `cohort`, `env` and `targetingKey` are reserved and cannot be used. |
-| Value | 1 to 64 characters, no leading or trailing whitespace |
+| Value | 1 to 64 characters, no leading or trailing whitespace, and cannot contain semicolons (`;`) |
 
 ### Sending attributes from your application
 
@@ -73,9 +73,15 @@ Editors, Admins and Owners can create, edit and delete audiences. Viewers can se
 
 You can also create an audience from inside a flag editor by choosing **New audience...** in the Audience field. That opens a side drawer that only creates. To edit an audience later, use the **Audiences** tab.
 
+Each audience displays its ID on the **Audiences** page and in the editor, with a copy button to easily copy it for use with the [Management API](/api/management/).
+
+To test a new audience, create it first, then open it from the **Audiences** tab. The **Try it** panel is not shown while you are creating an audience, in either the **New audience** form or the flag editor's drawer.
+
 #### Try it
 
-Once the audience is saved, open it and use the **Try it** panel. Paste a query string such as `plan=pro&country=AU` and see whether the audience matches and which rules matched, for example *Matched rules 1 and 2*. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies. **Try it** runs against the rules as they are saved, not unsaved edits, so save a change before you test it. It uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
+Open an existing audience from the **Audiences** tab to use the **Try it** panel. Paste a query string such as `plan=pro&country=AU`, click **Try**, and see whether the audience matches and which rules matched, for example *Matched rules 1 and 2*. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies.
+
+**Try it** checks the rules as they are currently shown in the editor, saved or not, so you can test an edit before you save it. If you have not changed anything, that is the saved rules. The rules on screen are validated exactly as a save would validate them, so while they are incomplete or invalid, **Try** is disabled and the panel shows *Complete the rules above to try them*. A result is cleared as soon as you change a rule, so it never sits beside rules it was not worked out for. **Try it** uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
 
 ### Using an audience on a flag
 
@@ -89,7 +95,7 @@ Open a flag and click **Edit** (for a group flag, edit the environment you want)
 
 On a group flag each environment has its own audience, so staging can target `plan` is one of `pro` while production targets a different audience.
 
-Flags that use an audience show an audience badge in the flags table. Editing an audience updates every flag and environment that uses it. The console lists the affected flags, production first, and asks you to confirm before saving if any of them are enabled. An audience that is still used by a flag cannot be deleted until you clear it from those flags.
+Flags that use an audience show a yellow audience badge in the flags table. Editing an audience updates every flag and environment that uses it. The console lists the affected flags, production first, and asks you to confirm before saving if any of them are enabled. An audience that is still used by a flag cannot be deleted until you clear it from those flags.
 
 ### How a flag is evaluated
 
@@ -102,7 +108,3 @@ Evaluation is a short, fixed sequence. The first step that produces an answer wi
 5. **Rollout.** A rollout of 100% returns `true`. Otherwise the request is bucketed by its [key](/guides/feature-flags/#sticky-rollouts) and gets `true` when its bucket is below the percentage. With no key, it is a random roll on each request.
 
 A request with an invalid `cohort` is rejected with a `400` before any of these steps. Cohorts may contain letters, digits and `. _ - + @ :` only, so an email address or an id such as `uid:1234` is fine.
-
-### When audiences take effect
-
-Audiences take effect once the RocketFlag release that carries them is live. There is nothing for you to check or configure. Until then, a flag with an audience behaves as though it had none.

@@ -82,6 +82,7 @@ RocketFlag offers several tiers to suit your needs:
 | :---------------------- | :----- | :-------- | :-------- |
 | **Seat Limit**          | 1 User | Unlimited | Unlimited |
 | **Multi-Env Flags**     | Yes    | Yes       | Yes       |
+| **Management API**      | No     | Yes (Preview) | Yes (Preview) |
 | **Analytics (7 days)**  | No     | Yes       | Yes       |
 | **Org-wide Audit Logs** | No     | No        | Yes       |
 | **Enterprise SAML SSO** | No     | No        | Yes       |
@@ -102,11 +103,13 @@ Owners and Admins can click **Manage Payment Method** in Organisation Billing to
 - Download past invoices and receipts
 - Schedule period-end cancellations or resume pending cancellations before the period ends
 
+Cancelling a subscription emails the organisation owner (and the Admin who scheduled the cancellation, if different) confirming the date access ends. When the paid period concludes, a second email confirms that the subscription has ended.
+
 #### Teams Trial
 
 New Organisations automatically start on a **14-day free trial** of the Teams tier to explore advanced features (unlimited seats, multi-environment flags, analytics, and Caretaker). No credit card is required.
 
 - The trial can be activated once per Organisation.
 - After 14 days, if no paid subscription is started, the Organisation enters a **write-locked** state.
-- While write-locked, creating new projects, creating flags, and editing flag configurations are disabled. Helpful banners and tooltips on console controls explain why actions are locked.
+- While write-locked, creating new projects, creating flags, editing flag configurations across all environments, managing audiences, and managing API tokens (creating, revoking, rotating) are disabled across all project routes. Helpful banners and tooltips on console controls explain why actions are locked.
 - **Resource deletion remains permitted** while write-locked so you can remove flags, group flags, or projects to wind down or clean up your workspace without needing to start a subscription first.

@@ -50,3 +50,5 @@ We recommend **Multi-Environment Projects** for most teams. It reduces configura
 
 ### Important: Renaming Environments
 If you rename an environment label in the RocketFlag UI, you **must** update the `env` parameter in your application code. The API will return a `404 Not Found` if it receives an environment name it doesn't recognize.
+
+Renaming or removing an environment also affects any [API tokens](/api/management/) limited to that environment. Tokens store the environment name as configured when created, so requests from a token limited to a renamed or deleted environment are refused (and the token's page displays a **No longer exists** marker). The environment label editor warns you and asks for a second click to confirm before a rename or removal would break an active token.
