@@ -47,7 +47,7 @@ Each token has:
 | Setting | Meaning |
 | :--- | :--- |
 | **Permission** | `read` can call the `GET` routes. `write` can also create and patch flags. |
-| **Environments** | Optional. On a multi-environment project you can limit a token to some environments, for example `staging` only. Empty means every environment. |
+| **Environments** | Optional. On a multi-environment project you can limit a token to some environments, for example `staging` only. Empty means every environment. The limit is stored by environment name, so renaming an environment does not update tokens limited to it: their requests for that environment are refused until you revoke them and create new ones. The console marks the stale name on the token's page. |
 | **Expiry** | Optional. A token with an expiry stops working after that time. |
 
 The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. Writes also return `402` while the organisation is write-locked, for example after an expired trial.
