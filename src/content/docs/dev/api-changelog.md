@@ -19,6 +19,8 @@ Write your scripts to ignore fields they do not recognise, and they will keep wo
 
 ### 2.9.0
 
+Released 1 October 2026, together with evaluation release `eval-v1.1.0`.
+
 #### Management API v1
 
 The Management API is available on the Teams and Enterprise plans. See the [Management API reference](/api/management/). API tokens and audiences are a **Preview** first iteration and may change.
