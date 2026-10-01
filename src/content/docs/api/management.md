@@ -63,7 +63,7 @@ The Management API is available on the **Teams and Enterprise plans**, and to or
 | Status | Cause |
 | :--- | :--- |
 | `401` | The header is missing or malformed, the token is unknown, revoked or expired. |
-| `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or a write was attempted while the organisation is write-locked. |
+| `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. Every call returns this until the organisation is back in good standing. |
 
 ```json
 {
@@ -402,7 +402,7 @@ Every error from `/api/v1` has the same body:
 | :--- | :--- | :--- |
 | `400` | The body or query failed validation (every problem is listed), a patch is empty or has an unknown or null key, or the request does not fit the project type (missing or unneeded `env`, unknown environment). | [Patch](#patch), [Create](#create) |
 | `401` | Missing, malformed, unknown, revoked or expired token. | [Auth](#auth) |
-| `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or it is write-locked and you tried to write. | [Auth](#auth) |
+| `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. Reads and writes alike return this until it is back in good standing. | [Auth](#auth) |
 | `403` | A `read` token on a write route, or an environment outside the token's list. The detail names the environment or the permission. | [Security](#security) |
 | `404` | No such flag, or it belongs to another project. Also any path under `/api/v1` that does not exist. | [Get](#get) |
 | `413` | The request body is larger than 1 MiB. | [Create](#create), [Patch](#patch) |
