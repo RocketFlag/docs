@@ -260,7 +260,7 @@ A successful create returns `201` and the new flag in the [standard representati
 
 `audienceId` is optional. Absent or `null` means no audience. An id that is not one of the project's audiences is a `400`.
 
-The API has no endpoint that lists audiences, and the console does not show an audience's id. To find one, attach the audience to a flag in the console once, then read `audienceId` from `GET /api/v1/flags/{id}`.
+The API has no endpoint that lists audiences. To find an audience's id, open the **Audiences** tab in the console or edit the audience, where each audience displays its id with a copy button.
 
 :::note
 A token restricted to some environments can still create flags, but a body that sets state for an environment outside its list is refused with `403`.
