@@ -10,6 +10,9 @@ RocketFlag provides detailed **Audit Logs** to help you track changes, debug iss
 An audit entry is created for significant actions across flags and organisation management:
 - **Flag Activity:** Creating, updating (including name, description, traffic percentage, or cohort overrides), toggling, or deleting flags.
 - **Organisation & Team Changes:** Organisation creation, deletion, inviting members, updating member roles, and removing members.
+- **Changes made with an API token:** The author shows as `token:<id>` together with the token's name, and a key avatar that links to the token's page.
+- **Token lifecycle:** When audit logs are on, the organisation feed records a token being created, rotated, revoked or denied.
+- **Audience changes:** Editing an [audience](/guides/audiences/) is recorded as an audience update, including when the edit changes the flags that use it.
 
 ### Viewing Audit Logs
 

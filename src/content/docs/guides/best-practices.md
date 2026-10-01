@@ -23,9 +23,11 @@ Feature flags are intended to be temporary. Once a feature is 100% rolled out an
 Don't just toggle a feature from 0% to 100%. Use the **Traffic Percentage** to mitigate risk:
 
 1. **0%:** Feature is in the code but disabled for everyone.
-2. **Cohorts (Internal):** Enable the flag for your internal team's emails or IDs.
+2. **Always on for (Internal):** Enable the flag for your internal team's emails or IDs.
 3. **10% Traffic:** Release to a small subset of real users to monitor performance.
 4. **50% -> 100%:** Scale up as confidence grows.
+
+Send a stable `targetingKey` (a user ID, not a per-session value) so rollouts are sticky: the same user keeps the same experience, and raising the percentage only ever adds users. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). To roll out to a slice of one segment, such as only Pro customers, pick an [audience](/guides/audiences/) and set the percentage to apply within it. Keep attributes coarse (`plan`, `region`) rather than personal data.
 
 ### 4. Group Flags vs. Single Flags
 - Use **Group Flags** for long-lived features that need to be tested in staging before production.

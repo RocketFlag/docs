@@ -20,7 +20,13 @@ The `cohort` value contained characters that weren't URL-encoded (a common culpr
 
 ### The same user sometimes sees the feature and sometimes doesn't.
 
-Traffic-percentage rollouts are evaluated **randomly per request**, so a user below 100% traffic won't get a consistent result across requests. For a stable per-user experience, target them with a [**Cohort**](/guides/feature-flags/#targeting-with-cohorts) instead of (or in addition to) a traffic percentage.
+Percentage rollouts are **sticky**, but only when RocketFlag has a key to bucket on. Send a stable identifier as `targetingKey` (or `cohort`) on every evaluation request and a user keeps the same result across requests and across environments. If you send neither, every request is an independent random roll, which is the usual cause of a flickering feature. The SDKs send `targetingKey` when you include it in the context. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+
+Also check that the identifier really is stable: a value that changes per session, such as an anonymous session ID that resets, gives a different bucket each time. If you need certain people always on, add them to **Always on for** ([Cohorts](/guides/feature-flags/#targeting-with-cohorts)).
+
+### My audience doesn't match.
+
+Audience matching is exact and case-sensitive, and an attribute that is not sent never matches, not even **is not one of**. Use the **Try it** panel in the audience editor to paste your query string and see which rule matched. Also confirm the attribute key is spelled the same in your code (keys are case-sensitive) and that it is not one of the reserved keys `cohort`, `env` or `targetingKey`. See [Audiences](/guides/audiences/).
 
 ### My analytics numbers look behind.
 

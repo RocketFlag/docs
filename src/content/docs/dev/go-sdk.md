@@ -49,6 +49,20 @@ userContext := rocketflag.UserContext{"cohort": "user@example.com"}
 flag, err := rf.GetFlag(flagKey, userContext)
 ```
 
+#### Attributes and sticky rollouts
+Add a `targetingKey` for sticky percentage rollouts, and any other keys as audience attributes:
+
+```go
+userContext := rocketflag.UserContext{
+	"targetingKey": "user-42",
+	"plan":         "pro",
+	"country":      "AU",
+}
+flag, err := rf.GetFlag(flagKey, userContext)
+```
+
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. No SDK signature changed: this is the same context you already pass. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). With caching on, each distinct `targetingKey` is a separate cache entry.
+
 #### Working with Group Flags (Environments)
 Specify the environment in the `UserContext`:
 

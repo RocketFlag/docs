@@ -49,6 +49,19 @@ const flag = await rocketflag.getFlag(flagId, {
 });
 ```
 
+#### Attributes and sticky rollouts
+Add a `targetingKey` for sticky percentage rollouts, and any other keys as audience attributes:
+
+```javascript
+const flag = await rocketflag.getFlag(flagId, {
+  targetingKey: "user-42",
+  plan: "pro",
+  country: "AU"
+});
+```
+
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. In TypeScript, the `UserContext` type currently declares only `cohort` and `env`, so an object literal with other keys fails type-checking until the next SDK release widens the type. Until then, cast the object (`{ plan: "pro" } as UserContext`). Building it as a variable does not help on its own, because TypeScript still rejects an object that shares no property with `UserContext` unless it also carries `cohort` or `env`. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+
 #### Working with Group Flags (Environments)
 When using Group Flags, you must specify the environment:
 

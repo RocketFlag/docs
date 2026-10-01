@@ -26,19 +26,25 @@ A **Project** is a logical grouping of related feature flags. A project is eithe
 
 A **Flag** is the core entity of the service. It represents a feature or a conditional path in your application.
 - **Enabled:** A global toggle to turn the feature on or off.
-- **Traffic Percentage:** Control the rollout by enabling the flag for a specific percentage of requests (0-100%).
-- **Cohorts:** Target specific users or groups by providing a list of identifiers (emails, IDs, etc.).
+- **Traffic Percentage:** Control the rollout by enabling the flag for a specific percentage of users (0-100%). Rollouts are sticky: send a stable `targetingKey` and the same user always gets the same answer. See [Sticky rollouts](../../guides/feature-flags/#sticky-rollouts).
+- **Cohorts (Always on for):** Target specific users or groups by providing a list of identifiers (emails, IDs, etc.). A cohort match is always on.
+- **Audience:** Restrict the flag to requests whose attributes match a reusable [audience](../../guides/audiences/).
 
 ### Group Flags (Multi-Env)
 
 **Group Flags** are flags that exist across multiple environments. Each environment can have its own:
 - Enabled status
 - Traffic percentage
+- Audience
 - Environment-specific cohorts (which override global cohorts)
 
 ### Cohorts
 
-**Cohorts** are lists of identifiers used for targeting. When you query a flag, you can provide a `cohort` parameter. If that value exists in the flag's cohort list, the flag will evaluate to `true` (if enabled).
+**Cohorts** are lists of identifiers used for targeting. When you query a flag, you can provide a `cohort` parameter. If that value exists in the flag's cohort list, the flag will evaluate to `true` (if enabled), whatever the traffic percentage. In the console this list is labelled **Always on for**.
+
+### Audiences
+
+An **Audience** is a named set of rules over attributes such as `plan` or `region`, defined once per project and picked on any flag or environment. Rules are OR'd, the conditions inside a rule are AND'd, and matching is exact. Your application sends attributes as flat query parameters alongside `targetingKey`. See [Audiences](../../guides/audiences/).
 
 ### Audit Logs
 

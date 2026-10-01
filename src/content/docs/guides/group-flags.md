@@ -26,8 +26,13 @@ You can set different rollout percentages for different environments. For exampl
 - `staging`: 50%
 - `prod`: 0% (disabled)
 
+Rollouts are sticky per user. The environment is not part of the bucketing hash, so a user who is in the first 50% in `staging` is also in the first 50% in `prod` once you reach 50% there. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+
+#### Per-Environment Audiences
+Each environment can pick its own [audience](/guides/audiences/). Edit an environment and choose an audience in the **Audience** field. For example, `staging` can use an `internal` audience while `prod` uses `pro-customers`. The **Rollout** percentage then applies to the audience in that environment.
+
 #### Per-Environment Cohorts (Overrides)
-You can define specific cohorts for an environment. 
+You can define specific cohorts for an environment (shown in the console as **Always on for**). A cohort match is always on, whatever the rollout percentage. 
 - **Override:** If you set a cohort for the `dev` environment, the system will use that list and **ignore** the global flag-level cohorts for requests targeting `dev`.
 - **Fallback:** If an environment has no specific cohorts defined, it will fall back to using the global cohorts defined on the Group Flag.
 - **Configuration:** These can be added or updated by clicking the **Update** icon for a specific environment in the Group Flags table.

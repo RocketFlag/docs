@@ -18,7 +18,7 @@ RocketFlag periodically evaluates every flag (and group flag) and assigns it a *
 | **Dormant** | Has received **no evaluations for 60+ days**. The flag may already be gone from your code, or it's dead code. |
 | **Snoozed** | You've chosen to ignore this flag for a period (see [Snoozing](#snoozing-a-flag)).               |
 
-Healthy flags are left alone. When a flag becomes **stale** or **dormant**, RocketFlag surfaces it so you can act. Any rollout modification — including toggling the flag on/off, adjusting traffic percentage, or updating cohort targeting — counts as a rollout change and resets the 30-day clock.
+Healthy flags are left alone. When a flag becomes **stale** or **dormant**, RocketFlag surfaces it so you can act. Any rollout modification counts as a rollout change and resets the 30-day clock. That includes toggling the flag on or off, adjusting the traffic percentage, updating cohort targeting, or changing the flag's audience (including edits to the audience itself).
 
 ### Spotting Flags That Need Attention
 
@@ -46,7 +46,7 @@ The Caretaker tab can generate a tailored **removal prompt** for the flag — co
 - **For single flags:** The prompt generates code removal instructions tailored to the flag's single-environment configuration.
 - **For group flags:** The prompt is environment-aware. It lists each environment's rollout configuration and instructs your agent to remove the flag. It only commits to a specific branch when all environments agree; otherwise, it tells the agent that the live state/branch differs across environments and requests human verification.
 
-> **Cohort targeting and deletion readiness:** A flag that still has cohorts attached returns `false` for any request without a matching cohort, so a 100% rollout is only 100% of that cohort. While such a flag can still become stale, it is **not ready for removal** because removing the conditional would expose the active branch to all users. In this case, the Caretaker displays a **Not ready for removal** alert naming the targeted cohorts (or restricted environments) and withholds prompt generation until the cohort targeting is removed.
+> **Cohort and audience targeting and deletion readiness:** A flag that still has cohorts attached returns `false` for any request without a matching cohort, so a 100% rollout is only 100% of that cohort. The same is true of an [audience](/guides/audiences/): a flag with an audience only serves matching requests, so a 100% rollout is only 100% of the audience. While such a flag can still become stale, it is **not ready for removal** because removing the conditional would expose the active branch to all users. In this case, the Caretaker displays a **Not ready for removal** alert naming the targeted cohorts (or restricted environments) and withholds prompt generation until the cohort targeting is removed. Audience targeting blocks the removal prompt in the same way, so clear the audience (choose **Everyone**) as well.
 
 1. In the Caretaker tab, click **Generate prompt**. (If cohorts are still attached, remove them first to unlock prompt generation.)
 2. Click **Copy**.
