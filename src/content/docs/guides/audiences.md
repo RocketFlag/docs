@@ -75,9 +75,13 @@ You can also create an audience from inside a flag editor by choosing **New audi
 
 Each audience displays its ID on the **Audiences** page and in the editor, with a copy button to easily copy it for use with the [Management API](/api/management/).
 
+To test a new audience, create it first, then open it from the **Audiences** tab. The **Try it** panel is not shown while you are creating an audience, in either the **New audience** form or the flag editor's drawer.
+
 #### Try it
 
-The audience editor includes a **Try it** panel. Paste a sample query string such as `plan=pro&country=AU` and see whether the rules on screen would match and, if so, which rules matched (for example *Matched rules 1 and 2*). It checks your unsaved draft, so you no longer have to save first, and the result clears the moment you edit a rule. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies. It uses the same matcher as evaluation, making it the quickest way to confirm case and absent-attribute behaviour.
+Open an existing audience from the **Audiences** tab to use the **Try it** panel. Paste a query string such as `plan=pro&country=AU`, click **Try**, and see whether the audience matches and which rules matched, for example *Matched rules 1 and 2*. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies.
+
+**Try it** checks the rules as they are currently shown in the editor, saved or not, so you can test an edit before you save it. If you have not changed anything, that is the saved rules. The rules on screen are validated exactly as a save would validate them, so while they are incomplete or invalid, **Try** is disabled and the panel shows *Complete the rules above to try them*. A result is cleared as soon as you change a rule, so it never sits beside rules it was not worked out for. **Try it** uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
 
 ### Using an audience on a flag
 
