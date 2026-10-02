@@ -77,7 +77,7 @@ You can also create an audience from inside a flag editor by choosing **New audi
 
 Each audience displays its ID on the **Audiences** page and in the editor, with a copy button to easily copy it for use with the [Management API](/api/management/).
 
-Closing the audience editor modal or drawer without saving keeps your draft rules, restoring them automatically the next time you open the editor with an option to discard unsaved changes.
+Closing the audience editor or drawer without saving keeps your draft, name and rules included, until you save it or leave the page. The next time you open the editor it is restored, with a Discard option to go back to the saved audience.
 
 #### Try it
 
