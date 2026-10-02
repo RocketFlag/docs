@@ -50,7 +50,7 @@ Each token has:
 | **Environments** | Optional. On a multi-environment project you can limit a token to some environments, for example `staging` only. Empty means every environment. The limit is stored by environment name, so renaming an environment does not update tokens limited to it: their requests for that environment are refused until you revoke them and create new ones. The console marks the stale name on the token's page. |
 | **Expiry** | Optional. A token with an expiry stops working after that time. |
 
-The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards.
+The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards. In the console, an organisation below Teams can still see its existing tokens on **Project > Tokens**, read-only: it cannot create, rotate or revoke them there.
 
 ### Creating and managing tokens
 

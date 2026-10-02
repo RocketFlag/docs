@@ -9,6 +9,8 @@ Audiences are a first iteration. They are marked **Preview** in the console and 
 
 An **audience** is a named, reusable set of rules over attributes of a request, such as `plan`, `country` or `region`. You define it once in a project, then pick it on any flag (or on one environment of a [group flag](/guides/group-flags/)). The flag is only enabled for requests that match the audience.
 
+Audiences are available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. An organisation below Teams can still see its existing audiences on the **Audiences** tab, read-only: it cannot create, edit or delete them. An audience that is already attached to a flag keeps working until it is detached.
+
 Audiences are deliberately simple. There is no regex, no semantic version comparison and no numeric comparison. Every match is an exact string check, which keeps evaluation fast and predictable.
 
 ### How an audience is built

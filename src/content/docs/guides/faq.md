@@ -41,6 +41,7 @@ Yes. The [Node](/dev/node-sdk/#caching-responses), [React](/dev/react-sdk/#cachi
 These are tier-gated:
 
 - **Caretaker** (stale-flag detection) and **Analytics** require the **Teams** tier or above, on a project that belongs to an Organisation.
+- **Audiences** require the **Teams** tier or above. An organisation below Teams can still see its existing audiences on the **Audiences** tab, read-only, but cannot create, edit or delete them. See [Audiences](/guides/audiences/).
 - **Organisation-wide Audit Logs** and **SAML SSO** require the **Enterprise** tier.
 
 See [Organisation Tiers](/guides/organisations-and-users/#organisation-tiers).

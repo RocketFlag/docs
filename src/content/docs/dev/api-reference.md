@@ -136,5 +136,5 @@ A project with no flags returns an empty list, `[]`.
 
 #### Error Responses
 - **400 Bad Request:** Returned if the `cohort` query string could not be decoded, the same as for a single flag. Earlier versions answered with an empty list instead, which looked like a project with no flags. Always URL-encode cohort values.
-- **404 Not Found:** Returned if the `project_id` does not exist.
+- A `project_id` that does not exist is not an error: the route returns `200 OK` with an empty list, the same as a project with no flags.
 - **500 Internal Server Error:** Returned if an unexpected error occurs on the server.
