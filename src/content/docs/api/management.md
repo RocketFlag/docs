@@ -47,7 +47,7 @@ Each token has:
 | Setting | Meaning |
 | :--- | :--- |
 | **Permission** | `read` can call the `GET` routes. `write` can also create and patch flags. |
-| **Environments** | Optional. On a multi-environment project you can limit a token to some environments, for example `staging` only. Empty means every environment. The limit is stored by environment name, so renaming an environment does not update tokens limited to it: their requests for that environment are refused until you revoke them and create new ones. The console marks the stale name on the token's page. |
+| **Environments** | Optional. On a multi-environment project you can limit a token to specific environments (such as `staging` only) using checkboxes, or choose **All** for all environments. The limit is stored by environment name, so renaming an environment does not update tokens limited to it: their requests for that environment are refused until you revoke them and create new ones. The console marks the stale name on the token's page. |
 | **Expiry** | Optional. A token with an expiry stops working after that time. |
 
 The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards. In the console, an organisation below Teams can still see its existing tokens on **Project > Tokens**, read-only: it cannot create, rotate or revoke them there.
@@ -56,6 +56,7 @@ The Management API is available on the **Teams and Enterprise plans**, and to or
 
 - **Where.** Tokens belong to organisation projects. A personal project cannot have tokens.
 - **Who.** An Editor, Admin or Owner can create a token. Revoking or rotating a token is open to the person who created it and to any Admin.
+- **Environments.** On a multi-environment project, the creation dialog offers a checkbox for each environment label plus an **All** checkbox. **All** is ticked by default and gives access to all environments (including future ones). Unticking **All** allows you to select one or more specific environments.
 - **Expiry.** The console offers Never, 30 days, 90 days and 365 days. A token can last at most 365 days.
 - **Limit.** A project can have at most 50 active tokens. An expired token that has not been revoked still uses a slot, so revoke tokens you no longer need.
 - **Activity.** Each token has its own page in the console. It shows when the token was last used, its recent activity and any recent denials.
