@@ -9,7 +9,7 @@ Audiences are a first iteration. They are marked **Preview** in the console and 
 
 An **audience** is a named, reusable set of rules over attributes of a request, such as `plan`, `country` or `region`. You define it once in a project, then pick it on any flag (or on one environment of a [group flag](/guides/group-flags/)). The flag is only enabled for requests that match the audience.
 
-Audiences are available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. An organisation below Teams can still see its existing audiences on the **Audiences** tab, read-only: it cannot create, edit or delete them. An audience that is already attached to a flag keeps working until it is detached.
+Audiences are available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. Audiences belong to organisation projects; personal projects cannot have audiences. An organisation below Teams can still see its existing audiences on the **Audiences** tab, read-only: it cannot create, edit or delete them. In the flag editor, the Audience field only offers **Everyone** and any audience already saved on the flag (you can detach an audience, but cannot attach or create one). An audience that is already attached to a flag keeps working until it is detached.
 
 Audiences are deliberately simple. There is no regex, no semantic version comparison and no numeric comparison. Every match is an exact string check, which keeps evaluation fast and predictable.
 
@@ -77,13 +77,13 @@ You can also create an audience from inside a flag editor by choosing **New audi
 
 Each audience displays its ID on the **Audiences** page and in the editor, with a copy button to easily copy it for use with the [Management API](/api/management/).
 
-To test a new audience, create it first, then open it from the **Audiences** tab. The **Try it** panel is not shown while you are creating an audience, in either the **New audience** form or the flag editor's drawer.
+Closing the audience editor modal or drawer without saving keeps your draft rules, restoring them automatically the next time you open the editor with an option to discard unsaved changes.
 
 #### Try it
 
-Open an existing audience from the **Audiences** tab to use the **Try it** panel. Paste a query string such as `plan=pro&country=AU`, click **Try**, and see whether the audience matches and which rules matched, for example *Matched rules 1 and 2*. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies.
+The **Try it** panel is available in the audience editor for both new and existing audiences (including when creating an audience from a flag's drawer). Paste a query string such as `plan=pro&country=AU`, click **Try**, and see whether the audience matches and which rules matched, for example *Matched rules 1 and 2*. Evaluation stops at the first match, but **Try it** lists every rule the query satisfies.
 
-**Try it** checks the rules as they are currently shown in the editor, saved or not, so you can test an edit before you save it. If you have not changed anything, that is the saved rules. The rules on screen are validated exactly as a save would validate them, so while they are incomplete or invalid, **Try** is disabled and the panel shows *Complete the rules above to try them*. A result is cleared as soon as you change a rule, so it never sits beside rules it was not worked out for. **Try it** uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
+**Try it** checks the rules as they are currently shown in the editor, saved or not, so you can test rules before you save. For an existing audience that has not been changed, that is the saved rules; for a new audience or unsaved edit, it tests your draft rules. The rules on screen are validated exactly as a save would validate them, so while they are incomplete or invalid, **Try** is disabled and the panel shows *Complete the rules above to try them*. A result is cleared as soon as you change a rule, so it never sits beside rules it was not worked out for. **Try it** uses the same matcher as evaluation, so it is the quickest way to confirm case and absent-attribute behaviour.
 
 ### Using an audience on a flag
 
