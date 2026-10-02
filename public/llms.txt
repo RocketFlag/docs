@@ -19,7 +19,7 @@
 
 ## Guides
 - [Feature flags](https://docs.rocketflag.app/guides/feature-flags/) · [Group flags](https://docs.rocketflag.app/guides/group-flags/)
-- [Audiences](https://docs.rocketflag.app/guides/audiences/): reusable project-level targeting groups shared across flags
+- [Audiences](https://docs.rocketflag.app/guides/audiences/): reusable project-level targeting groups shared across flags (Teams and Enterprise plans)
 - [Stale flags & Caretaker](https://docs.rocketflag.app/guides/stale-flags/)
 - [Organisations & users](https://docs.rocketflag.app/guides/organisations-and-users/)
 - [FAQ](https://docs.rocketflag.app/guides/faq/)
