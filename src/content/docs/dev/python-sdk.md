@@ -59,9 +59,11 @@ flag = rocketflag.get_flag(
 
 Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. No SDK signature changed: this is the same context you already pass. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). With caching on, each distinct `targetingKey` is a separate cache entry.
 
+Context values must be `str`, `int`, `float`, or `bool`. `None` raises `ValueError`, so leave out an attribute you do not have. `UserContext` and `ContextValue` are exported from `rocketflag` for type annotations.
+
 #### Working with Group Flags (Environments)
 
-When using Group Flags, specify the environment (`env` must be alphanumeric):
+When using Group Flags, specify the environment (environment names may contain letters, numbers, hyphens, and underscores):
 
 ```python
 flag = rocketflag.get_flag("ABC123def456", {"env": "production"})
@@ -87,7 +89,11 @@ flag = rocketflag.get_flag("ABC123def456", {"cohort": "beta"})
 flag = rocketflag.get_flag("ABC123def456", ttl_seconds=0)
 ```
 
-Without a client default or per-call TTL, every call hits the API.
+Without a client default or per-call TTL, every call hits the API. Each distinct context is its own cache entry, so a `targetingKey` per user means an entry per user. The cache is thread-safe, holds at most 10,000 entries by default, and evicts the least recently used (LRU) entry when full. You can configure the limit with `max_entries`:
+
+```python
+rocketflag = create_client(ttl_seconds=300, max_entries=50_000)
+```
 
 ### Error Handling
 
