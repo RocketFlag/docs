@@ -100,11 +100,11 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", { cohort: "beta", env: "staging"
 ```
 
 - `cohort`: `string | number | boolean` — cohort/variant identifier.
-- `env`: `string` — letters, numbers, hyphens, and underscores (e.g. `prod-portals`, `staging_v2`). Required for [Group Flags](/guides/group-flags/).
+- `env`: `string`, letters, numbers, hyphens, and underscores (e.g. `prod-portals`, `staging_v2`). Required for [Group Flags](/guides/group-flags/).
 - `targetingKey`: a stable user identifier that makes percentage rollouts sticky. See [Attributes and sticky rollouts](#attributes-and-sticky-rollouts).
 - any other key: an [audience](/guides/audiences/) attribute, such as `plan` or `country`.
 
-> **Input validation:** the client validates its arguments and throws synchronously for bad input — `flagId` must be a non-empty string, context values must be `string`/`number`/`boolean`, and `env` must contain only alphanumeric characters, hyphens, or underscores. These surface via the hook's `error` field.
+> **Input validation:** the client validates its arguments and throws synchronously for bad input: `flagId` must be a non-empty string, context values must be `string`/`number`/`boolean`, and `env` must contain only alphanumeric characters, hyphens, or underscores. These surface via the hook's `error` field.
 
 #### Attributes and sticky rollouts
 
@@ -120,7 +120,7 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", {
 
 Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). With caching on, each distinct `targetingKey` is a separate cache entry.
 
-In TypeScript, `UserContext` declares `targetingKey`, `cohort`, `env`, and accepts any other key as an audience attribute whose value is a `ContextValue` (`string | number | boolean`), so you no longer need a cast to use sticky percentage rollouts or audiences. Values cannot be `undefined`: passing `{ plan: user.plan }` where `user.plan` may be `undefined` is a compile error, so leave out any keys you do not have. Because `UserContext` is defined with a string index signature, a context typed with a TypeScript `interface` will not implicitly type-check; declare custom context types using a `type` alias instead, or spread the object (`useFlag(id, { ...context })`).
+In TypeScript, `UserContext` declares `targetingKey`, `cohort`, `env`, and accepts any other key as an audience attribute whose value is a `ContextValue` (`string | number | boolean`), so you no longer need a cast to use sticky percentage rollouts or audiences. Values cannot be `undefined`, so leave out any keys you do not have. Passing `{ plan: user.plan }` where `user.plan` may be `undefined` is a compile error. TypeScript cannot see through an optional property on an object you have typed yourself, so that case throws at runtime instead. Because `UserContext` is defined with a string index signature, a context typed with a TypeScript `interface` will not implicitly type-check; declare custom context types using a `type` alias instead, or spread the object (`useFlag(id, { ...context })`).
 
 #### Per-call cache override
 
