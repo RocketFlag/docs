@@ -60,10 +60,12 @@ const flag = await rocketflag.getFlag(flagId, {
 });
 ```
 
-Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. In TypeScript, the `UserContext` type currently declares only `cohort` and `env`, so an object literal with other keys fails type-checking until the next SDK release widens the type. Until then, cast the object (`{ plan: "pro" } as UserContext`). Building it as a variable does not help on its own, because TypeScript still rejects an object that shares no property with `UserContext` unless it also carries `cohort` or `env`. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+
+Every context value must be a `string`, `number`, or `boolean`. Leave out an attribute you do not have rather than passing it as `undefined` (which causes a compile error in TypeScript or throws at runtime). `UserContext` and `ContextValue` are exported for type annotations. Because `UserContext` has a string index signature, declare custom context objects using `type` rather than `interface`, or spread them: `getFlag(flagId, { ...context })`.
 
 #### Working with Group Flags (Environments)
-When using Group Flags, you must specify the environment:
+When using Group Flags, you must specify the environment (environment names may contain letters, numbers, hyphens, and underscores):
 
 ```javascript
 const flag = await rocketflag.getFlag(flagId, {
@@ -103,7 +105,15 @@ const flag = await rocketflag.getFlag("ABC123def456", {}, { ttlSeconds: 0 });
 const flag = await rocketflag.getFlag("ABC123def456", {}, { ttlSeconds: 10 });
 ```
 
-Caching is **opt-in** — without a client default or per-call TTL, every call goes to the API. The cache has no size cap and entries are only evicted when their key is re-requested after expiry; if you call with high-cardinality user contexts (e.g. per-user IDs), construct a new client periodically to release memory.
+Caching is **opt-in** — without a client default or per-call TTL, every call goes to the API. Each distinct context is its own cache entry, so a `targetingKey` per user means an entry per user. The cache holds at most 10,000 entries by default and evicts the least recently used (LRU) entry when full. You can configure this limit with `maxEntries`:
+
+```javascript
+// Cache flag responses for 5 minutes, capping the cache at 50,000 entries.
+const rocketflag = createRocketflagClient(undefined, undefined, {
+  ttlSeconds: 300,
+  maxEntries: 50_000,
+});
+```
 
 ### Error Handling
 
