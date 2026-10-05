@@ -40,6 +40,7 @@ Provider props (all optional):
 | `version`         | API version segment (defaults to `v1`).                                          |
 | `apiUrl`          | Base API URL (defaults to `https://api.rocketflag.app`).                         |
 | `cacheTtlSeconds` | Default cache TTL in seconds, shared across all hooks. Omit to disable caching.  |
+| `cacheMaxEntries` | Maximum number of cached flag responses (defaults to `10000`). Evicts least recently used entry when full. |
 | `client`          | Inject a pre-built client (testing / advanced use).                             |
 
 #### 2. Read a flag with the `useFlag` hook
@@ -99,11 +100,11 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", { cohort: "beta", env: "staging"
 ```
 
 - `cohort`: `string | number | boolean` — cohort/variant identifier.
-- `env`: `string` — must be **alphanumeric**. Required for [Group Flags](/guides/group-flags/).
+- `env`: `string` — letters, numbers, hyphens, and underscores (e.g. `prod-portals`, `staging_v2`). Required for [Group Flags](/guides/group-flags/).
 - `targetingKey`: a stable user identifier that makes percentage rollouts sticky. See [Attributes and sticky rollouts](#attributes-and-sticky-rollouts).
 - any other key: an [audience](/guides/audiences/) attribute, such as `plan` or `country`.
 
-> **Input validation:** the client validates its arguments and throws synchronously for bad input — `flagId` must be a non-empty string, context values must be `string`/`number`/`boolean`, and `env` must be alphanumeric. These surface via the hook's `error` field.
+> **Input validation:** the client validates its arguments and throws synchronously for bad input — `flagId` must be a non-empty string, context values must be `string`/`number`/`boolean`, and `env` must contain only alphanumeric characters, hyphens, or underscores. These surface via the hook's `error` field.
 
 #### Attributes and sticky rollouts
 
@@ -117,11 +118,13 @@ const { enabled } = useFlag("IFldMzqP5jtv9wAL", {
 });
 ```
 
-Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. In TypeScript, the `UserContext` type currently declares only `cohort` and `env`, so an object literal with other keys fails type-checking until the next SDK release widens the type. Until then, cast the object (`{ plan: "pro" } as UserContext`). Building it as a variable does not help on its own, because TypeScript still rejects an object that shares no property with `UserContext` unless it also carries `cohort` or `env`. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). With caching on, each distinct `targetingKey` is a separate cache entry.
+Percentage rollouts are sticky per key: the same `targetingKey` (or, without one, the same `cohort`) gets the same answer every time, so send a stable user identifier. Other keys are matched against the flag's [audience](/guides/audiences/) and are only read when the flag has one. Matching is exact and case-sensitive, and an attribute you do not send never matches. `cohort`, `env` and `targetingKey` are reserved and cannot be audience attributes. The SDK sends every key in the context to the API, so this needs no new method. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). With caching on, each distinct `targetingKey` is a separate cache entry.
+
+In TypeScript, `UserContext` declares `targetingKey`, `cohort`, `env`, and accepts any other key as an audience attribute whose value is a `ContextValue` (`string | number | boolean`), so you no longer need a cast to use sticky percentage rollouts or audiences. Values cannot be `undefined`: passing `{ plan: user.plan }` where `user.plan` may be `undefined` is a compile error, so leave out any keys you do not have. Because `UserContext` is defined with a string index signature, a context typed with a TypeScript `interface` will not implicitly type-check; declare custom context types using a `type` alias instead, or spread the object (`useFlag(id, { ...context })`).
 
 #### Per-call cache override
 
-Pass cache options as the third argument to override the provider default for a single call (or `0` to force a fresh fetch):
+Pass call options as the third argument to override the provider default for a single call (or `0` to force a fresh fetch):
 
 ```tsx
 const { flag } = useFlag("IFldMzqP5jtv9wAL", {}, { ttlSeconds: 0 });
@@ -134,7 +137,7 @@ Need a client outside of React (e.g. in an event handler or loader)? Build one d
 ```ts
 import { createRocketflagClient } from "@rocketflag/react-sdk";
 
-const client = createRocketflagClient(); // (version?, apiUrl?, { ttlSeconds }?)
+const client = createRocketflagClient(); // (version?, apiUrl?, { ttlSeconds, maxEntries }?)
 const flag = await client.getFlag("IFldMzqP5jtv9wAL");
 ```
 
@@ -159,7 +162,7 @@ if (error instanceof APIError) {
 
 ### Testing
 
-Inject a pre-built (or mock) client via the provider's `client` prop. When set, `version`, `apiUrl`, and `cacheTtlSeconds` are ignored, so your components resolve flags without hitting the network:
+Inject a pre-built (or mock) client via the provider's `client` prop. When set, `version`, `apiUrl`, `cacheTtlSeconds`, and `cacheMaxEntries` are ignored, so your components resolve flags without hitting the network:
 
 ```tsx
 const mockClient = {
@@ -180,7 +183,7 @@ Flag fetching runs client-side inside `useEffect`, so **no request is made durin
 ### Caching notes & limitations
 
 - Caching is **opt-in** — without `cacheTtlSeconds` (or a per-call `ttlSeconds`), every check hits the API.
-- The cache has no size cap and entries are only evicted when re-requested after expiry. With high-cardinality contexts (e.g. per-user IDs), remount the provider periodically to release memory.
+- The cache holds at most 10,000 entries by default and evicts the least recently used entry when full. You can customize this limit using the `cacheMaxEntries` provider prop or the `maxEntries` client cache option.
 - **No in-flight de-duplication:** two components requesting the same uncached flag in the same tick may each fire a request before the cache populates.
 - The API is one-flag-per-request, so this SDK offers `useFlag(id)` rather than a bulk `useFlags()`.
 
@@ -205,6 +208,7 @@ import type {
   FlagProps,
   FlagStatus,
   UserContext,
+  ContextValue,
   CacheOptions,
   CallOptions,
   RocketFlagClient,
