@@ -19,8 +19,8 @@ An audit entry is created for significant actions across flags and organisation 
 #### Flag-Level Logs
 To see the history of a specific flag:
 1. Navigate to the project containing the flag.
-2. Click on the flag name in the table to open the **Flag Details** drawer.
-3. Select the **Activity** or **History** tab.
+2. Click on the flag name in the table to open the slide-over **Flag Inspector** drawer.
+3. Select the **Telemetry & SDK Snippet** tab to view the **Activity** feed.
 4. A list of all historical changes for that flag will be displayed, including the action, the data changed, the timestamp, and the author. Expanding an entry shows a highlighted diff: removed values in red, added values in green, and unchanged fields dimmed out.
 
 #### Organisation-Level Logs (Enterprise Tier)

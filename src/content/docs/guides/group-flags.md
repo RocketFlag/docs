@@ -9,16 +9,19 @@ description: Managing flags across multiple environments.
 
 1. Enter a **Multi-Environment Project**.
 2. Click **New Group Flag**.
-3. Provide a **Name** and **Description**.
-4. Configure the default settings for each of your defined environments.
+3. Provide a **Name**, **Description**, and optional **Tags** to categorize and filter your flags.
+4. Configure the settings for each of your defined environments (Enabled state, Audience, per-environment cohort overrides under **Environment Always on for**, and Rollout percentage).
 5. Click **Create**.
 
 ### Environment Isolation
 
 The core benefit of Group Flags is environment isolation. Each environment you've added to the flag can be managed independently.
 
+#### Environment Scope Bar
+Above the Group Flags table, the **Environment Scope Bar** displays `ALL ENVS` alongside pills for each defined environment label with live active counts. You can either view all environments stacked in aligned horizontal lanes or select a specific environment pill (such as `prod` or `staging`) to isolate that environment across all flags in the project.
+
 #### Per-Environment Toggles
-In the Group Flags table, you will see a toggle for each environment. Toggling "on" for `dev` will not affect the `prod` state.
+In the Group Flags table, each environment lane features its own toggle switch. Toggling "on" for `dev` will not affect the `prod` state. Non-production toggles update immediately, while toggling a flag off in a production environment prompts for confirmation.
 
 #### Per-Environment Traffic
 You can set different rollout percentages for different environments. For example:
@@ -26,7 +29,7 @@ You can set different rollout percentages for different environments. For exampl
 - `staging`: 50%
 - `prod`: 0% (disabled)
 
-Rollouts are sticky per user. The environment is not part of the bucketing hash, so a user who is in the first 50% in `staging` is also in the first 50% in `prod` once you reach 50% there. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts).
+Rollouts are sticky per user. The environment is not part of the bucketing hash, so a user who is in the first 50% in `staging` is also in the first 50% in `prod` once you reach 50% there. See [Sticky rollouts](/guides/feature-flags/#sticky-rollouts). Traffic rollout is shown in the table as a clean chip (`All` at 100%, or the percentage when below 100%).
 
 #### Per-Environment Audiences
 Each environment can pick its own [audience](/guides/audiences/). Edit an environment and choose an audience in the **Audience** field. For example, `staging` can use an `internal` audience while `prod` uses `pro-customers`. The **Rollout** percentage then applies to the audience in that environment.
@@ -35,7 +38,15 @@ Each environment can pick its own [audience](/guides/audiences/). Edit an enviro
 You can define specific cohorts for an environment (shown in the console as **Always on for**). A cohort match is always on, whatever the rollout percentage. 
 - **Override:** If you set a cohort for the `dev` environment, the system will use that list and **ignore** the global flag-level cohorts for requests targeting `dev`.
 - **Fallback:** If an environment has no specific cohorts defined, it will fall back to using the global cohorts defined on the Group Flag.
-- **Configuration:** These can be added or updated by clicking the **Update** icon for a specific environment in the Group Flags table.
+- **Configuration:** These can be configured directly inside each environment tab when creating or updating a Group Flag, or updated individually by clicking the **Edit** icon for a specific environment lane in the table.
+
+### Inspecting and Editing Flags
+
+Clicking any group flag row opens the slide-over **Flag Inspector Drawer**, organised into two tabs:
+- **Targeting & Rollout:** Live per-environment switches, rollout sliders, global cohort chip management, audience summaries, and evaluation precedence order.
+- **Telemetry & SDK Snippet:** Real-time evaluation charts, the immutable activity audit log, and ready-to-copy API and SDK integration snippets.
+
+An **Edit Flag** button in the drawer header opens the edit modal directly.
 
 
 ### Targeting Environments via API
