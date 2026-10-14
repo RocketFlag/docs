@@ -54,7 +54,7 @@
   <!-- Text -->
   <g transform="translate(130, 235)">
     <text x="0" y="0" font-family="'Inter', 'Segoe UI', system-ui, sans-serif" font-weight="800" font-size="48" text-anchor="middle" letter-spacing="-1">
-      <tspan fill="#1E293B">Rocket</tspan><tspan fill="#22d3ee">Flag</tspan>
+      <tspan fill="#1E293B">Rocket</tspan><tspan fill="#6BC2DC">Flag</tspan>
     </text>
   </g>
 </svg>

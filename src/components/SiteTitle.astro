@@ -1,0 +1,10 @@
+---
+const { siteTitleHref } = Astro.locals.starlightRoute;
+---
+
+<a href={siteTitleHref} class="site-title sl-flex" translate="no">
+	<img src="/favicon.svg" alt="RocketFlag" width="26" height="26" class="brand-logo" />
+	<span class="brand-wordmark">Rocket<span class="brand-wordmark-accent">Flag</span></span>
+	<span class="brand-divider" aria-hidden="true">/</span>
+	<span class="brand-section">Docs</span>
+</a>
