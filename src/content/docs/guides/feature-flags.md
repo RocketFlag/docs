@@ -30,7 +30,7 @@ You can quickly find flags in the flags table using the search filter. The searc
 - **Name:** The human-readable name of the flag.
 - **ID:** The unique flag ID.
 - **Description:** Text within the flag's description.
-- **Tags:** Any tags assigned to the flag.
+- **Tags:** Any tags assigned to the flag (supported on both single flags and group flags).
 
 When a project has flags identified as stale by the [Caretaker](/guides/stale-flags/), an **Only show stale flags** toggle switch appears next to the search bar to let you quickly narrow the view down to flags ready for retirement.
 
@@ -76,9 +76,12 @@ Cohorts (shown in the console as **Always on for**) enable a feature for specifi
 
 Cohorts are an exact list of people. To target by attributes such as plan or region, use an [audience](/guides/audiences/). See [how a flag is evaluated](/guides/audiences/#how-a-flag-is-evaluated) for the full order of checks.
 
-### Audit History
-To view the full history of changes for any flag:
-1. Click on the flag name in the flags table to open the **Flag Details** drawer.
-2. Select the **Activity** tab.
-Here you can see every change made to that flag, including who made the change and when. Expanding an entry shows a highlighted diff of what changed (removed values in red, added values in green, and unchanged values dimmed).
+### Inspecting Flags & Audit History
+To view the configuration, telemetry, or full history of changes for any flag:
+1. Click on the flag in the flags table to open the slide-over **Flag Inspector** drawer.
+2. The drawer provides two tabs:
+   - **Targeting & Rollout:** View and adjust targeting rules, live toggles, percentage rollout sliders, and cohort chips.
+   - **Telemetry & SDK Snippet:** View evaluation charts, code integration snippets, and the immutable **Activity** feed showing every change made to that flag, including who made the change and when (with expandable diffs).
+
+An **Edit Flag** button in the drawer header lets you transition directly into editing.
 

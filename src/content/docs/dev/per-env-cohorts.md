@@ -21,15 +21,14 @@ You can now define distinct cohorts for *every single environment* your flag is 
 
 ### Setting Up Overrides
 
-1. Open a **Group Flag** in a Multi-Environment project.
-2. Find the environment you want to override (e.g., `dev`) in the environments table.
-3. Click the **Edit** (pencil) icon for that environment.
-4. Enter your comma-separated list of identifiers in the **Environment Cohorts** field.
-5. Click **Save**.
+You can configure per-environment cohort overrides in two ways:
+
+1. **In the Group Flag editor:** When creating or editing a Group Flag, switch to the desired environment tab (e.g., `dev`) and enter your comma-separated list of identifiers in the **Environment Always on for** field.
+2. **From the Group Flags table:** Click the **Edit** (pencil) icon on that specific environment lane (or open the slide-over inspector drawer) to update its targeting individually.
 
 ### Identifying Overrides in the UI
 
-To help you quickly identify which environments are using overrides, a **"Cohorts" badge** will appear next to the environment name in the Group Flags table whenever a specific cohort list is active for that environment.
+To help you quickly identify which environments are using overrides, a **"COHORTS"** (or **"ALWAYS ON"**) badge appears next to the environment name in the Group Flags table and inspector drawer whenever a specific cohort list is active for that environment.
 
 ### API Integration
 

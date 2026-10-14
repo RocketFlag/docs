@@ -13,8 +13,8 @@ Every time a flag is evaluated via the RocketFlag API or SDK, the result (enable
 
 To view the analytics for a flag:
 1. Navigate to your project.
-2. Click on the flag name in the flags table to open the **Flag Details** drawer.
-3. If analytics are enabled for your organisation, the usage data and charts will be displayed directly in the drawer. 
+2. Click on the flag name in the flags table to open the slide-over **Flag Inspector** drawer.
+3. Select the **Telemetry & SDK Snippet** tab. If analytics are enabled for your organisation, the usage data and charts will be displayed directly in the drawer. 
 4. Data is shown for the **last 7 days**.
 
 ### Key Metrics
@@ -31,7 +31,7 @@ A breakdown of how often the flag evaluated to `true` vs. `false`.
 A time-series chart showing the volume of hits per day, helping you identify trends or unexpected spikes in traffic.
 
 ### Multi-Environment Stats
-For **Group Flags**, analytics are tracked separately for each environment. When you open the details for a Group Flag, the usage panel will display environment-specific breakdowns to help you see how a feature is performing in `Staging` vs. `Production`.
+For **Group Flags**, analytics are tracked separately for each environment. When you open the inspector drawer for a Group Flag, the **Telemetry & SDK Snippet** tab provides environment-specific breakdowns to help you see how a feature is performing in `staging` vs. `production`.
 
 ### Data Latency
 Analytics data is processed in batches. While usage counts are updated frequently, there may be a delay of up to **10-15 minutes** before the latest hits appear in your dashboard charts.
