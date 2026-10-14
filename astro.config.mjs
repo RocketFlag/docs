@@ -15,12 +15,31 @@ export default defineConfig({
 			},
 			favicon: '/favicon.svg',
 			components: {
+				SiteTitle: './src/components/SiteTitle.astro',
 				ThemeProvider: './src/components/ThemeProvider.astro',
 				ThemeSelect: './src/components/ThemeSelect.astro',
 				Head: './src/components/Head.astro',
 			},
 			expressiveCode: {
-				styleOverrides: { borderRadius: '0' },
+				styleOverrides: {
+					borderRadius: '0',
+					borderColor: '#2C313D',
+					codeBackground: '#08090B',
+					codeFontFamily: '"JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace',
+					frames: {
+						editorBackground: '#08090B',
+						editorTabBarBackground: '#111215',
+						editorTabBarBorderColor: '#2C313D',
+						editorTabBarBorderBottomColor: '#232732',
+						editorActiveTabBackground: '#08090B',
+						editorActiveTabBorderColor: '#2C313D',
+						editorActiveTabIndicatorTopColor: '#6BC2DC',
+						terminalBackground: '#08090B',
+						terminalTitlebarBackground: '#111215',
+						terminalTitlebarBorderBottomColor: '#232732',
+						frameBoxShadowCssValue: 'none',
+					},
+				},
 			},
 			customCss: [
 				'@fontsource/geist/400.css',
