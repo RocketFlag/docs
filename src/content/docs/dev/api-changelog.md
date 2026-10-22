@@ -17,6 +17,17 @@ Write your scripts to ignore fields they do not recognise, and they will keep wo
 
 ---
 
+### 2.10.1
+
+Released 22 October 2026.
+
+#### Management API
+
+- **Environment-scoped token filtering:** When listing flags (`GET /api/v1/flags`), getting a flag without `?env=` (`GET /api/v1/flags/{id}`), or creating a flag (`POST /api/v1/flags`) using a token restricted to specific environments, the `environments` map on each group flag is now filtered to only include the environments within the token's allowed scope.
+- **Environment enforcement on flag get:** `GET /api/v1/flags/{id}?env={env}` now enforces token environment restrictions and returns `403 Forbidden` (`Environment not permitted`) when the requested environment is outside the token's scope.
+
+---
+
 ### 2.9.0
 
 Released 1 October 2026, together with evaluation release `eval-v1.1.0`.

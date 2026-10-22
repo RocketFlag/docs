@@ -112,5 +112,5 @@ New Organisations automatically start on a **14-day free trial** of the Teams ti
 
 - The trial can be activated once per Organisation.
 - After 14 days, if no paid subscription is started, the Organisation enters a **write-locked** state.
-- While write-locked, creating new projects, creating flags, editing flag configurations across all environments, managing audiences, and managing API tokens (creating, revoking, rotating) are disabled across all project routes. Helpful banners and tooltips on console controls explain why actions are locked.
-- **Resource deletion remains permitted** while write-locked so you can remove flags, group flags, or projects to wind down or clean up your workspace without needing to start a subscription first.
+- While write-locked, creating new projects, creating flags, editing flag configurations across all environments, managing audiences, and creating or rotating API tokens are disabled across all project routes. Helpful banners and tooltips on console controls explain why actions are locked.
+- **Resource deletion and token revocation remain permitted** while write-locked so you can remove flags, group flags, or projects to wind down or clean up your workspace, and neutralize leaked API tokens, without needing to start a subscription first.
