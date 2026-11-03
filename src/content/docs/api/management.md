@@ -50,7 +50,7 @@ Each token has:
 | **Environments** | Optional. On a multi-environment project you can limit a token to specific environments (such as `staging` only) using checkboxes, or choose **All** for all environments. The limit is stored by environment name, so renaming an environment does not update tokens limited to it: their requests for that environment are refused until you revoke them and create new ones. The console marks the stale name on the token's page. |
 | **Expiry** | Optional. A token with an expiry stops working after that time. |
 
-The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards. In the console, an organisation below Teams can still see its existing tokens on **Project > Tokens**, read-only: it cannot create, rotate or revoke them there.
+The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards. In the console, an organisation below Teams can still see its existing tokens on **Project > Tokens**, read-only: it cannot create or rotate them there (revoking an existing token remains permitted to allow neutralizing leaked credentials).
 
 ### Creating and managing tokens
 
@@ -141,7 +141,7 @@ curl "https://api.rocketflag.app/api/v1/flags?name=new-checkout" \
 }
 ```
 
-The list is always an object with a `flags` array, and the array is `[]` when nothing matches, never `null`. An environment-restricted token still lists every flag: the restriction applies to writes and to reads that name an environment.
+The list is always an object with a `flags` array, and the array is `[]` when nothing matches, never `null`. An environment-restricted token still lists every flag, but on a multi-environment project, each flag's `environments` map is filtered to the token's environment scope.
 
 ### The flag representation
 
@@ -184,7 +184,7 @@ Every endpoint that returns a flag uses the same shape. `id`, `name`, `kind` and
 }
 ```
 
-`environments` is always present on this shape, as `{}` for a project that has no environments yet. Each environment's `updatedAt` is currently the flag's own `updatedAt`, so do not rely on it to tell you when one environment changed. For a group flag, the `cohorts` you read for an environment is the effective list: the environment's own override if it has one, otherwise the flag-wide list.
+`environments` is always present on this shape, as `{}` for a project that has no environments yet. When called with an environment-restricted token, `environments` contains only the environments within the token's allowed scope. Each environment's `updatedAt` is currently the flag's own `updatedAt`, so do not rely on it to tell you when one environment changed. For a group flag, the `cohorts` you read for an environment is the effective list: the environment's own override if it has one, otherwise the flag-wide list.
 
 ---
 
@@ -218,7 +218,7 @@ curl "https://api.rocketflag.app/api/v1/flags/Gp9rS5dH1jXe6UaM0fTw?env=staging" 
 }
 ```
 
-Passing `?env=` on a single-environment project is a `400` that tells you to drop the parameter. An unknown environment is a `400` that lists the valid ones. A flag id that does not exist, or that belongs to another project, is a `404`, and the two cases look identical on purpose.
+Passing `?env=` on a single-environment project is a `400` that tells you to drop the parameter. An unknown environment is a `400` that lists the valid ones. Passing an environment that the token is not permitted to use is a `403` ([Environment not permitted](#security)). A flag id that does not exist, or that belongs to another project, is a `404`, and the two cases look identical on purpose.
 
 ---
 
@@ -264,7 +264,7 @@ A successful create returns `201` and the new flag in the [standard representati
 The API has no endpoint that lists audiences. To find an audience's id, open the **Audiences** tab in the console or edit the audience, where each audience displays its id with a copy button.
 
 :::note
-A token restricted to some environments can still create flags, but a body that sets state for an environment outside its list is refused with `403`.
+A token restricted to some environments can still create flags, but a body that sets state for an environment outside its list is refused with `403`. In the response, the created flag's `environments` map is filtered to the token's permitted environments.
 :::
 
 ---
