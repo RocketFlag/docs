@@ -93,7 +93,11 @@ curl https://api.rocketflag.app/api/v1/token \
 {
   "id": "Tk6eW3hB9uLa1NxQ5oSd",
   "name": "GitHub Actions",
-  "project": { "id": "Pj2cV8yN4bRk7ZsD1qXm", "name": "Storefront" },
+  "project": {
+    "id": "Pj2cV8yN4bRk7ZsD1qXm",
+    "name": "Storefront",
+    "environments": ["staging", "production"]
+  },
   "permission": "write",
   "environments": ["staging"],
   "expiresAt": 1798675200000
@@ -102,8 +106,9 @@ curl https://api.rocketflag.app/api/v1/token \
 
 | Field | Notes |
 | :--- | :--- |
+| `project.environments` | The project's configured environment labels (`string[]`) on a multi-environment project, or `[]` on a single-environment project, alongside top-level `environments` which lists the token's own environment restriction. Never `null`. |
 | `permission` | `read` or `write`. |
-| `environments` | The environments the token is limited to. An empty array means every environment. Never `null`. |
+| `environments` | The environments the token is limited to (`string[]`). An empty array (`[]`) means the token is unrestricted and can access every environment. Never `null`. |
 | `expiresAt` | Unix time in milliseconds. `0` means the token never expires. |
 
 ---
@@ -457,4 +462,4 @@ A `403` means the token is real but may not do what you asked. The usual causes 
 
 ### CORS
 
-The API answers cross-origin requests from any origin (`Access-Control-Allow-Origin: *`, without credentials). It allows `GET`, `POST`, `PATCH` and `OPTIONS`, and the `Content-Type` and `Authorization` request headers. A preflight `OPTIONS` request is answered without a token. That means a browser can technically call the API, which can be handy for an internal tool. It also means any page that holds a token exposes it to everyone who can open that page, so only do this where you fully trust every viewer.
+The API answers cross-origin requests from any origin (`Access-Control-Allow-Origin: *`, without credentials). It allows `GET`, `POST`, `PATCH` and `OPTIONS`, and the `Content-Type`, `Authorization` and `X-RocketFlag-Client` request headers. A preflight `OPTIONS` request is answered without a token. That means a browser can technically call the API, which can be handy for an internal tool. It also means any page that holds a token exposes it to everyone who can open that page, so only do this where you fully trust every viewer.
