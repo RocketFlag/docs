@@ -48,7 +48,7 @@ An **Audience** is a named set of rules over attributes such as `plan` or `regio
 
 ### Audit Logs
 
-Every change to flags (creation, update, toggle, deletion) and organisation settings (member invitations, role updates, removals, organisation deletion) is recorded in the **Audit Logs**, providing a history of who changed what and when.
+Every change to flags (creation, update, toggle, deletion) and organisation settings (member invitations, role updates, removals, organisation deletion) is recorded in the **Audit Logs**, providing a history of who changed what and when. When a user account is deleted, audit history is preserved with personal details anonymised.
 
 ### Caretaker (Stale & Dormant Flags)
 

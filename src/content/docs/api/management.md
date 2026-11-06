@@ -56,10 +56,12 @@ The Management API is available on the **Teams and Enterprise plans**, and to or
 
 - **Where.** Tokens belong to organisation projects. A personal project cannot have tokens.
 - **Who.** An Editor, Admin or Owner can create a token. Revoking or rotating a token is open to the person who created it and to any Admin.
+- **Permission.** The creation dialog requires an explicit choice between **Read** (read-only queries) and **Write** (create, toggle, and patch flags) before creating a token. Neither is pre-selected by default, preventing accidentally generating a read-only token when configuring developer tools or deployment scripts.
 - **Environments.** On a multi-environment project, the creation dialog offers a checkbox for each environment label plus an **All** checkbox. **All** is ticked by default and gives access to all environments (including future ones). Unticking **All** allows you to select one or more specific environments.
 - **Expiry.** The console offers Never, 30 days, 90 days and 365 days. A token can last at most 365 days.
 - **Limit.** A project can have at most 50 active tokens. An expired token that has not been revoked still uses a slot, so revoke tokens you no longer need.
 - **Activity.** Each token has its own page in the console. It shows when the token was last used, its recent activity and any recent denials.
+- **Lifecycle & deletion.** Revoking a token takes effect within about a minute. Deleting a project or organisation immediately revokes all associated tokens and purges their denial history; subsequent requests using them return `401 Unauthorized` (`Token revoked`). If a user account is deleted, tokens they created for an organisation are preserved with creator details anonymised.
 
 | Status | Cause |
 | :--- | :--- |
@@ -455,7 +457,7 @@ A `403` means the token is real but may not do what you asked. The usual causes 
 - **The secret is shown once.** RocketFlag stores only a hash of a token. Copy the `rf_...` value when you create it and put it straight into your CI secret store. If you lose it, create a new token.
 - **Keep it out of URLs.** Always send the token in the `Authorization` header. A secret in a query string ends up in logs, proxies and shell history.
 - **Use the least access that works.** A `read` token is enough for anything that only checks state. A pipeline that only touches staging should have a token limited to `staging`.
-- **Rotate and revoke from the console.** Rotating creates a replacement with the same name, permission, environments and expiry, and revokes the original. Revoked tokens stop working within about a minute.
+- **Rotate and revoke from the console.** Rotating creates a replacement with the same name, permission, environments and expiry, and revokes the original. Revoked tokens stop working within about a minute. Deleting a project or organisation immediately revokes all associated tokens and purges their denial history.
 - **Denials are reported.** When a real token is refused (revoked, expired, wrong permission, or an environment it may not use), the attempt is recorded on the token's page in the console, and the token's creator and the organisation's owners get an email, at most once per token per 24 hours. A sudden denial usually means a pipeline was edited or a secret leaked, so it is worth a look.
 - **Every change is audited.** Writes made with a token appear in the audit log as `token:<id>`, with the token's name.
 - **Do not call it from a browser.** The Management API can change production flags. Keep tokens in server-side code and CI secrets, never in a frontend bundle. For client-side flag checks, use the [Evaluation API](/dev/api-reference/), which needs no secret.

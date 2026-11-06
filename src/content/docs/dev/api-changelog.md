@@ -17,13 +17,14 @@ Write your scripts to ignore fields they do not recognise, and they will keep wo
 
 ---
 
-### 2026-11-03
+### 2.11.0
 
-Released 3 November 2026.
+Released 6 November 2026.
 
 #### Management API
 
 - **Project environments on token introspection:** `GET /api/v1/token` now includes `project.environments` (`string[]`), returning the project's configured environment labels on multi-environment projects or `[]` on single-environment projects. This sits alongside top-level `environments`, which lists the token's own environment restrictions (or `[]` when unrestricted), allowing clients such as the [RocketFlag CLI and MCP Server](/dev/cli-and-mcp/) to distinguish single-environment and multi-environment projects in a single call.
+- **Immediate token revocation on project or organisation deletion:** Deleting a project or organisation now immediately revokes all associated API tokens and purges their denial history. Requests using a token from a deleted project or organisation immediately receive `401 Unauthorized` (`Token revoked`).
 - **Client telemetry CORS header:** Cross-origin preflight responses on `/api/v1` now include `X-RocketFlag-Client` in `Access-Control-Allow-Headers` alongside `Authorization` and `Content-Type`.
 
 ---

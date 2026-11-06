@@ -70,3 +70,9 @@ If you have a personal project (one that isn't yet part of an Organisation), you
 3. Click **Move Project**.
 
 All existing flags and evaluations continue to work without interruption — flag IDs don't change, so your application keeps working through the move.
+
+### Deleting a Project
+
+To delete a project, open the project in the console, navigate to project settings, and choose **Delete Project**.
+
+> **Warning:** Deleting a project permanently removes the project and all of its flags. All API tokens scoped to the deleted project are immediately revoked and their denial history is cleared; any scripts or CI workflows still using those tokens receive `401 Unauthorized` (`Token revoked`). Project audit logs are preserved under the parent organisation.
