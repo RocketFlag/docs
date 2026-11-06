@@ -3,7 +3,7 @@ title: CLI & MCP Server
 description: Manage and evaluate RocketFlag feature flags from your terminal, CI pipelines, and AI coding assistants with the RocketFlag CLI and Model Context Protocol (MCP) server.
 ---
 
-The RocketFlag CLI (`rocketflag`) and Model Context Protocol server (`@rocketflag/mcp`) let you inspect, create, toggle, and evaluate feature flags directly from your terminal, CI workflows, or AI coding assistants such as Claude Code, Cursor, and Antigravity.
+The RocketFlag CLI (`@rocketflag/cli`) and Model Context Protocol server (`@rocketflag/mcp`) let you inspect, create, toggle, and evaluate feature flags directly from your terminal, CI workflows, or AI coding assistants such as Claude Code, Cursor, and Antigravity.
 
 Both packages are built on the [Management API](/api/management/) (`/api/v1`) and the public [Evaluation API](/dev/api-reference/) (`/v1`), require Node.js 22 or newer, and use standard `rf_...` project API tokens created in the console under **Project > Tokens**.
 
@@ -19,23 +19,26 @@ Management API calls (`login`, `whoami`, `init`, `flags list`, `flags get`, `fla
 For an interactive, step-by-step walkthrough of how the CLI maps to your existing RocketFlag projects and environments, see [Getting Started with the CLI](/dev/cli-getting-started/).
 :::
 
-Create a Write API token in the RocketFlag console under **Project > Tokens**, then run these five commands with `npx rocketflag` (or install globally with `npm install -g rocketflag`):
+Create a Write API token in the RocketFlag console under **Project > Tokens**, install the CLI globally (`npm install -g @rocketflag/cli`, or prefix commands with `npx @rocketflag/cli`), and run these five commands:
 
 ```bash
+# Install globally so `rocketflag` is on your PATH
+npm install -g @rocketflag/cli
+
 # 1. Authenticate and save your token to ~/.config/rocketflag/config.json
-npx rocketflag login
+rocketflag login
 
 # 2. Initialise .rocketflag.json in your repository (stores projectId and defaultEnv)
-npx rocketflag init
+rocketflag init
 
 # 3. Create a new flag enabled at 100% rollout in your default environment (returns the new flag ID, e.g. Zt4nQ8wK2mVx7LpB3hYc)
-npx rocketflag flags create checkout_v2 --enabled
+rocketflag flags create checkout_v2 --enabled
 
 # 4. Toggle the flag on or off (pass <flag_id> from the create output above)
-npx rocketflag flags toggle <flag_id>
+rocketflag flags toggle <flag_id>
 
 # 5. Evaluate the flag via the public Evaluation API
-npx rocketflag flags eval <flag_id>
+rocketflag flags eval <flag_id>
 ```
 
 Every command supports `--json` for machine-readable output in scripts and CI pipelines.
@@ -87,8 +90,8 @@ On single-environment projects, `.rocketflag.json` stores only `projectId`, and 
 Validates a project API token against `GET /api/v1/token` and saves it to `~/.config/rocketflag/config.json` with `0700` directory and `0600` file permissions.
 
 ```bash
-npx rocketflag login
-npx rocketflag login --token rf_your_token_here
+rocketflag login
+rocketflag login --token rf_your_token_here
 ```
 
 If neither `--token` nor `ROCKETFLAG_TOKEN` is provided in an interactive terminal, the CLI prompts for the token on `stderr`. If the token is restricted to environments that have been deleted or renamed on the project, the CLI prints a stale-environment warning.
@@ -98,8 +101,8 @@ If neither `--token` nor `ROCKETFLAG_TOKEN` is provided in an interactive termin
 Displays the active token's name, ID, permission (`read` or `write`), project name and ID, project mode (`single-environment` or `multi-environment`), configured project environments, token-allowed environments, and expiry.
 
 ```bash
-npx rocketflag whoami
-npx rocketflag whoami --json
+rocketflag whoami
+rocketflag whoami --json
 ```
 
 ### `rocketflag init`
@@ -107,8 +110,8 @@ npx rocketflag whoami --json
 Writes `.rocketflag.json` in the current directory for the token's project.
 
 ```bash
-npx rocketflag init
-npx rocketflag init --env staging
+rocketflag init
+rocketflag init --env staging
 ```
 
 - On a **single-environment project**, `init` writes `{ "projectId": "..." }`.
@@ -119,9 +122,9 @@ npx rocketflag init --env staging
 Lists all flags in the project, or filters to an exact flag name with `--name`.
 
 ```bash
-npx rocketflag flags list
-npx rocketflag flags list --name checkout_v2
-npx rocketflag flags list --json
+rocketflag flags list
+rocketflag flags list --name checkout_v2
+rocketflag flags list --json
 ```
 
 ### `rocketflag flags get <id>`
@@ -129,9 +132,9 @@ npx rocketflag flags list --json
 Fetches a single flag by ID. On a multi-environment project, pass `--env` (or configure `defaultEnv` in `.rocketflag.json`) to project the flag to a flat state for that environment.
 
 ```bash
-npx rocketflag flags get Zt4nQ8wK2mVx7LpB3hYc
-npx rocketflag flags get Gp9rS5dH1jXe6UaM0fTw --env staging
-npx rocketflag flags get Gp9rS5dH1jXe6UaM0fTw --env staging --json
+rocketflag flags get Zt4nQ8wK2mVx7LpB3hYc
+rocketflag flags get Gp9rS5dH1jXe6UaM0fTw --env staging
+rocketflag flags get Gp9rS5dH1jXe6UaM0fTw --env staging --json
 ```
 
 ### `rocketflag flags create <name>`
@@ -139,7 +142,7 @@ npx rocketflag flags get Gp9rS5dH1jXe6UaM0fTw --env staging --json
 Creates a new flag in the project. Requires a `write` token. New flags default to `100%` rollout traffic unless `--percentage` is passed. On a multi-environment project, passing initial state options (`--enabled`, `--percentage`, `--cohort`, `--audience`) applies them only to the target environment (`--env`, `ROCKETFLAG_ENV`, or `defaultEnv` from `.rocketflag.json`), while all other environments start disabled (`off` at `100%` traffic).
 
 ```bash
-npx rocketflag flags create checkout_v2 \
+rocketflag flags create checkout_v2 \
   --description "Redesigned checkout flow" \
   --tag checkout \
   --enabled \
@@ -166,11 +169,11 @@ Flips a flag's `enabled` state (or sets it explicitly with `--on` or `--off`). R
 
 ```bash
 # Invert the current enabled state
-npx rocketflag flags toggle Zt4nQ8wK2mVx7LpB3hYc
+rocketflag flags toggle Zt4nQ8wK2mVx7LpB3hYc
 
 # Explicitly enable or disable in a specific environment (idempotent in CI)
-npx rocketflag flags toggle Gp9rS5dH1jXe6UaM0fTw --env production --on
-npx rocketflag flags toggle Gp9rS5dH1jXe6UaM0fTw --env production --off --json
+rocketflag flags toggle Gp9rS5dH1jXe6UaM0fTw --env production --on
+rocketflag flags toggle Gp9rS5dH1jXe6UaM0fTw --env production --off --json
 ```
 
 ### `rocketflag flags eval <id>`
@@ -178,7 +181,7 @@ npx rocketflag flags toggle Gp9rS5dH1jXe6UaM0fTw --env production --off --json
 Evaluates whether a flag is enabled for a given context via the public Evaluation API (`GET /v1/flags/{id}`). Does not require a Management API token.
 
 ```bash
-npx rocketflag flags eval Gp9rS5dH1jXe6UaM0fTw \
+rocketflag flags eval Gp9rS5dH1jXe6UaM0fTw \
   --env staging \
   --cohort beta-testers \
   --key user_123 \

@@ -29,15 +29,15 @@ Three design choices anchor how the CLI works:
 
 ## Step 0: Install or run `--help`
 
-You can run the CLI directly with `npx rocketflag` or install it globally so `rocketflag` is always on your `PATH`:
+Install the CLI globally with `npm install -g @rocketflag/cli` so `rocketflag` is always on your `PATH` (or run individual commands with `npx @rocketflag/cli`):
 
 ```bash
-npm install -g rocketflag
+npm install -g @rocketflag/cli
 rocketflag --help
 ```
 
 ```text
-rocketflag v0.1.0 - RocketFlag command-line interface
+rocketflag v1.0.0 - RocketFlag command-line interface
 
 Usage:
   rocketflag <command> [options]
