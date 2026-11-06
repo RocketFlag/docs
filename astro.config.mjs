@@ -98,6 +98,7 @@ export default defineConfig({
 					label: 'API',
 					items: [
 						{ label: 'Management API', slug: 'api/management' },
+						{ label: 'Getting Started with the CLI', slug: 'dev/cli-getting-started' },
 						{ label: 'CLI & MCP Server', slug: 'dev/cli-and-mcp' },
 						{ label: 'CI Recipes', slug: 'dev/ci-recipes' },
 						{ label: 'API Changelog', slug: 'dev/api-changelog' },

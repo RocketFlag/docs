@@ -15,6 +15,10 @@ Management API calls (`login`, `whoami`, `init`, `flags list`, `flags get`, `fla
 
 ## First flag in 2 minutes
 
+:::tip[New to the CLI?]
+For an interactive, step-by-step walkthrough of how the CLI maps to your existing RocketFlag projects and environments, see [Getting Started with the CLI](/dev/cli-getting-started/).
+:::
+
 Create a Write API token in the RocketFlag console under **Project > Tokens**, then run these five commands with `npx rocketflag` (or install globally with `npm install -g rocketflag`):
 
 ```bash
@@ -24,14 +28,14 @@ npx rocketflag login
 # 2. Initialise .rocketflag.json in your repository (stores projectId and defaultEnv)
 npx rocketflag init
 
-# 3. Create a new flag enabled at 0% rollout (returns the new flag ID, e.g. Zt4nQ8wK2mVx7LpB3hYc)
+# 3. Create a new flag enabled at 100% rollout in your default environment (returns the new flag ID, e.g. Zt4nQ8wK2mVx7LpB3hYc)
 npx rocketflag flags create checkout_v2 --enabled
 
-# 4. Toggle the flag on or off (replace checkout_v2 with the flag ID returned above)
-npx rocketflag flags toggle checkout_v2
+# 4. Toggle the flag on or off (pass <flag_id> from the create output above)
+npx rocketflag flags toggle <flag_id>
 
 # 5. Evaluate the flag via the public Evaluation API
-npx rocketflag flags eval checkout_v2
+npx rocketflag flags eval <flag_id>
 ```
 
 Every command supports `--json` for machine-readable output in scripts and CI pipelines.
@@ -132,7 +136,7 @@ npx rocketflag flags get Gp9rS5dH1jXe6UaM0fTw --env staging --json
 
 ### `rocketflag flags create <name>`
 
-Creates a new flag in the project. Requires a `write` token.
+Creates a new flag in the project. Requires a `write` token. New flags default to `100%` rollout traffic unless `--percentage` is passed. On a multi-environment project, passing initial state options (`--enabled`, `--percentage`, `--cohort`, `--audience`) applies them only to the target environment (`--env`, `ROCKETFLAG_ENV`, or `defaultEnv` from `.rocketflag.json`), while all other environments start disabled (`off` at `100%` traffic).
 
 ```bash
 npx rocketflag flags create checkout_v2 \
@@ -149,11 +153,11 @@ npx rocketflag flags create checkout_v2 \
 | :--- | :--- |
 | `--description <text>` | Optional human-readable description shown in the console. |
 | `--tag <tag>` | Tag to attach to the flag (repeatable). |
-| `--enabled` | Enable the flag immediately on creation. |
-| `--percentage <0-100>` | Initial rollout traffic percentage (whole number from `0` to `100`). |
+| `--enabled` | Enable the flag immediately on creation (in the target/default environment on multi-environment projects). |
+| `--percentage <0-100>` | Initial rollout traffic percentage (whole number from `0` to `100`, defaults to `100`). |
 | `--cohort <cohort>` | Cohort identifier to attach (repeatable). |
 | `--audience <id>` | Project audience ID to attach. |
-| `--env <env>` | Target environment for the initial state on a multi-environment project. Other environments start disabled at `0%`. |
+| `--env <env>` | Target environment for the initial state on a multi-environment project (defaults to `ROCKETFLAG_ENV` or `defaultEnv` in `.rocketflag.json`). Other environments start disabled (`off` at `100%` traffic). |
 | `--json` | Output the created flag as JSON. |
 
 ### `rocketflag flags toggle <id>`
