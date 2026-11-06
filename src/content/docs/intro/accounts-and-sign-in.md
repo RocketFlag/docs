@@ -52,7 +52,7 @@ If you wish to close your RocketFlag account:
 **Important Safety Rules for Deletion:**
 - **Last Owner/Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Owner** or **Admin** of any Organisation. You must first promote another member to Owner/Admin, assign a new Owner/Admin, or [delete the Organisation](/guides/organisations-and-users/#deleting-an-organisation) first.
 - **Subscription Cancellation:** When you delete your account, any active user-level subscription is automatically cancelled.
-- **Data Cleanup:** All of your personal projects and user details will be permanently removed.
+- **Data Cleanup & Anonymisation:** Personal feedback entries, dashboard snapshots, pending invitations, and personal projects are permanently removed. To preserve team workflows and compliance history without keeping personal data, your past entries in organisation audit logs and any API tokens you created for a team are preserved but anonymised (attributed to "Deleted user").
 
 ### Inviting Teammates
 

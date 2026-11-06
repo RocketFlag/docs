@@ -65,7 +65,7 @@ The Settings page displays any blockers upfront so you know what needs to be sor
 3. Type the organisation's name to confirm.
 4. Click **Yes, delete organisation**.
 
-> **Warning:** Deletion is permanent and immediate. Deleting an Organisation synchronously removes the organisation and all of its associated projects, flags, group flags, and environment configurations.
+> **Warning:** Deletion is permanent and immediate. Deleting an Organisation synchronously removes the organisation and all of its associated projects, flags, group flags, and environment configurations. All API tokens belonging to the organisation or its projects are immediately revoked and their denial logs cleared; any subsequent requests using those tokens receive `401 Unauthorized` (`Token revoked`).
 
 ### Enterprise SAML SSO
 

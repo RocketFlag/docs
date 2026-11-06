@@ -30,3 +30,7 @@ RocketFlag uses two distinct APIs to ensure security:
 
 ### 3. Environment Isolation
 Use **Multi-Environment Projects** to ensure that changes in your `dev` environment can never accidentally impact your `production` users. Each environment is treated as a separate silo by the RocketFlag evaluation engine.
+
+### 4. Data Cleanup & Token Revocation
+- **Immediate token revocation:** Deleting a project or organisation immediately revokes all associated API tokens and purges their denial history, preventing unauthorized access from orphaned credentials.
+- **Account deletion anonymisation:** When a user account is deleted, personal data (feedback, snapshots, pending invites) is permanently removed, while organisation audit trails and team-created API tokens are anonymised to protect individual privacy without disrupting ongoing team operations.

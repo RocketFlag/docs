@@ -30,6 +30,10 @@ Organisations on the **Enterprise** tier have access to a global audit feed. Thi
 - **Filtering:** You can filter the logs by **Project**, **Author** (email), and **Date Range**.
 - **Export:** Audit logs can be viewed in the dashboard to maintain a complete trail of all configuration changes.
 
+#### Retention and Account Deletion
+
+When a user deletes their RocketFlag account, their past entries in organisation audit logs are retained to maintain an unbroken compliance trail, but personal information is scrubbed: author and target IDs are replaced with anonymous identifiers (`deleted-user-...`), author names display as "Deleted user", and personal details (such as email addresses) are purged from diffs. When an organisation is deleted, all of its audit logs are cascade-deleted.
+
 
 ### Why Use Audit Logs?
 
