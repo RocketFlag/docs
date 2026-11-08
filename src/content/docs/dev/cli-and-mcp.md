@@ -3,12 +3,12 @@ title: CLI & MCP Server
 description: Manage and evaluate RocketFlag feature flags from your terminal, CI pipelines, and AI coding assistants with the RocketFlag CLI and Model Context Protocol (MCP) server.
 ---
 
-The RocketFlag CLI (`@rocketflag/cli`) and Model Context Protocol server (`@rocketflag/mcp`) let you inspect, create, toggle, and evaluate feature flags directly from your terminal, CI workflows, or AI coding assistants such as Claude Code, Cursor, and Antigravity.
+The RocketFlag CLI (`@rocketflag/cli`) and hosted Model Context Protocol (MCP) server (`https://api.rocketflag.app/mcp/v1`) let you inspect, create, toggle, and evaluate feature flags directly from your terminal, CI workflows, or AI coding assistants such as Claude Code, Cursor, and Antigravity.
 
-Both packages are built on the [Management API](/api/management/) (`/api/v1`) and the public [Evaluation API](/dev/api-reference/) (`/v1`), require Node.js 22 or newer, and use standard `rf_...` project API tokens created in the console under **Project > Tokens**.
+The CLI is built on the [Management API](/api/management/) (`/api/v1`) and the public [Evaluation API](/dev/api-reference/) (`/v1`), and requires Node.js 22 or newer. The hosted MCP endpoint runs on the RocketFlag management plane over Streamable HTTP (`https://api.rocketflag.app/mcp/v1`), so no local Node.js or `npx` installation is required for MCP. Both authenticate with standard `rf_...` project API tokens created in the console under **Project > Tokens**.
 
 :::note[Plan availability]
-Management API calls (`login`, `whoami`, `init`, `flags list`, `flags get`, `flags create`, and `flags toggle`) require an organisation on the **Teams or Enterprise plan** (or an active Teams trial). Evaluating flags with `flags eval` calls the public Evaluation API and works on any plan.
+Management API calls (`login`, `whoami`, `init`, `flags list`, `flags get`, `flags create`, and `flags toggle`) and the hosted MCP endpoint (`/mcp/v1`) require an organisation on the **Teams or Enterprise plan** (or an active Teams trial). Evaluating flags with `flags eval` in the CLI calls the public Evaluation API and works on any plan.
 :::
 
 ---
@@ -214,16 +214,17 @@ The CLI uses deterministic exit codes so shell scripts and CI pipelines can bran
 
 ---
 
-## MCP Server (`@rocketflag/mcp`)
+## MCP Server (`https://api.rocketflag.app/mcp/v1`)
 
-The `@rocketflag/mcp` package exposes RocketFlag over the Model Context Protocol (`stdio` transport) so AI coding agents can inspect your project, create feature flags while wiring up code, toggle flags in staging, and test evaluation rules without leaving your editor.
+RocketFlag hosts a stateless Streamable HTTP Model Context Protocol (MCP) endpoint on the management plane at `https://api.rocketflag.app/mcp/v1` so AI coding agents can inspect your project, create feature flags while wiring up code, and toggle flags in staging without leaving your editor. Because RocketFlag hosts the MCP endpoint directly on the management plane, no local Node.js or `npx` installation is required for MCP.
 
 ### Setup in Claude Code
 
-Register the MCP server with the `claude mcp add` command, passing your project API token in `ROCKETFLAG_TOKEN`:
+Register the hosted HTTP MCP server with the `claude mcp add` command, passing your project API token in the `Authorization` header:
 
 ```bash
-claude mcp add rocketflag -e ROCKETFLAG_TOKEN=rf_your_token_here -- npx -y @rocketflag/mcp
+claude mcp add --transport http rocketflag https://api.rocketflag.app/mcp/v1 \
+  --header "Authorization: Bearer rf_your_token_here"
 ```
 
 ### Setup in Cursor
@@ -234,10 +235,9 @@ Add a `rocketflag` server entry to `.cursor/mcp.json` in your project root (or `
 {
   "mcpServers": {
     "rocketflag": {
-      "command": "npx",
-      "args": ["-y", "@rocketflag/mcp"],
-      "env": {
-        "ROCKETFLAG_TOKEN": "rf_your_token_here"
+      "url": "https://api.rocketflag.app/mcp/v1",
+      "headers": {
+        "Authorization": "Bearer rf_your_token_here"
       }
     }
   }
@@ -252,10 +252,9 @@ Add the server to your Antigravity `mcp_config.json`:
 {
   "mcpServers": {
     "rocketflag": {
-      "command": "npx",
-      "args": ["-y", "@rocketflag/mcp"],
-      "env": {
-        "ROCKETFLAG_TOKEN": "rf_your_token_here"
+      "serverUrl": "https://api.rocketflag.app/mcp/v1",
+      "headers": {
+        "Authorization": "Bearer rf_your_token_here"
       }
     }
   }
@@ -263,12 +262,12 @@ Add the server to your Antigravity `mcp_config.json`:
 ```
 
 :::tip[Least-privilege tokens for AI agents]
-Give your local coding agent a token scoped to your `development` or `staging` environment rather than `production`. If a tool call attempts to modify an environment outside the token's scope or write with a `read` token, `@rocketflag/mcp` returns an actionable suggestion explaining how to update the token under **Project > Tokens**.
+Give your local coding agent a token scoped to your `development` or `staging` environment rather than `production`. If a tool call attempts to modify an environment outside the token's scope or write with a `read` token, the hosted MCP server returns an actionable suggestion explaining how to update the token under **Project > Tokens**.
 :::
 
 ### Available MCP tools
 
-`@rocketflag/mcp` registers six tools:
+The hosted MCP endpoint at `https://api.rocketflag.app/mcp/v1` registers five management-plane tools:
 
 | Tool | Token permission | Inputs | What it does |
 | :--- | :--- | :--- | :--- |
@@ -276,5 +275,4 @@ Give your local coding agent a token scoped to your `development` or `staging` e
 | `list_flags` | `read` | `name?` (`string`) | Lists all flags in the project, or filters by exact flag name. |
 | `get_flag` | `read` | `id` (`string`), `env?` (`string`) | Fetches a flag by ID, optionally projected to a single environment on multi-environment projects. |
 | `create_flag` | `write` | `name` (`string`), `description?`, `tags?`, `enabled?`, `trafficPercentage?`, `cohorts?`, `audienceId?`, `environments?` | Creates a new flag. Uses top-level state fields on single-environment projects and an `environments` map on multi-environment projects. |
-| `toggle_flag` | `write` | `id` (`string`), `env?` (`string`), `enabled?` (`boolean`) | Toggles a flag on or off (or sets `enabled` explicitly) and returns `{ previous, current, changed, flag }`. Requires `env` on multi-environment projects. |
-| `evaluate_flag` | *(public)* | `id` (`string`), `env?` (`string`), `cohort?`, `targetingKey?`, `attributes?` | Evaluates whether a flag is enabled for the given context via the public Evaluation API (`/v1/flags/{id}`). |
+| `toggle_flag` | `write` | `id` (`string`), `env?` (`string`), `enabled?` (`boolean`) | Toggles a flag on or off (or sets `enabled` explicitly) and returns `{ id, name, environment, previous, current, changed, flag }`. Requires `env` on multi-environment projects. |
