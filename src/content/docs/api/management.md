@@ -17,7 +17,7 @@ It is separate from the [Evaluation API](/dev/api-reference/), which your applic
 https://api.rocketflag.app
 ```
 
-Every route lives under `/api/v1`.
+Every REST route lives under `/api/v1`. RocketFlag also hosts a stateless Streamable HTTP Model Context Protocol (MCP) endpoint at `POST /mcp/v1`.
 
 | Method and path | What it does | Token permission |
 | :--- | :--- | :--- |
@@ -26,6 +26,7 @@ Every route lives under `/api/v1`.
 | `GET /api/v1/flags/{id}` | Returns one flag | read |
 | `POST /api/v1/flags` | Creates a flag | write |
 | `PATCH /api/v1/flags/{id}` | Changes a flag's state | write |
+| `POST /mcp/v1` | Stateless Streamable HTTP MCP server for AI coding assistants | read (tool-dependent) |
 
 There is no delete, no rename, and no way to edit a flag's description or tags through the API. Those stay in the console. Audience definitions are also managed in the console: the API only lets you attach or detach an audience on a flag with `audienceId`.
 
@@ -388,9 +389,49 @@ An `audienceId` that does not exist on the project is a `400` with the detail `A
 
 ---
 
+## MCP
+
+RocketFlag serves a stateless Model Context Protocol (MCP) endpoint over Streamable HTTP at `POST /mcp/v1`, authenticated with the same bearer tokens (`Authorization: Bearer rf_...`) as the REST API. It is designed for AI coding assistants such as Claude Code, Cursor, and Antigravity.
+
+Send JSON-RPC 2.0 requests to `POST /mcp/v1`. Calling `/mcp/v1` with `GET` or `DELETE` returns `405 Method Not Allowed` with `Allow: POST, OPTIONS`.
+
+```bash
+curl -X POST https://api.rocketflag.app/mcp/v1 \
+  -H "Authorization: Bearer $ROCKETFLAG_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/list"
+  }'
+```
+
+Supported JSON-RPC methods:
+
+- `initialize`: Negotiates protocol version (`2025-03-26`) and returns server capabilities.
+- `ping`: Health-check returning `{}`.
+- `tools/list`: Lists available management tools and their input schemas.
+- `tools/call`: Executes a management tool.
+- Notifications (requests without an `id`, such as `notifications/initialized`) receive `202 Accepted` with an empty body.
+
+The hosted MCP server exposes six management-plane tools:
+
+| Tool | Token permission | Description |
+| :--- | :--- | :--- |
+| `whoami` | `read` | Inspects the active token, project ID and mode, allowed environments, and stale-environment warnings. Call this first. |
+| `list_flags` | `read` | Lists all flags in the project, optionally filtered by exact flag name (`name`). |
+| `get_flag` | `read` | Fetches a flag by ID (`id`), optionally projected to a specific environment (`env`). |
+| `create_flag` | `write` | Creates a new flag. Accepts top-level properties on single-environment projects or an `environments` map on multi-environment projects. |
+| `update_flag` | `write` | Updates a flag's state (`enabled`, `trafficPercentage`, `cohorts`, `audienceId`). Requires `env` on multi-environment projects. |
+| `toggle_flag` | `write` | Toggles or explicitly sets `enabled`. Requires `env` on multi-environment projects. |
+
+For client setup instructions (Claude Code, Cursor, Antigravity) and full tool schemas, see the [CLI & MCP Server reference](/dev/cli-and-mcp/#mcp-server-httpsapirocketflagappmcpv1).
+
+---
+
 ## Errors
 
-Every error from `/api/v1` has the same body:
+Every error from `/api/v1` and `/mcp/v1` has the same body:
 
 | Field | Meaning |
 | :--- | :--- |
@@ -412,8 +453,9 @@ Every error from `/api/v1` has the same body:
 | `401` | Missing, malformed, unknown, revoked or expired token. | [Auth](#auth) |
 | `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. Reads and writes alike return this until it is back in good standing. | [Auth](#auth) |
 | `403` | A `read` token on a write route, or an environment outside the token's list. The detail names the environment or the permission. | [Security](#security) |
-| `404` | No such flag, or it belongs to another project. Also any path under `/api/v1` that does not exist. | [Get](#get) |
-| `413` | The request body is larger than 1 MiB. | [Create](#create), [Patch](#patch) |
+| `404` | No such flag, or it belongs to another project. Also any path under `/api/v1` or `/mcp/v1` that does not exist. | [Get](#get) |
+| `405` | Calling `/mcp/v1` with an unsupported method (e.g. `GET` or `DELETE`). Supported methods are `POST` and `OPTIONS`. | [MCP](#mcp) |
+| `413` | The request body is larger than 1 MiB. | [Create](#create), [Patch](#patch), [MCP](#mcp) |
 | `429` | Too many requests, or too many failed authentication attempts. | [Rate limits](#rate-limits) |
 | `500` | Something unexpected on our side. Retry, and contact support if it persists. | [Errors](#errors) |
 
@@ -464,4 +506,4 @@ A `403` means the token is real but may not do what you asked. The usual causes 
 
 ### CORS
 
-The API answers cross-origin requests from any origin (`Access-Control-Allow-Origin: *`, without credentials). It allows `GET`, `POST`, `PATCH` and `OPTIONS`, and the `Content-Type`, `Authorization` and `X-RocketFlag-Client` request headers. A preflight `OPTIONS` request is answered without a token. That means a browser can technically call the API, which can be handy for an internal tool. It also means any page that holds a token exposes it to everyone who can open that page, so only do this where you fully trust every viewer.
+The API answers cross-origin requests from any origin (`Access-Control-Allow-Origin: *`, without credentials). It allows `GET`, `POST`, `PATCH` and `OPTIONS`, and the `Content-Type`, `Content-Length`, `Accept-Encoding`, `Authorization`, `X-RocketFlag-Client`, `Mcp-Session-Id`, and `Mcp-Protocol-Version` request headers. Preflight `OPTIONS` requests on `/api/v1` and `/mcp/v1` are answered without a token. That means a browser can technically call the API, which can be handy for an internal tool. It also means any page that holds a token exposes it to everyone who can open that page, so only do this where you fully trust every viewer.

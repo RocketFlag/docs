@@ -17,7 +17,7 @@ Write your scripts to ignore fields they do not recognise, and they will keep wo
 
 ---
 
-### 2026-11-08
+### 2.11.1
 
 Released 8 November 2026.
 
