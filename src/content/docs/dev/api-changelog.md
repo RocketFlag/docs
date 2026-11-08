@@ -23,7 +23,7 @@ Released 8 November 2026.
 
 #### Management API & Hosted MCP Server
 
-- **Hosted Streamable HTTP MCP endpoint (`POST /mcp/v1`):** RocketFlag now serves a stateless Model Context Protocol (MCP) endpoint on the management plane at `https://api.rocketflag.app/mcp/v1`, authenticated with project API tokens (`Authorization: Bearer rf_...`). It exposes five management-plane tools (`whoami`, `list_flags`, `get_flag`, `create_flag`, and `toggle_flag`) for AI coding assistants such as Claude Code, Cursor, and Antigravity without requiring a local Node.js or `npx` installation. Cross-origin preflight responses on `/mcp/v1` also include `Mcp-Session-Id` and `Mcp-Protocol-Version` in `Access-Control-Allow-Headers`. See the [CLI & MCP Server reference](/dev/cli-and-mcp/).
+- **Hosted Streamable HTTP MCP endpoint (`POST /mcp/v1`):** RocketFlag now serves a stateless Model Context Protocol (MCP) endpoint on the management plane at `https://api.rocketflag.app/mcp/v1`, authenticated with project API tokens (`Authorization: Bearer rf_...`). It exposes six management-plane tools (`whoami`, `list_flags`, `get_flag`, `create_flag`, `update_flag`, and `toggle_flag`) for AI coding assistants such as Claude Code, Cursor, and Antigravity without requiring a local Node.js or `npx` installation. Cross-origin preflight responses on `/mcp/v1` also include `Mcp-Session-Id` and `Mcp-Protocol-Version` in `Access-Control-Allow-Headers`. See the [CLI & MCP Server reference](/dev/cli-and-mcp/).
 
 ---
 
