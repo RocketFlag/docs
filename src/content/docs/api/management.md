@@ -1,9 +1,9 @@
 ---
 title: Management API
-description: Read and change flags from scripts and CI with a bearer token. List, get, create and patch flags over HTTPS.
+description: Read and change flags from the CLI, scripts, and CI with a bearer token. List projects, inspect credentials, and list, get, create, and patch flags over HTTPS.
 ---
 
-The Management API lets a script, a deploy pipeline or an internal tool read and change the flags in one project. It is small and flat: four flag endpoints, one introspection endpoint, JSON in and JSON out.
+The Management API lets the [RocketFlag CLI](/dev/cli-and-mcp/), a deploy pipeline, or an internal tool read and change feature flags over HTTPS. It is small and flat: four flag endpoints, one projects endpoint, one introspection endpoint, and one session revocation endpoint, with JSON in and JSON out.
 
 :::caution[Preview]
 API tokens and this API are a first iteration. They are marked **Preview** in the console and may change as we learn how teams use them. The changelog lists every change.
@@ -19,13 +19,15 @@ https://api.rocketflag.app
 
 Every route lives under `/api/v1`.
 
-| Method and path | What it does | Token permission |
+| Method and path | What it does | Required permission |
 | :--- | :--- | :--- |
-| `GET /api/v1/token` | Describes the token you are calling with | read |
-| `GET /api/v1/flags` | Lists the project's flags | read |
-| `GET /api/v1/flags/{id}` | Returns one flag | read |
-| `POST /api/v1/flags` | Creates a flag | write |
-| `PATCH /api/v1/flags/{id}` | Changes a flag's state | write |
+| `GET /api/v1/token` | Describes the project API token (`rf_...`) or user CLI session (`rfu_...`) you are calling with | `read` |
+| `GET /api/v1/projects` | Lists the projects accessible to the calling credential | `read` |
+| `POST /api/v1/session/revoke` | Revokes the calling user CLI session (`rfu_...`) | user session |
+| `GET /api/v1/flags` | Lists the project's flags | `read` |
+| `GET /api/v1/flags/{id}` | Returns one flag | `read` |
+| `POST /api/v1/flags` | Creates a flag | `write` |
+| `PATCH /api/v1/flags/{id}` | Changes a flag's state | `write` |
 
 There is no delete, no rename, and no way to edit a flag's description or tags through the API. Those stay in the console. Audience definitions are also managed in the console: the API only lets you attach or detach an audience on a flag with `audienceId`.
 
@@ -33,16 +35,32 @@ There is no delete, no rename, and no way to edit a flag's description or tags t
 
 ## Auth
 
-Send a token in the `Authorization` header on every request:
+Send a bearer credential in the `Authorization` header on every request:
 
 ```bash
 curl https://api.rocketflag.app/api/v1/flags \
   -H "Authorization: Bearer $ROCKETFLAG_TOKEN"
 ```
 
-Token secrets start with `rf_`. The token itself also has an id (a 20-character id, shown in the console and by `GET /api/v1/token`), which is not the secret. You create tokens in the console under **Project > Tokens**. A token belongs to one project, so you never pass a project id: the token decides which project you are talking to.
+The Management API accepts two types of bearer credentials:
 
-Each token has:
+1. **Project API tokens (`rf_...`):** Created in the console under **Project > Tokens** on organisation projects (**Teams and Enterprise plans**, or an active Teams trial). A project API token belongs to a single project, so you do not need to pass a project ID header: the token decides which project you are talking to. Designed for CI/CD pipelines, headless scripts, and the hosted MCP server (`https://api.rocketflag.app/mcp/v1`).
+2. **User CLI session tokens (`rfu_...`):** Minted when a developer signs in with `rocketflag login` and confirms in the browser (**available on all plans**: Free, Pro, Teams, and Enterprise). A user session represents your signed-in RocketFlag account across all of your personal and organisation projects, lasts for **7 days**, and can be revoked at any time from **My Account > CLI Sessions** in the console or by running `rocketflag logout` (`POST /api/v1/session/revoke`).
+
+### Selecting a project (`X-RocketFlag-Project`)
+
+- **With a user CLI session (`rfu_...`):** Because a user account can access multiple personal and organisation projects, every call to `/api/v1/flags*` must include the `X-RocketFlag-Project: <projectId>` header to name the target project. Omitting it returns `400 Missing project`. You can discover accessible project IDs with `GET /api/v1/projects` (or `rocketflag projects list`).
+- **With a project API token (`rf_...`):** The token is already bound to a single project, so `X-RocketFlag-Project` is not required. Passing an `X-RocketFlag-Project` header that conflicts with the token's project returns `400 Invalid request`.
+
+```bash
+curl https://api.rocketflag.app/api/v1/flags \
+  -H "Authorization: Bearer $ROCKETFLAG_USER_SESSION" \
+  -H "X-RocketFlag-Project: Pj2cV8yN4bRk7ZsD1qXm"
+```
+
+### Project API tokens (`rf_...`)
+
+Each project API token has:
 
 | Setting | Meaning |
 | :--- | :--- |
@@ -50,23 +68,30 @@ Each token has:
 | **Environments** | Optional. On a multi-environment project you can limit a token to specific environments (such as `staging` only) using checkboxes, or choose **All** for all environments. The limit is stored by environment name, so renaming an environment does not update tokens limited to it: their requests for that environment are refused until you revoke them and create new ones. The console marks the stale name on the token's page. |
 | **Expiry** | Optional. A token with an expiry stops working after that time. |
 
-The Management API is available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards. In the console, an organisation below Teams can still see its existing tokens on **Project > Tokens**, read-only: it cannot create or rotate them there (revoking an existing token remains permitted to allow neutralizing leaked credentials).
+Project API tokens are available on the **Teams and Enterprise plans**, and to organisations on an active Teams trial. If the organisation moves to a plan without it, or a trial ends, calls with an `rf_...` token return `402` until it is back on Teams or Enterprise. The same applies while the organisation's subscription has lapsed, for example over an unpaid invoice: every call with a project token, reads included, returns `402` until the subscription is back in good standing. Tokens do not need to be recreated afterwards. In the console, an organisation below Teams can still see its existing tokens on **Project > Tokens**, read-only: it cannot create or rotate them there (revoking an existing token remains permitted to allow neutralising leaked credentials).
 
-### Creating and managing tokens
+#### Creating and managing project tokens
 
-- **Where.** Tokens belong to organisation projects. A personal project cannot have tokens.
-- **Who.** An Editor, Admin or Owner can create a token. Revoking or rotating a token is open to the person who created it and to any Admin.
+- **Where.** Project tokens belong to organisation projects. A personal project cannot have `rf_...` tokens (use `rocketflag login` with a user session instead).
+- **Who.** An Editor, Admin, or Owner can create a token. Revoking or rotating a token is open to the person who created it and to any Admin.
 - **Permission.** The creation dialog requires an explicit choice between **Read** (read-only queries) and **Write** (create, toggle, and patch flags) before creating a token. Neither is pre-selected by default, preventing accidentally generating a read-only token when configuring developer tools or deployment scripts.
 - **Environments.** On a multi-environment project, the creation dialog offers a checkbox for each environment label plus an **All** checkbox. **All** is ticked by default and gives access to all environments (including future ones). Unticking **All** allows you to select one or more specific environments.
-- **Expiry.** The console offers Never, 30 days, 90 days and 365 days. A token can last at most 365 days.
+- **Expiry.** The console offers Never, 30 days, 90 days, and 365 days. A token can last at most 365 days.
 - **Limit.** A project can have at most 50 active tokens. An expired token that has not been revoked still uses a slot, so revoke tokens you no longer need.
-- **Activity.** Each token has its own page in the console. It shows when the token was last used, its recent activity and any recent denials.
+- **Activity.** Each token has its own page in the console. It shows when the token was last used, its recent activity, and any recent denials.
 - **Lifecycle & deletion.** Revoking a token takes effect within about a minute. Deleting a project or organisation immediately revokes all associated tokens and purges their denial history; subsequent requests using them return `401 Unauthorized` (`Token revoked`). If a user account is deleted, tokens they created for an organisation are preserved with creator details anonymised.
+
+### User CLI sessions (`rfu_...`)
+
+- **Plan availability.** Available on **every plan** (Free, Pro, Teams, and Enterprise), across personal projects, shared personal projects, and organisation projects.
+- **Role-based project access.** Reads (`GET /api/v1/flags*`) require `Viewer` or higher on organisation projects, or owner/collaborator access on personal projects. Writes (`POST /api/v1/flags` and `PATCH /api/v1/flags/{id}`) require `Editor`, `Admin`, or `Owner` on organisation projects, or owner/collaborator access on personal projects. If the user has no access to the project named in `X-RocketFlag-Project`, the API returns `404 Not found`; if a `Viewer` attempts a write, it returns `403 Insufficient permission`.
+- **Plan and billing gates on writes.** If an organisation's trial has expired or its subscription is write-locked, flag writes on that organisation's projects return `402 Payment required`. Attaching or changing a non-empty `audienceId` on a flag requires Teams or Enterprise eligibility on the project (`402 Payment required` on Free or Pro), while detaching (`null`) or keeping the existing `audienceId` is permitted on any plan.
+- **Audit attribution.** Flag creations and state changes made with an `rfu_...` user session record the user's email and display name in the project's audit log.
 
 | Status | Cause |
 | :--- | :--- |
-| `401` | The header is missing or malformed, the token is unknown, revoked or expired. |
-| `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. Every call returns this until the organisation is back in good standing. |
+| `401` | The header is missing or malformed, or the token or CLI session is unknown, revoked, or expired. |
+| `402` | For `rf_...` tokens: the organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. For `rfu_...` user sessions: the target organisation is write-locked on a write request, or a write attaches an `audienceId` on a project without Teams eligibility. |
 
 ```json
 {
@@ -77,14 +102,16 @@ The Management API is available on the **Teams and Enterprise plans**, and to or
 ```
 
 :::note
-Revoking a token takes effect within about a minute, because the API caches token lookups for up to 60 seconds. If you suspect a leak, revoke first and investigate after.
+Revoking a project token takes effect within about a minute, because the API caches token lookups for up to 60 seconds. If you suspect a leak, revoke first and investigate after.
 :::
 
 ---
 
 ## Token
 
-`GET /api/v1/token` describes the token that made the request. Use it at the top of a script to fail early if a credential cannot do what you need.
+`GET /api/v1/token` describes the credential that made the request. Use it at the top of a script to fail early if a credential cannot do what you need.
+
+### With a project API token (`rf_...`)
 
 ```bash
 curl https://api.rocketflag.app/api/v1/token \
@@ -93,6 +120,7 @@ curl https://api.rocketflag.app/api/v1/token \
 
 ```json
 {
+  "kind": "token",
   "id": "Tk6eW3hB9uLa1NxQ5oSd",
   "name": "GitHub Actions",
   "project": {
@@ -108,16 +136,106 @@ curl https://api.rocketflag.app/api/v1/token \
 
 | Field | Notes |
 | :--- | :--- |
+| `kind` | `"token"` for a project API token (`rf_...`), or `"user"` for a user CLI session (`rfu_...`). |
 | `project.environments` | The project's configured environment labels (`string[]`) on a multi-environment project, or `[]` on a single-environment project, alongside top-level `environments` which lists the token's own environment restriction. Never `null`. |
 | `permission` | `read` or `write`. |
-| `environments` | The environments the token is limited to (`string[]`). An empty array (`[]`) means the token is unrestricted and can access every environment. Never `null`. |
+| `environments` | The environments the project token is limited to (`string[]`). An empty array (`[]`) means the token is unrestricted and can access every environment. Never `null`. |
 | `expiresAt` | Unix time in milliseconds. `0` means the token never expires. |
+
+### With a user CLI session (`rfu_...`)
+
+When called with an `rfu_...` user session, `GET /api/v1/token` returns `kind: "user"`, the session ID, device name (`name`), 7-day expiry (`expiresAt`), and `user` details. If you also pass `X-RocketFlag-Project: <projectId>` for a project the user can access, the response includes `project` and the user's effective `permission` (`read` or `write`) on that project:
+
+```bash
+curl https://api.rocketflag.app/api/v1/token \
+  -H "Authorization: Bearer $ROCKETFLAG_USER_SESSION" \
+  -H "X-RocketFlag-Project: Pj2cV8yN4bRk7ZsD1qXm"
+```
+
+```json
+{
+  "kind": "user",
+  "id": "Cs8kP2mV9xLq4NwR1tYz",
+  "name": "dev-laptop",
+  "expiresAt": 1794643200000,
+  "user": {
+    "id": "usr_9xK3mV2pLq8N",
+    "email": "alex@example.com",
+    "name": "Alex Rivera"
+  },
+  "project": {
+    "id": "Pj2cV8yN4bRk7ZsD1qXm",
+    "name": "Storefront",
+    "environments": ["dev", "test", "prod"]
+  },
+  "permission": "write"
+}
+```
+
+---
+
+## Projects
+
+`GET /api/v1/projects` lists the projects accessible to the calling credential.
+
+- **With a user CLI session (`rfu_...`):** Returns all personal projects, shared personal projects, and organisation projects where the user has at least `Viewer` access, sorted by organisation name and then project name.
+- **With a project API token (`rf_...`):** Returns a single-element array containing the project the token belongs to.
+
+```bash
+curl https://api.rocketflag.app/api/v1/projects \
+  -H "Authorization: Bearer $ROCKETFLAG_TOKEN"
+```
+
+```json
+{
+  "projects": [
+    {
+      "id": "Pj9xK3mV2pLq8NwR4tYz",
+      "name": "Side Project",
+      "organisationId": "",
+      "organisationName": "",
+      "environments": [],
+      "permission": "write"
+    },
+    {
+      "id": "Pj2cV8yN4bRk7ZsD1qXm",
+      "name": "Storefront",
+      "organisationId": "Org7mK2pV9xLq4NwR1tY",
+      "organisationName": "Acme Corp",
+      "environments": ["dev", "test", "prod"],
+      "permission": "write"
+    }
+  ]
+}
+```
+
+| Field | Notes |
+| :--- | :--- |
+| `id` | The project ID (`20` characters). Pass this in `X-RocketFlag-Project` when calling `/api/v1/flags*` with a user CLI session. |
+| `name` | Human-readable project name. |
+| `organisationId` | Organisation ID, or `""` for a personal project. |
+| `organisationName` | Organisation display name, or `""` for a personal project. |
+| `environments` | Configured environment labels (`string[]`) on a multi-environment project, or `[]` on a single-environment project. |
+| `permission` | Effective permission for the caller on that project: `"read"` or `"write"`. |
+
+---
+
+## Revoke session
+
+`POST /api/v1/session/revoke` immediately revokes the active `rfu_...` user CLI session and returns `204 No Content` with an empty body. This is the endpoint called by `rocketflag logout`.
+
+```bash
+curl -X POST https://api.rocketflag.app/api/v1/session/revoke \
+  -H "Authorization: Bearer $ROCKETFLAG_USER_SESSION"
+```
+
+Calling `POST /api/v1/session/revoke` with a project API token (`rf_...`) returns `400 Invalid request` (project API tokens are managed in the console under **Project > Tokens**).
 
 ---
 
 ## List
 
-`GET /api/v1/flags` returns every flag in the token's project.
+`GET /api/v1/flags` returns every flag in the target project. (When calling with an `rfu_...` user CLI session, include `-H "X-RocketFlag-Project: <projectId>"`.)
 
 ```bash
 curl https://api.rocketflag.app/api/v1/flags \
@@ -231,7 +349,7 @@ Passing `?env=` on a single-environment project is a `400` that tells you to dro
 
 ## Create
 
-`POST /api/v1/flags` creates a flag. It needs a `write` token. The body depends on the project type.
+`POST /api/v1/flags` creates a flag. It needs `write` permission. The body depends on the project type.
 
 **Single-environment project.** Put the state at the top level. Only `name` is required:
 
@@ -278,7 +396,7 @@ A token restricted to some environments can still create flags, but a body that 
 
 ## Patch
 
-`PATCH /api/v1/flags/{id}` changes a flag's state. It needs a `write` token. For a group flag you must say which environment with `?env=`.
+`PATCH /api/v1/flags/{id}` changes a flag's state. It needs `write` permission. For a group flag you must say which environment with `?env=`.
 
 ```bash
 curl -X PATCH "https://api.rocketflag.app/api/v1/flags/Zt4nQ8wK2mVx7LpB3hYc" \
@@ -408,11 +526,11 @@ Every error from `/api/v1` has the same body:
 
 | Status | When | Where to look |
 | :--- | :--- | :--- |
-| `400` | The body or query failed validation (every problem is listed), a patch is empty or has an unknown or null key, or the request does not fit the project type (missing or unneeded `env`, unknown environment). | [Patch](#patch), [Create](#create) |
-| `401` | Missing, malformed, unknown, revoked or expired token. | [Auth](#auth) |
-| `402` | The organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. Reads and writes alike return this until it is back in good standing. | [Auth](#auth) |
-| `403` | A `read` token on a write route, or an environment outside the token's list. The detail names the environment or the permission. | [Security](#security) |
-| `404` | No such flag, or it belongs to another project. Also any path under `/api/v1` that does not exist. | [Get](#get) |
+| `400` | The body or query failed validation (every problem is listed), a patch is empty or has an unknown or null key, `X-RocketFlag-Project` is missing on a user CLI session request or conflicts with a project token, or the request does not fit the project type (missing or unneeded `env`, unknown environment). | [Auth](#auth), [Patch](#patch), [Create](#create) |
+| `401` | Missing, malformed, unknown, revoked, or expired token or user CLI session. | [Auth](#auth) |
+| `402` | For `rf_...` project tokens: the organisation is not on the Teams or Enterprise plan (or an active Teams trial), or its subscription has lapsed. For `rfu_...` user sessions: the organisation is write-locked on a write request, or a write attaches an `audienceId` on a project without Teams eligibility. | [Auth](#auth) |
+| `403` | A read-only token or `Viewer` user on a write route, or an environment outside a project token's list. The detail names the environment or the permission. | [Security](#security) |
+| `404` | No such flag, or it belongs to another project (or a project the user cannot access). Also any path under `/api/v1` that does not exist. | [Get](#get) |
 | `413` | The request body is larger than 1 MiB. | [Create](#create), [Patch](#patch) |
 | `429` | Too many requests, or too many failed authentication attempts. | [Rate limits](#rate-limits) |
 | `500` | Something unexpected on our side. Retry, and contact support if it persists. | [Errors](#errors) |
@@ -444,7 +562,7 @@ And for a read-only token trying to write:
 There are two limits, and a healthy script will not notice either.
 
 - **600 requests per minute per IP address**, applied before the request reaches the API. A CI fleet behind one NAT shares this budget. A request over the limit gets a plain `429` with no JSON envelope, because it is refused at the edge.
-- **20 failed authentication attempts per minute per IP address**, for requests that send no token, a malformed token or a token that does not exist. After that the API answers `429` with the envelope and the detail `Wait a minute before retrying`. A valid token that is merely misconfigured (wrong permission, revoked, wrong environment) does not count towards this, so a bad pipeline cannot lock itself out. While an IP address is limited, every request from it gets `429`, including requests with a valid token. The window is a fixed 60 seconds from the first failure, counted separately on each server instance.
+- **20 failed authentication attempts per minute per IP address**, for requests that send no token, a malformed token, or a token or session that does not exist. After that the API answers `429` with the envelope and the detail `Wait a minute before retrying`. A valid credential that is merely misconfigured (wrong permission, revoked, wrong environment) does not count towards this, so a bad pipeline cannot lock itself out. While an IP address is limited, every request from it gets `429`, including requests with a valid token. The window is a fixed 60 seconds from the first failure, counted separately on each server instance.
 
 On a `429`, wait a minute and retry. Do not loop faster.
 
@@ -452,16 +570,16 @@ On a `429`, wait a minute and retry. Do not loop faster.
 
 ## Security
 
-A `403` means the token is real but may not do what you asked. The usual causes are a `read` token on a write route, an `?env=` outside the token's environment list, and a create body that sets state for an environment the token may not change, for example the detail `This token cannot change the "production" environment` with the title `Forbidden`.
+A `403` means the credential is real but may not do what you asked. The usual causes are a `read` token (or `Viewer` role) on a write route, an `?env=` outside a project token's environment list, and a create body that sets state for an environment the token may not change, for example the detail `This token cannot change the "production" environment` with the title `Forbidden`.
 
-- **The secret is shown once.** RocketFlag stores only a hash of a token. Copy the `rf_...` value when you create it and put it straight into your CI secret store. If you lose it, create a new token.
-- **Keep it out of URLs.** Always send the token in the `Authorization` header. A secret in a query string ends up in logs, proxies and shell history.
-- **Use the least access that works.** A `read` token is enough for anything that only checks state. A pipeline that only touches staging should have a token limited to `staging`.
-- **Rotate and revoke from the console.** Rotating creates a replacement with the same name, permission, environments and expiry, and revokes the original. Revoked tokens stop working within about a minute. Deleting a project or organisation immediately revokes all associated tokens and purges their denial history.
-- **Denials are reported.** When a real token is refused (revoked, expired, wrong permission, or an environment it may not use), the attempt is recorded on the token's page in the console, and the token's creator and the organisation's owners get an email, at most once per token per 24 hours. A sudden denial usually means a pipeline was edited or a secret leaked, so it is worth a look.
-- **Every change is audited.** Writes made with a token appear in the audit log as `token:<id>`, with the token's name.
+- **The secret is shown once.** RocketFlag stores only a SHA-256 hash of a project token or user CLI session secret. Copy the `rf_...` value when you create a project token and put it straight into your CI secret store. If you lose it, create a new token (or run `rocketflag login` again for a user session).
+- **Keep it out of URLs.** Always send the credential in the `Authorization` header. A secret in a query string ends up in logs, proxies, and shell history.
+- **Use the least access that works.** For CI and automation, a `read` project token is enough for anything that only checks state, and a pipeline that only touches staging should have a token limited to `staging`.
+- **Rotate and revoke from the console.** For project tokens, rotating creates a replacement with the same name, permission, environments, and expiry, and revokes the original under **Project > Tokens**. For user CLI sessions, revoke active sessions from **My Account > CLI Sessions** or run `rocketflag logout`. Deleting a project or organisation immediately revokes all associated project tokens and purges their denial history.
+- **Denials are reported.** When a real project token is refused (revoked, expired, wrong permission, or an environment it may not use), the attempt is recorded on the token's page in the console, and the token's creator and the organisation's owners get an email, at most once per token per 24 hours. A sudden denial usually means a pipeline was edited or a secret leaked, so it is worth a look.
+- **Every change is audited.** Writes made with a project token appear in the audit log as `token:<id>` with the token's name. Writes made with a user CLI session appear under the user's email and display name.
 - **Do not call it from a browser.** The Management API can change production flags. Keep tokens in server-side code and CI secrets, never in a frontend bundle. For client-side flag checks, use the [Evaluation API](/dev/api-reference/), which needs no secret.
 
 ### CORS
 
-The API answers cross-origin requests from any origin (`Access-Control-Allow-Origin: *`, without credentials). It allows `GET`, `POST`, `PATCH` and `OPTIONS`, and the `Content-Type`, `Authorization` and `X-RocketFlag-Client` request headers. A preflight `OPTIONS` request is answered without a token. That means a browser can technically call the API, which can be handy for an internal tool. It also means any page that holds a token exposes it to everyone who can open that page, so only do this where you fully trust every viewer.
+The API answers cross-origin requests from any origin (`Access-Control-Allow-Origin: *`, without credentials). It allows `GET`, `POST`, `PATCH` and `OPTIONS`, and the `Content-Type`, `Authorization`, `X-RocketFlag-Client`, and `X-RocketFlag-Project` request headers. A preflight `OPTIONS` request is answered without a token. That means a browser can technically call the API, which can be handy for an internal tool. It also means any page that holds a token exposes it to everyone who can open that page, so only do this where you fully trust every viewer.
