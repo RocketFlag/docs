@@ -13,7 +13,7 @@
 - [API reference](https://docs.rocketflag.app/dev/api-reference/): GET /v1/flags/{id}, unauthenticated
 - [Node SDK](https://docs.rocketflag.app/dev/node-sdk/) · [React SDK](https://docs.rocketflag.app/dev/react-sdk/) · [Go SDK](https://docs.rocketflag.app/dev/go-sdk/) · [Python SDK](https://docs.rocketflag.app/dev/python-sdk/)
 - [Management API](https://docs.rocketflag.app/api/management/): token-authenticated /api/v1 endpoints to list, read, create and patch flags
-- [CLI & MCP Server](https://docs.rocketflag.app/dev/cli-and-mcp/): `rocketflag` CLI and `@rocketflag/mcp` server for terminals, CI pipelines and AI coding assistants
+- [CLI & MCP Server](https://docs.rocketflag.app/dev/cli-and-mcp/): `rocketflag` CLI and hosted MCP server (`https://api.rocketflag.app/mcp/v1`) for terminals, CI pipelines and AI coding assistants
 - [CI recipes](https://docs.rocketflag.app/dev/ci-recipes/): flip and audit flags from CI pipelines with the Management API
 - [API changelog](https://docs.rocketflag.app/dev/api-changelog/): dated changes to the public and management APIs
 - [Protected keys](https://docs.rocketflag.app/dev/protected-keys/) · [Per-environment cohorts](https://docs.rocketflag.app/dev/per-env-cohorts/)

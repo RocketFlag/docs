@@ -295,6 +295,6 @@ rocketflag flags eval JlBvxKerlbE6mdIEGnbF \
 
 ## Next steps
 
-- **[CLI & MCP Server Reference](/dev/cli-and-mcp/):** Full option tables, environment variable precedence, exit codes (`0`, `1`, `2`, `3`), and AI coding agent setup (`@rocketflag/mcp`).
+- **[CLI & MCP Server Reference](/dev/cli-and-mcp/):** Full option tables, environment variable precedence, exit codes (`0`, `1`, `2`, `3`), and AI coding agent setup (`https://api.rocketflag.app/mcp/v1`).
 - **[CI Recipes](/dev/ci-recipes/):** Copy-and-paste GitHub Actions and shell workflows for post-deploy flag toggles, staged rollouts, and kill switches.
 - **[Management API](/api/management/):** Underlying `/api/v1` HTTP endpoints, merge patch semantics, and rate limits.
