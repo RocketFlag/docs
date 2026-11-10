@@ -5,10 +5,10 @@ description: Manage and evaluate RocketFlag feature flags from your terminal, CI
 
 The RocketFlag CLI (`@rocketflag/cli`) and hosted Model Context Protocol (MCP) server (`https://api.rocketflag.app/mcp/v1`) let you inspect, create, toggle, and evaluate feature flags directly from your terminal, CI workflows, or AI coding assistants such as Claude Code, Cursor, and Antigravity.
 
-The CLI is built on the [Management API](/api/management/) (`/api/v1`) and the public [Evaluation API](/dev/api-reference/) (`/v1`), and requires Node.js 22 or newer. The hosted MCP endpoint runs on the RocketFlag management plane over Streamable HTTP (`https://api.rocketflag.app/mcp/v1`), so no local Node.js or `npx` installation is required for MCP. Both authenticate with standard `rf_...` project API tokens created in the console under **Project > Tokens**.
+The CLI is built on the [Management API](/api/management/) (`/api/v1`) and the public [Evaluation API](/dev/api-reference/) (`/v1`), and requires Node.js 22 or newer. The CLI supports browser-based authentication directly with your RocketFlag account (`rfu_...` user CLI sessions), which works on **every plan (including Free)** without creating an API token. For CI/CD and automated pipelines, it also accepts standard `rf_...` project API tokens created in the console under **Project > Tokens**. The hosted MCP endpoint runs on the RocketFlag management plane over Streamable HTTP (`https://api.rocketflag.app/mcp/v1`) and authenticates with `rf_...` project API tokens.
 
 :::note[Plan availability]
-Management API calls (`login`, `whoami`, `init`, `flags list`, `flags get`, `flags create`, and `flags toggle`) and the hosted MCP endpoint (`/mcp/v1`) require an organisation on the **Teams or Enterprise plan** (or an active Teams trial). Evaluating flags with `flags eval` in the CLI calls the public Evaluation API and works on any plan.
+Browser-authenticated CLI sessions (`rocketflag login`) and flag evaluation (`flags eval`) work across **every plan (including Free)**. Project API tokens (`rf_...`) and the hosted MCP endpoint (`/mcp/v1`) require an organisation on the **Teams or Enterprise plan** (or an active Teams trial).
 :::
 
 ---
@@ -19,13 +19,13 @@ Management API calls (`login`, `whoami`, `init`, `flags list`, `flags get`, `fla
 For an interactive, step-by-step walkthrough of how the CLI maps to your existing RocketFlag projects and environments, see [Getting Started with the CLI](/dev/cli-getting-started/).
 :::
 
-Create a Write API token in the RocketFlag console under **Project > Tokens**, install the CLI globally (`npm install -g @rocketflag/cli`, or prefix commands with `npx @rocketflag/cli`), and run these five commands:
+Install the CLI globally (`npm install -g @rocketflag/cli`, or prefix commands with `npx @rocketflag/cli`), and run these five commands:
 
 ```bash
 # Install globally so `rocketflag` is on your PATH
 npm install -g @rocketflag/cli
 
-# 1. Authenticate and save your token to ~/.config/rocketflag/config.json
+# 1. Authenticate with your RocketFlag account (opens browser on any plan, or pass a token)
 rocketflag login
 
 # 2. Initialise .rocketflag.json in your repository (stores projectId and defaultEnv)
@@ -49,13 +49,13 @@ Every command supports `--json` for machine-readable output in scripts and CI pi
 
 The CLI separates user credentials from repository configuration so you can safely commit your project defaults without exposing secrets.
 
-### Token resolution precedence
+### Credential resolution precedence
 
-The CLI resolves your `rf_...` bearer token in the following order (highest to lowest priority):
+The CLI resolves your bearer credential in the following order (highest to lowest priority):
 
-1. `--token <rf_...>` command-line flag
+1. `--token <secret>` command-line flag (accepts `rf_...` project token or `rfu_...` user session)
 2. `ROCKETFLAG_TOKEN` environment variable
-3. `~/.config/rocketflag/config.json` (or `$XDG_CONFIG_HOME/rocketflag/config.json`, written by `rocketflag login` with `0600` file permissions)
+3. Saved credential in `~/.config/rocketflag/config.json` (or `$XDG_CONFIG_HOME/rocketflag/config.json`, written by `rocketflag login` with `0600` file permissions)
 
 ### Environment resolution precedence
 
@@ -87,23 +87,31 @@ On single-environment projects, `.rocketflag.json` stores only `projectId`, and 
 
 ### `rocketflag login`
 
-Validates a project API token against `GET /api/v1/token` and saves it to `~/.config/rocketflag/config.json` with `0700` directory and `0600` file permissions.
+Authenticates the CLI and saves your credentials to `~/.config/rocketflag/config.json` with `0700` directory and `0600` file permissions.
 
 ```bash
+# Browser-based login (recommended for local development, works on all plans)
 rocketflag login
+
+# Authenticate directly with a project API token (ideal for CI/CD)
 rocketflag login --token rf_your_token_here
 ```
 
-If neither `--token` nor `ROCKETFLAG_TOKEN` is provided in an interactive terminal, the CLI prompts for the token on `stderr`. If the token is restricted to environments that have been deleted or renamed on the project, the CLI prints a stale-environment warning.
+In an interactive terminal, running `rocketflag login` without arguments opens your browser to sign in to RocketFlag and creates a 7-day user CLI session (`rfu_...`). Browser sessions work across every plan (including Free) and attribute actions to your user account in the audit log. You can review and revoke active CLI sessions in the console under **My Account > CLI Sessions**.
+
+When `--token` or `ROCKETFLAG_TOKEN` is provided (or in non-interactive environments), the CLI validates the credential against `GET /api/v1/token` before saving it to disk. If a token is restricted to environments that have been deleted or renamed on the project, the CLI prints a stale-environment warning.
 
 ### `rocketflag whoami`
 
-Displays the active token's name, ID, permission (`read` or `write`), project name and ID, project mode (`single-environment` or `multi-environment`), configured project environments, token-allowed environments, and expiry.
+Displays the active credential's details.
 
 ```bash
 rocketflag whoami
 rocketflag whoami --json
 ```
+
+- **For browser-authenticated user sessions (`rfu_...`):** Displays your name, email, device name, session expiry, and when run inside an initialised repository (or with `--project`), the target project and effective permission.
+- **For project API tokens (`rf_...`):** Displays the token's name, ID, permission (`read` or `write`), project name and ID, project mode (`single-environment` or `multi-environment`), configured project environments, token-allowed environments, and expiry.
 
 ### `rocketflag init`
 

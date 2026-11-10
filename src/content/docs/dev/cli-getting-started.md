@@ -9,8 +9,8 @@ By the end, you will have authenticated your terminal, bound a repository to a d
 
 :::note[Prerequisites]
 - **Node.js 22 or newer**
-- An organisation project on the **Teams or Enterprise plan** (or an active Teams trial) to use Management API commands (`login`, `whoami`, `init`, `flags list`, `flags get`, `flags create`, and `flags toggle`). Flag evaluation (`flags eval`) works on any plan.
-- A project API token (`rf_...`) created in the console under **Project > Tokens**.
+- A RocketFlag account (browser-authenticated CLI sessions work across **every plan, including Free**)
+- For CI/CD or automated pipelines: an organisation project on the **Teams or Enterprise plan** (or an active Teams trial) and a project API token (`rf_...`) created in the console under **Project > Tokens**.
 :::
 
 ---
@@ -19,7 +19,9 @@ By the end, you will have authenticated your terminal, bound a repository to a d
 
 Three design choices anchor how the CLI works:
 
-1. **Tokens belong to a single project (`rf_...`).** You create tokens in the console under **Project > Tokens**. Each token belongs to one project, has either `read` or `write` permission, and can be scoped to **All** environments or restricted to specific environments (such as `dev` and `test`, excluding `prod`).
+1. **Two ways to authenticate: browser sessions or project tokens.**
+   - **Browser login (`rfu_...`):** For local development on your machine, `rocketflag login` opens your browser to authenticate with your RocketFlag account on **every plan (including Free)**. Sessions last for 7 days, attribute flag changes directly to your user in the audit log, and can be reviewed or revoked anytime under **My Account > CLI Sessions**.
+   - **Project API tokens (`rf_...`):** For CI/CD and automated pipelines, create a token in the console under **Project > Tokens** (Teams or Enterprise). Tokens belong to a single project, have either `read` or `write` permission, and can be scoped to specific environments.
 2. **User credentials and repository config are kept separate.**
    - **Your credentials** are saved in `~/.config/rocketflag/config.json` with `0600` file permissions when you run `rocketflag login`.
    - **Your repository defaults** live in `.rocketflag.json` in your git repository when you run `rocketflag init`. It only ever stores `{ "projectId", "defaultEnv" }`, never tokens or secrets, so it is safe to commit.
@@ -67,15 +69,32 @@ Every command and subcommand supports `--help` (for example, `rocketflag flags c
 
 ## Step 1: Log in (`rocketflag login`)
 
-In the [RocketFlag console](https://console.rocketflag.app), open your project, go to **Tokens** in the sidebar, and click **Create Token**. Choose **Write** permission (so you can create and toggle flags in this walkthrough), select the environments the token should be allowed to touch, and copy the `rf_...` token secret.
-
 Run `rocketflag login`:
 
 ```bash
 rocketflag login
 ```
 
-In an interactive terminal, the CLI prompts you for your token (`Enter RocketFlag API token (rf_...): `), validates it against `GET /api/v1/token` before writing anything to disk, and saves it to `~/.config/rocketflag/config.json`:
+In an interactive terminal, `rocketflag login` opens your browser to sign in to RocketFlag. Once approved, the CLI saves a 7-day user CLI session (`rfu_...`) to `~/.config/rocketflag/config.json`:
+
+```text
+Authenticated with RocketFlag as Jane Doe (jane@example.com).
+Session ID: sess_7a8b9c0d1e2f
+Expires: 7 days
+Saved credentials to /home/you/.config/rocketflag/config.json
+```
+
+Browser-authenticated CLI sessions work on **every plan (including Free)** and attribute flag changes to your user account in audit logs. You can review and revoke active sessions at any time in the console under **My Account > CLI Sessions**.
+
+### Logging in with a project API token (CI/CD)
+
+For automated pipelines or CI environments, you can log in directly with a project API token:
+
+1. In the [RocketFlag console](https://console.rocketflag.app), open your project, go to **Tokens** in the sidebar, and click **Create Token** (requires Teams or Enterprise).
+2. Choose **Write** permission (so you can create and toggle flags in this walkthrough), select the environments the token should be allowed to touch, and copy the `rf_...` token secret.
+3. Pass the token directly with `rocketflag login --token rf_...` (or set `ROCKETFLAG_TOKEN` in CI).
+
+In an interactive terminal prompting for a token:
 
 ```text
 Authenticated with RocketFlag.
@@ -85,8 +104,6 @@ Permission: write
 Allowed environments: dev, test
 Saved credentials to /home/you/.config/rocketflag/config.json
 ```
-
-You can also pass `--token rf_...` directly (or set `ROCKETFLAG_TOKEN` in CI).
 
 **Built-in guardrails on login:**
 - If you log in with a `read` token, `login` succeeds and prints a note letting you know that `flags create` and `flags toggle` require a Write token.

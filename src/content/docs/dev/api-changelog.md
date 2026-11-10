@@ -17,6 +17,20 @@ Write your scripts to ignore fields they do not recognise, and they will keep wo
 
 ---
 
+### 2.12.0
+
+Released 10 November 2026.
+
+#### Management API
+
+- **Browser-authenticated user CLI sessions (`rfu_...`):** The Management API now accepts 7-day browser-authenticated user CLI sessions (`Authorization: Bearer rfu_...`) alongside project API tokens (`rf_...`). CLI sessions work across every plan (including Free). Flag mutations made with a user CLI session attribute changes directly to the authenticated user in audit logs.
+- **Project listing endpoint (`GET /api/v1/projects`):** Lists all projects accessible to the caller. When called with a project API token (`rf_...`), returns the single project scoped to the token. When called with a user CLI session (`rfu_...`), returns all accessible personal, shared personal, and organisation projects with their ID, name, organisation details, environment labels, and effective permission (`read` or `write`).
+- **Target project header for CLI sessions (`X-RocketFlag-Project`):** When calling project-scoped endpoints (such as `GET /api/v1/flags` or `PATCH /api/v1/flags/{id}`) with a user CLI session, clients must send `X-RocketFlag-Project: <projectId>`. Project API tokens continue to deduce the project from the token (sending a mismatched `X-RocketFlag-Project` header returns `400 Bad Request`).
+- **Token introspection enhancements (`GET /api/v1/token`):** The response now returns `kind: "token"` for project API tokens, or `kind: "user"` for user CLI sessions. For user sessions, it includes user identity (`id`, `email`, `name`), device name, and expiry, along with target project details and effective permission when `X-RocketFlag-Project` is provided.
+- **Session revocation endpoint (`POST /api/v1/session/revoke`):** Revokes the calling user CLI session (`204 No Content`). Calling this endpoint with a project API token returns `400 Bad Request`.
+
+---
+
 ### 2.11.1
 
 Released 8 November 2026.

@@ -11,6 +11,7 @@ An audit entry is created for significant actions across flags and organisation 
 - **Flag Activity:** Creating, updating (including name, description, traffic percentage, or cohort overrides), toggling, or deleting flags.
 - **Organisation & Team Changes:** Organisation creation, deletion, inviting members, updating member roles, and removing members.
 - **Changes made with an API token:** The author shows as `token:<id>` together with the token's name, and a key avatar that links to the token's page.
+- **Changes made via CLI sessions:** Flag mutations performed through browser-authenticated user CLI sessions (`rfu_...`) attribute the action directly to your user account, displaying your name and email as the author.
 - **Token lifecycle:** When audit logs are on, the organisation feed records a token being created, rotated, revoked or denied.
 - **Audience changes:** Editing an [audience](/guides/audiences/) is recorded as an audience update, including when the edit changes the flags that use it.
 

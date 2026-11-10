@@ -38,7 +38,9 @@ If you prefer working solo, you can choose to create a **personal project** inst
 
 You can update your profile and manage your account from the **Account** area of the console:
 - **Profile:** Update your display name.
+- **Appearance:** Choose between **System** (default, follows your operating system theme automatically), **Light**, or **Dark** mode. You can also switch between modes anytime using the theme toggle in the top command bar.
 - **Notifications:** Customize your notification preferences, such as turning on or off the weekly Caretaker digest emails for stale and dormant flags.
+- **CLI Sessions:** Review and revoke active browser-authenticated CLI sessions (`rfu_...`), including device name, creation time, 7-day expiry, and last-used timestamp.
 - **Subscriptions & Billing:** For legacy individual subscriptions, you can update payment details, download past invoices, and manage your subscription by clicking **Manage Payment Method** under **Subscriptions**. Organisation billing is managed under Organisation settings by Organisation **Owners and Admins** — see [Organisations & Users](/guides/organisations-and-users/#managing-billing).
 
 #### Deleting Your Account
@@ -52,6 +54,7 @@ If you wish to close your RocketFlag account:
 **Important Safety Rules for Deletion:**
 - **Last Owner/Admin Protection:** To prevent orphaned Organisations and lost resources, you **cannot** delete your account if you are the last active **Owner** or **Admin** of any Organisation. You must first promote another member to Owner/Admin, assign a new Owner/Admin, or [delete the Organisation](/guides/organisations-and-users/#deleting-an-organisation) first.
 - **Subscription Cancellation:** When you delete your account, any active user-level subscription is automatically cancelled.
+- **CLI Session Revocation:** All active browser-authenticated CLI sessions linked to your account are immediately revoked.
 - **Data Cleanup & Anonymisation:** Personal feedback entries, dashboard snapshots, pending invitations, and personal projects are permanently removed. To preserve team workflows and compliance history without keeping personal data, your past entries in organisation audit logs and any API tokens you created for a team are preserved but anonymised (attributed to "Deleted user").
 
 ### Inviting Teammates

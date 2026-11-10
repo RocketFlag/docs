@@ -21,7 +21,9 @@ Every REST route lives under `/api/v1`. RocketFlag also hosts a stateless Stream
 
 | Method and path | What it does | Token permission |
 | :--- | :--- | :--- |
-| `GET /api/v1/token` | Describes the token you are calling with | read |
+| `GET /api/v1/token` | Describes the token or user CLI session you are calling with | read |
+| `GET /api/v1/projects` | Lists projects accessible to the authenticated credential | read |
+| `POST /api/v1/session/revoke` | Revokes the active user CLI session | read |
 | `GET /api/v1/flags` | Lists the project's flags | read |
 | `GET /api/v1/flags/{id}` | Returns one flag | read |
 | `POST /api/v1/flags` | Creates a flag | write |
@@ -34,14 +36,26 @@ There is no delete, no rename, and no way to edit a flag's description or tags t
 
 ## Auth
 
-Send a token in the `Authorization` header on every request:
+Send a token or session secret in the `Authorization` header on every request:
 
 ```bash
 curl https://api.rocketflag.app/api/v1/flags \
   -H "Authorization: Bearer $ROCKETFLAG_TOKEN"
 ```
 
-Token secrets start with `rf_`. The token itself also has an id (a 20-character id, shown in the console and by `GET /api/v1/token`), which is not the secret. You create tokens in the console under **Project > Tokens**. A token belongs to one project, so you never pass a project id: the token decides which project you are talking to.
+The Management API accepts two types of credentials:
+
+- **Project API tokens (`rf_...`):** Created in the console under **Project > Tokens**. Each token belongs to one organisation project, has either `read` or `write` permission, and can be scoped to specific environments. Available on the **Teams and Enterprise plans** (or an active Teams trial).
+- **User CLI sessions (`rfu_...`):** Created during browser-based login via the [RocketFlag CLI](/dev/cli-and-mcp/) (`rocketflag login`). CLI sessions belong to your user account, last for 7 days, attribute flag changes directly to you in the audit log, and work across **every plan (including Free)**.
+
+### Target project resolution (`X-RocketFlag-Project`)
+
+- **When calling with a project API token (`rf_...`):** The project is determined by the token itself. Passing a different project via `X-RocketFlag-Project` returns `400 Bad Request`.
+- **When calling with a user CLI session (`rfu_...`):** Because user sessions can access multiple projects, you must identify the target project on project-scoped endpoints (`/api/v1/flags`, `/api/v1/flags/{id}`) by passing the `X-RocketFlag-Project: <projectId>` header. If omitted, the request returns `400 Bad Request`.
+
+### Project API tokens
+
+Token secrets start with `rf_`. The token itself also has an id (a 20-character id, shown in the console and by `GET /api/v1/token`), which is not the secret. You create tokens in the console under **Project > Tokens**.
 
 Each token has:
 
@@ -85,15 +99,20 @@ Revoking a token takes effect within about a minute, because the API caches toke
 
 ## Token
 
-`GET /api/v1/token` describes the token that made the request. Use it at the top of a script to fail early if a credential cannot do what you need.
+`GET /api/v1/token` describes the credential that made the request. Use it at the top of a script or CLI tool to inspect permissions before relying on them.
 
 ```bash
 curl https://api.rocketflag.app/api/v1/token \
   -H "Authorization: Bearer $ROCKETFLAG_TOKEN"
 ```
 
+### Project API token response
+
+When called with an `rf_...` token:
+
 ```json
 {
+  "kind": "token",
   "id": "Tk6eW3hB9uLa1NxQ5oSd",
   "name": "GitHub Actions",
   "project": {
@@ -109,10 +128,99 @@ curl https://api.rocketflag.app/api/v1/token \
 
 | Field | Notes |
 | :--- | :--- |
+| `kind` | Always `"token"` for project API tokens. |
 | `project.environments` | The project's configured environment labels (`string[]`) on a multi-environment project, or `[]` on a single-environment project, alongside top-level `environments` which lists the token's own environment restriction. Never `null`. |
 | `permission` | `read` or `write`. |
 | `environments` | The environments the token is limited to (`string[]`). An empty array (`[]`) means the token is unrestricted and can access every environment. Never `null`. |
 | `expiresAt` | Unix time in milliseconds. `0` means the token never expires. |
+
+### User CLI session response
+
+When called with an `rfu_...` user session secret:
+
+```json
+{
+  "kind": "user",
+  "id": "sess_8k2m9x4v1b7n",
+  "name": "MacBook-Pro",
+  "expiresAt": 1798675200000,
+  "user": {
+    "id": "usr_5p9r2d4f8h1j",
+    "email": "jane@example.com",
+    "name": "Jane Doe"
+  },
+  "project": {
+    "id": "Pj2cV8yN4bRk7ZsD1qXm",
+    "name": "Storefront",
+    "environments": ["staging", "production"]
+  },
+  "permission": "write"
+}
+```
+
+| Field | Notes |
+| :--- | :--- |
+| `kind` | Always `"user"` for user CLI sessions. |
+| `name` | Device name recorded during login (e.g. hostname). |
+| `user` | User details (`id`, `email`, `name`). |
+| `project` | Included when `X-RocketFlag-Project: <projectId>` is sent in the request with an accessible project ID. |
+| `permission` | Included when `X-RocketFlag-Project` is provided. Reflects user's effective project permission (`read` or `write`). |
+| `expiresAt` | Unix time in milliseconds (7 days from session creation). |
+
+---
+
+## Projects
+
+`GET /api/v1/projects` lists the projects accessible to the authenticated credential.
+
+```bash
+curl https://api.rocketflag.app/api/v1/projects \
+  -H "Authorization: Bearer $ROCKETFLAG_TOKEN"
+```
+
+```json
+{
+  "projects": [
+    {
+      "id": "Pj2cV8yN4bRk7ZsD1qXm",
+      "name": "Storefront",
+      "organisationId": "org_3k7n9b1v5x2z",
+      "organisationName": "Acme Corp",
+      "environments": ["staging", "production"],
+      "permission": "write"
+    }
+  ]
+}
+```
+
+| Field | Type | Notes |
+| :--- | :--- | :--- |
+| `id` | string | Project ID. |
+| `name` | string | Project display name. |
+| `organisationId` | string | Organisation ID, or `""` for personal projects. |
+| `organisationName` | string | Organisation name, or `""` for personal projects. |
+| `environments` | array of strings | Configured environment labels for multi-environment projects, or `[]` for single-environment projects. |
+| `permission` | string | Effective permission: `read` or `write`. |
+
+- **For a project API token (`rf_...`):** Returns the single project the token is scoped to.
+- **For a user CLI session (`rfu_...`):** Returns all personal projects, shared personal projects, and organisation projects the user can access.
+
+---
+
+## Session Revocation
+
+`POST /api/v1/session/revoke` revokes the caller's active user CLI session (`rfu_...`).
+
+```bash
+curl -X POST https://api.rocketflag.app/api/v1/session/revoke \
+  -H "Authorization: Bearer rfu_your_session_secret"
+```
+
+Returns `204 No Content` on success. Subsequent requests with the revoked session secret return `401 Unauthorized`.
+
+:::note
+Calling this endpoint with a project API token (`rf_...`) returns `400 Bad Request`. Project API tokens must be revoked in the console under **Project > Tokens**.
+:::
 
 ---
 
