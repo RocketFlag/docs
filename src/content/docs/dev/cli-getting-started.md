@@ -38,7 +38,7 @@ rocketflag --help
 ```
 
 ```text
-rocketflag v1.1.0 - RocketFlag command-line interface
+rocketflag v1.2.0 - RocketFlag command-line interface
 
 Usage:
   rocketflag <command> [options]
@@ -125,7 +125,10 @@ How `init` behaves depends on your account and project configuration:
 - **Environment selection:** On a multi-environment project, `init` prompts you to choose your default environment (`Select default environment (dev, test, prod): `) or accepts `rocketflag init --env dev`. On a single-environment project, it writes `{ "projectId": "..." }` directly.
 
 ```text
-Select project: Storefront (Pj2cV8yN4bRk7ZsD1qXm)
+Available projects:
+  1. Pj9xK3mV2pLq8NwR4tYz  Side Project (Personal)
+  2. Pj2cV8yN4bRk7ZsD1qXm  Storefront (Acme Corp)
+Select project (1-2 or project ID): 2
 Select default environment (dev, test, prod): dev
 Initialised RocketFlag project 'Storefront' (Pj2cV8yN4bRk7ZsD1qXm) with defaultEnv 'dev' in /path/to/repo/.rocketflag.json
 ```
