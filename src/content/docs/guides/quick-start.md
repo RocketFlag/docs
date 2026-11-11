@@ -50,7 +50,7 @@ curl https://api.rocketflag.app/v1/flags/{FLAG_ID}
 ```
 
 ### Next Steps
-- [Learn about Multi-Environment Projects](./environment-management)
-- [Explore Advanced Targeting with Cohorts](../intro/concepts#cohorts)
-- [Install an SDK](../../dev/api-reference)
+- [Learn about Multi-Environment Projects](/guides/environment-management/)
+- [Explore Advanced Targeting with Cohorts](/intro/concepts/#cohorts)
+- [Install an SDK](/dev/api-reference/)
 - [Manage flags from the terminal with the CLI](/dev/cli-getting-started/)
