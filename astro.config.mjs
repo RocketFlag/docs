@@ -5,6 +5,12 @@ import starlight from '@astrojs/starlight';
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://docs.rocketflag.app',
+	// Old URLs that used to be reached via broken relative links in the Quick Start
+	// guide. Keep them working for anyone who bookmarked or linked them.
+	redirects: {
+		'/guides/quick-start/environment-management': '/guides/environment-management/',
+		'/guides/intro/concepts': '/intro/concepts/',
+	},
 	integrations: [
 		starlight({
 			title: 'RocketFlag Docs',
