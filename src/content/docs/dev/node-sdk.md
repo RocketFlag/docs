@@ -115,13 +115,38 @@ const rocketflag = createRocketflagClient(undefined, undefined, {
 });
 ```
 
+### Timeouts and Cancellation
+
+Configure a per-request timeout in milliseconds using `timeoutMs` in the call options (the third argument to `getFlag`):
+
+```javascript
+// Abort the request if it takes longer than 3 seconds.
+const flag = await rocketflag.getFlag("ABC123def456", {}, { timeoutMs: 3000 });
+```
+
+You can also pass your own `AbortSignal` via `signal` to cancel requests on demand:
+
+```javascript
+const controller = new AbortController();
+
+const flag = await rocketflag.getFlag("ABC123def456", {}, {
+  signal: controller.signal,
+});
+```
+
+When a request exceeds its timeout or is aborted, `getFlag` throws a `NetworkError`.
+
+<!-- TODO: verify release notes mention of 5s default timeout and client-level timeoutMs on RocketFlagConfig — only per-call timeoutMs and signal in CallOptions are implemented in index.ts. Also verify runtime rejection of non-finite numbers (NaN, Infinity) in UserContext, which was listed in release notes but not present in the 1.4.1 diff. -->
+
 ### Error Handling
 
 The SDK can throw three typed errors:
 
 - `APIError` — the API returned a non-ok response. Carries the `status` and `statusText`.
 - `InvalidResponseError` — the response wasn't valid JSON or didn't match the expected shape.
-- `NetworkError` — a network failure, such as a dropped connection.
+- `NetworkError` — a network failure, dropped connection, or timed-out/aborted request.
+
+Invalid arguments (such as passing a non-string flag ID, or a flag ID containing path separators or relative segments like `.` or `..`) throw a standard `Error` synchronously before making a network request.
 
 ```javascript
 import { APIError, InvalidResponseError, NetworkError } from "@rocketflag/node-sdk/errors";
