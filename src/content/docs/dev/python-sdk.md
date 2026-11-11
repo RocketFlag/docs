@@ -71,8 +71,17 @@ flag = rocketflag.get_flag("ABC123def456", {"env": "production"})
 
 ### Custom Configuration
 
+You can customize the API URL or version if necessary. Custom API URLs must use `http://` or `https://`:
+
 ```python
 rocketflag = create_client("v1", "https://your-custom-proxy.com")
+```
+
+You can also configure the HTTP request timeout with `timeout_seconds` (defaults to 10.0 seconds):
+<!-- TODO: verify timeout default (code uses timeout_seconds=10.0, release notes mention 5.0s / timeout) -->
+
+```python
+rocketflag = create_client(timeout_seconds=5.0)
 ```
 
 ### Caching Responses
@@ -113,8 +122,11 @@ except NetworkError as err:
 ```
 
 - `APIError` — non-OK HTTP status (includes `status` / `status_text`). A `404` means the flag ID is unknown.
-- `InvalidResponseError` — body is not JSON or not a flag object.
-- `NetworkError` — connection failure.
+- `InvalidResponseError` — body is not JSON, not a flag object, or exceeds the maximum response size (1 MiB).
+<!-- TODO: verify max response body size (code uses 1 MiB / 1,048,576 bytes, release notes mention 64 KiB) -->
+- `NetworkError` — connection failure or request timeout.
+
+`get_flag` also validates `flag_id` and raises `ValueError` if it is empty, contains path separators (`/` or `\`), or contains relative path segments (`.` or `..`).
 
 ### Source
 
